@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+    <style>
+        dl{
+            padding: 20px 20px 0 20px;
+        }
+        dt {
+            float: left;
+            display: inline-block;
+            font-size: 16px;
+            line-height: 30px;
+        }
+        dd{
+            position: relative;
+            float: left;
+            margin-left: 10px;
+        }
+        dd input{
+            display: inline-block;
+            width: 245px;
+            height: 30px;
+            font-size: 16px;
+            line-height: 30px;
+            padding: 0 5px;
+        }
+        dd button{
+            position: absolute;
+            padding: 6px;
+            right: 0;
+            top:0;
+            z-index: 4;
+            width: 90px;
+            height: 33px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        dd button:hover{
+            color: #ff791f;
+            border: 1px solid #ff791f;
+            background: #FFF;
+            height: 33px;
+        }
+        dl:nth-child(2n){
+            padding: 0px 10px;
+            height: 31px;
+        }
+        dl:nth-child(2n) dd{
+            margin-left: 68px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #f40a0a;
+        }
+        dl:nth-child(2n) dd i{
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: #f40a0a;
+            border-radius: 14px;
+            color: #FFFFFF;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 12px;
+            font-size: 30px;
+            font-style: normal;
+        }
+        .subBtn{
+            display: inline-block;
+            margin-top: 40px;
+            width: 100%;
+            text-align: center
+        }
+        .subBtn button{
+            padding: 5px 50px;
+            margin: 0 10px;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .agree{
+            background: #ff791f;
+        }
+        .agree:hover{
+            background: #f26108;
+        }
+        .cancle{
+            background: #cccccc;
+        }
+        .cancle:hover{
+            background: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <dl class="clearfix">
+            <dt>手机号</dt>
+            <dd><input type="text" id="phone" name="phone" placeholder="请输入手机号"></dd>
+        </dl>
+        <dl class="phoneTip clearfix" style="display: none;">
+            <dt></dt>
+            <dd><i>-</i> <span class="phoneMsg"></span></dd>
+        </dl>
+        <dl class="clearfix">
+            <dt>验证码</dt>
+            <dd><input type="text" id="code" name="code" placeholder="请输入验证码"><button class="getCode">获取验证码</button></dd>
+        </dl>
+        <dl class="codeTip clearfix"  style="display: none;">
+            <dt></dt>
+            <dd><i>-</i> <span class="codeMsg"></span></dd>
+        </dl>
+        <div class="subBtn clearfix">
+            <button class="agree">确认</button>
+            <button class="cancle">取消</button>
+        </div>
+    </div>
+</body>
+<script src="/js/jquery-1.8.1.min.js"></script>
+<script>
+    $(function () {
+
+        var seed = 60,_timer = null;
+
+        $(".getCode").click(function () {
+            _timer = setInterval(tips,1001);
+        });
+        
+        $(".agree").click(function () {
+            var phone = $("#phone").val(),code = $("#code").val(),phoneMsg = $(".phoneMsg"),codeMsg = $(".codeMsg");
+
+            if(phone == ""){
+                phoneMsg.html("手机号码不能为空");
+                $(".phoneTip").show();
+            }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){
+                phoneMsg.html("您输入的号码有误");
+                $(".phoneTip").show();
+            }else{
+                phoneMsg.html("");
+                $(".phoneTip").hide();
+            }
+
+            if(code == ""){
+                codeMsg.html("验证码不能为空");
+                $(".codeTip").show();
+            }else if(!(/^\w{4}$/.test(code))){
+                codeMsg.html("验证码有误");
+                $(".codeTip").show();
+            }else{
+                codeMsg.html("");
+                $(".codeTip").hide();
+            }
+
+        })
+        
+        function tips() {
+            if(seed<=0){
+                $(".getCode").html("获取验证码");
+                seed = 60;
+                clearInterval(_timer);
+                return ;
+            }
+            seed -- ;
+            $(".getCode").html(seed+"S&nbsp;&nbsp;后重试");
+        }
+        
+    })
+</script>
+</html>
