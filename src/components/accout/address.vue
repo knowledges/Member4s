@@ -37,16 +37,21 @@
                 <dl>
                     <dt class="star"><em>*</em>收货人：</dt>
                     <dd>
-                        <input type="text" class="receiver">
-                        <div class="tips">
-                            <p class=""></p>
-                        </div>
+                        <input type="text" class="receiver" v-model="user" id="user_">
+                    </dd>
+                    <dd v-if="user_">
+                        <i></i>
+                        {{user_msg}}
                     </dd>
                 </dl>
                 <dl>
                     <dt class="star"><em>*</em>手机号：</dt>
-                    <dd><input type="text" class="telephone">
-                        <div class="tips"></div>
+                    <dd>
+                        <input type="text" class="telephone" v-model="phone" id="phone_">
+                    </dd>
+                    <dd v-if="phone_">
+                        <i></i>
+                        {{phone_msg}}
                     </dd>
                 </dl>
                 <dl>
@@ -75,7 +80,7 @@
                 <dl>
                     <dt></dt>
                     <dd>
-                        <input type="submit" class="submit G_btn_a" value="保存">
+                        <input type="submit" class="submit G_btn_a" v-on:click="save" value="保存">
                         <input type="submit" class="cancel G_btn_c" value="取消">
                     </dd>
                 </dl>
@@ -88,7 +93,13 @@
         data(){
             return{
                 address:false,
-                selected:false
+                selected:false,
+                user:"",
+                user_:false,
+                user_msg:"",
+                phone:"",
+                phone_:false,
+                phone_msg:"",
             }
         },
         methods:{
@@ -117,11 +128,43 @@
                 }, function(){
                     layer.msg('我在想想');
                 });
+            },
+            save(){
+                if(this.user ==""){
+                    this.user_msg="联系人不能为空";
+                    this.user_ = true;
+                    $("#user_").addClass('lost');
+                }else if(!/^[\u4e00-\u9fa5\w\d@\.\-_]{3,10}$/i.test(this.user)){
+                    this.user_msg="联系人格式不正确"
+                    this.user_ = true;
+                    $("#user_").addClass('lost');
+                }else{
+                    this.user_msg="";
+                    this.user_ = false;
+                    $("#user_").removeClass('lost');
+                }
+
+                if(this.phone==""){
+                    this.phone_msg = "手机号不能为空";
+                    this.phone_ = true;
+                    $("#phone_").addClass('lost');
+                }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))){
+                    this.phone_msg = "手机号格式不正确";
+                    this.phone_ = true;
+                    $("#phone_").addClass('lost');
+                }else{
+                    this.phone_msg = "";
+                    this.phone_ = false;
+                    $("#phone_").removeClass('lost');
+                }
             }
         }
     }
 </script>
 <style>
+    .lost {
+        border: 1px solid red!important;
+    }
     .UC_main_r {
         display: inline-block;
         letter-spacing: normal;
@@ -265,6 +308,14 @@
     .address_magment .add_new dl dd{
         margin-left: 90px;
         position: relative;
+    }
+    .address_magment .add_new dl dd i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url('/img/pwd-icons-new.png') no-repeat;
+        background-position: -102px -47px;
+        vertical-align: sub;
     }
     .address_magment .add_new dl dd input[type="text"]{
         height: 28px;

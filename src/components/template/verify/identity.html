@@ -126,6 +126,7 @@
         var seed = 60,_timer = null;
 
         $(".getCode").click(function () {
+            $(this).attr("disabled",true);
             _timer = setInterval(tips,1001);
         });
         
@@ -161,6 +162,7 @@
                 $(".getCode").html("获取验证码");
                 seed = 60;
                 clearInterval(_timer);
+                $(this).attr("disabled",false);
                 return ;
             }
             seed -- ;

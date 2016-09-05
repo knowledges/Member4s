@@ -29,11 +29,11 @@
         route:{
             data({to,next}){
                 next();
-                var sessionid = sessionStorage.getItem("SESSIONID") ;
-                if(sessionid=="" || sessionid==null){
-                    layer.msg('µÇÂ¼ÏûÊ§£¬ÇëÖØĞÂµÇÂ½£¡');
-                    this.$route.router.go("/")
-                }
+//                var sessionid = sessionStorage.getItem("SESSIONID") ;
+//                if(sessionid=="" || sessionid==null){
+//                    layer.msg('ç™»å½•æ¶ˆå¤±ï¼Œè¯·é‡æ–°ç™»é™†ï¼');
+//                    this.$route.router.go("/")
+//                }
             }
         },
         ready () {

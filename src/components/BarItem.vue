@@ -14,7 +14,7 @@
 <style scroped>
     .tab-item{
         font-size: 16px;
-        padding: 5px 25px;
+        padding: 6px 25px;
         margin: 20px;
     }
     .tab-item:first-child{

@@ -4,33 +4,33 @@
 export default {
 
     /**
-     *  ÒıÈëÁË Layer Ui Àï£¬
-     *  ÀïÃæÓĞ µ¯³öÌáÊ¾¡¢µ¯³öÒ»¸öÒ³Ãæ²ã
-     *  ²é¿´ api : http://layer.layui.com/hello.html
-     *   ·ÖÒ³
-     *   ²é¿´ api http://laypage.layui.com/doc.html  Ê¹ÓÃ²é¿´ cloneStore.vue
+     *  å¼•å…¥äº† Layer Ui é‡Œï¼Œ
+     *  é‡Œé¢æœ‰ å¼¹å‡ºæç¤ºã€å¼¹å‡ºä¸€ä¸ªé¡µé¢å±‚
+     *  æŸ¥çœ‹ api : http://layer.layui.com/hello.html
+     *   åˆ†é¡µ
+     *   æŸ¥çœ‹ api http://laypage.layui.com/doc.html  ä½¿ç”¨æŸ¥çœ‹ cloneStore.vue
      */
 
     /**
-     *  loading Ä£°å
-     *  ÒıÈë util.js import {loader} from '../util/util'
-     *  mask.show() ÏÔÊ¾
-     *  mask.hide() Òş²Ø
+     *  loading æ¨¡æ¿
+     *  å¼•å…¥ util.js import {loader} from '../util/util'
+     *  mask.show() æ˜¾ç¤º
+     *  mask.hide() éšè—
      */
 
     /**
-     *  ±í¸ñ ºÍ·ÖÒ³
+     *  è¡¨æ ¼ å’Œåˆ†é¡µ
      * <mould-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize"  :arr_title="arr_title" :arr_items="arr_items"></mould-table>
-        <nav-pagination :cur="cur" :all="all" v-on:btn-click="listen"></nav-pagination>
-     stats:0 Ã»ÓĞ ²Ù×÷ °´Å¥£¬1 ÓĞ²Ù×÷°´Å¥
-     judge£ºtrue ÓĞ icon
-     idx:icon µÄÏÂ±í £¬judge ÊÇfalse µÄÊ±ºò£¬idx ÊÇ¿Õ
-     explain£ºÌáÊ¾ÄÚÈİ
-     pagesize£ºÕ¹Ê¾¶àÉÙÌõ
-     arr_title£ºtable ±êÌâ
-     arr_items ±í¸ñÄÚÈİ£¬±í¸ñcopy Ä£°åµ½×Ô¼ºµÄÄ£¿éÏÂ£¬tbody ²¿·ÖÖØĞ´£¬
-     cur:µ±Ç°Ò³
-     all:×ÜÊı
+     <nav-pagination :cur="cur" :all="all" v-on:btn-click="listen"></nav-pagination>
+     stats:0 æ²¡æœ‰ æ“ä½œ æŒ‰é’®ï¼Œ1 æœ‰æ“ä½œæŒ‰é’®
+     judgeï¼štrue æœ‰ icon
+     idx:icon çš„ä¸‹è¡¨ ï¼Œjudge æ˜¯false çš„æ—¶å€™ï¼Œidx æ˜¯ç©º
+     explainï¼šæç¤ºå†…å®¹
+     pagesizeï¼šå±•ç¤ºå¤šå°‘æ¡
+     arr_titleï¼štable æ ‡é¢˜
+     arr_items è¡¨æ ¼å†…å®¹ï¼Œè¡¨æ ¼copy æ¨¡æ¿åˆ°è‡ªå·±çš„æ¨¡å—ä¸‹ï¼Œtbody éƒ¨åˆ†é‡å†™ï¼Œ
+     cur:å½“å‰é¡µ
+     all:æ€»æ•°
      */
 
     //API_BASE:"https://www.woodche.com/YchLrestServer/api",
