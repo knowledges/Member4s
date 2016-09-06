@@ -57,7 +57,7 @@
                 <td>{{item.statue}}</td>
                 <td v-if="stats>0">
                     <a v-on:click="update(item)">修改</a>
-                    <a>历史</a>
+                    <a v-link="{path:'/u/active/thisShop/1'}">历史</a>
                     <a v-on:click="del(item)">删除</a>
                 </td>
             </tr>

@@ -115,6 +115,23 @@ export  default function (router) {
                         },
                     }
                 },
+                '/active/thisShop/*any':{
+                    component (resolve) {
+                        require(['./components/active/history'], resolve)
+                    },
+                    subRoutes:{
+                        '/':{
+                            component (resolve) {
+                                require(['./components/active/historyarray'], resolve)
+                            }
+                        },
+                        '/info':{
+                            component (resolve) {
+                                require(['./components/active/historyarray'], resolve)
+                            }
+                        }
+                    }
+                },
                 '/message':{
                     component (resolve) {
                         require(['./views/message'], resolve)
