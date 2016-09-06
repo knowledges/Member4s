@@ -63,7 +63,12 @@ export  default function (router) {
                             component (resolve) {
                                 require(['./components/order/completed'], resolve)
                             }
-                        }
+                        },
+                        '/orderDetail':{
+                            component (resolve) {
+                                require(['./components/order/orderDetail'], resolve)
+                            }
+                        },
                     }
                 },
                 '/manage':{
@@ -190,7 +195,7 @@ export  default function (router) {
                             }
                         },
                     }
-                },
+                }
             }
         },
     });

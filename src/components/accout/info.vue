@@ -71,6 +71,7 @@
 
 <script>
     import $ from 'jquery'
+    import manageValidate from './../../util/util'
     export default{
         data(){
             return{

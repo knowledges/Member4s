@@ -1,0 +1,22 @@
+{
+  "name": "titles-name",
+  "version": "0.0.1",
+  "data": [
+    {
+      "name": "时间",
+      "width":""
+    },
+    {
+      "name": "行为",
+      "width":""
+    },
+    {
+      "name": "积分",
+      "width":""
+    },
+    {
+      "name": "备注",
+      "width":""
+    }
+  ]
+}

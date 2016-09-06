@@ -10,7 +10,7 @@ import $ from 'jquery'
       return regex.test(val) ? true : false;
     },
     isUser:function(val){
-      var regex = /^[\u4e00-\u9fa5\w]{6,16}$/; //用户名可以匹配中文下划线数字字符6到16位
+      var regex = /^[\u4e00-\u9fa5\w\d]{3,10}$/; //用户名可以匹配中文下划线数字字符6到16位
       return regex.test(val) ? true : false;
     },
     isMail:function(val){
@@ -18,7 +18,7 @@ import $ from 'jquery'
       return regex.test(val) ? true : false;
     },
     isUserPwd:function(val){
-      var regex = /^\w{6,12}$/;//用户名只能是字母字符数组下划线6到16位
+      var regex = /^\w{6,16}$/;//用户名只能是字母字符数组下划线6到16位
       return regex.test(val) ? true : false;
     }
   }

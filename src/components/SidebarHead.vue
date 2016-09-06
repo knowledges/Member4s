@@ -5,22 +5,40 @@
                 <div class="facePic">
                     <div class="productImg">
                         <a href="http://www.gouchehui.com/member.php/MemberGeneral/n_uc_base_info_pic.html">
-                            <img src="http://www.gouchehui.com/Public/Home/images/headimg.png">
+                            <img v-bind:src="SESSIONID.head_url">
                         </a>
                     </div>
                 </div>
                 <div class="GB_innerwrap">
-                    <div class="nameBox"><span class="name">15952592727</span><span
+                    <div class="nameBox"><span class="name">{{SESSIONID.user_name}}</span><span
                             class="lv">V<i>2</i></span></div>
                     <div class="G_tc jifen">
-                        <a href="#">车币<span class="s">28</span>个</a>
-                        <a href="#">积分<span class="s">0</span></a>
+                        <a href="javascript:;;">车币<span class="s">{{SESSIONID.nick!=""?SESSIONID.nick:0}}</span>个</a>
+                        <a href="javascript:;;">积分<span class="s">{{SESSIONID.total_jifen}}</span></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+<script>
+    export default{
+        ready(){
+//            var sessionid = sessionStorage.getItem("SESSIONID") ;
+//            if(sessionid=="" || sessionid==null){
+//                layer.msg('登录消失，请重新登陆！');
+//                this.$route.router.go("/")
+//            }
+//            this.SESSIONID = JSON.parse(sessionid);
+        },
+        data(){
+            return {
+                SESSIONID:{}
+            }
+        }
+    }
+</script>
+
 
 <style scoped>
     .uc_leftmod_myinfo {

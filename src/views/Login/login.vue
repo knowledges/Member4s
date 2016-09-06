@@ -97,10 +97,14 @@
 </template>
 
 <script>
-    import config from '../../config'
+
     import $ from 'jquery'
+    import config from './../../config'
     export default {
         route:{
+        },
+        ready(){
+            debugger;
         },
         data(){
             return {
@@ -112,11 +116,12 @@
             loginClk(){
                 var that = this;
                 var ii = layer.load();
-//              var url = config.API_BASE+"/login/auth/4s/web";
+                console.log("成功："+config.API_BASE);
+//                var url = config.API_BASE+"/login/auth/4s/web";
                 var url = " http://192.168.13.111/YchLrestServer/api/login/auth/4s/web";
                 var param = {};
-                    param.username = that.username;
-                    param.password = that.password;
+                param.username = that.username;
+                param.password = that.password;
 
                 if(param.username == ""){
                     layer.msg('手机号不能为空');

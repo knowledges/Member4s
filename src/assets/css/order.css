@@ -1,0 +1,1135 @@
+.C_page{
+    background: #f7f7f7;
+    padding-bottom: 50px;
+}
+.c999 {
+    color: #999;
+}
+.w290{
+    width: 290px;
+}
+
+.w204{
+    width: 204px;
+}
+
+/*us- position*/
+
+.US_position{
+    height: 54px;
+    line-height: 50px;
+}
+
+
+/* orderbox */
+
+.orderbox .orderwrap{
+    padding: 32px;
+    background-color: #fff;
+    border: 1px solid #e4e4e4;
+}
+
+.step_arraw {
+    width: 100%;
+    height: 48px;
+    line-height: 48px;
+    overflow: hidden;
+}
+
+.step_arraw li{
+    float: left;
+}
+.step_arraw li a{
+    position: relative;
+    display: block;
+    padding: 0px 15px;
+    font-size: 16px;
+    text-align: center;
+    color:#fff;
+}
+
+.step_arraw .first_child{
+    width: 530px;
+}
+
+.step_arraw .bg_y{
+    background-color: #fa8c35;
+}
+
+.step_arraw .bg_g{
+    background-color: #bbb;
+}
+
+.step_arraw .last_child{
+    width: 603px;
+}
+
+
+.step_arraw li a:hover{
+    text-decoration: none;
+}
+
+.step_arraw .first_child a:after{
+    content: "";
+    position: absolute;
+    top: -5px;
+    right: -23px;
+    width: 48px;
+    height: 48px;
+    transform: scale(0.707) rotate(45deg);
+    -ms-transform: scale(0.707) rotate(45deg);
+    -moz-transform: scale(0.707) rotate(45deg);
+    -webkit-transform: scale(0.707) rotate(45deg);
+    z-index: 1;
+    background: #fa8c35;
+    border-radius: 0 5px 0 50px;
+    border-top: 10px solid #FFF;
+    border-right: 10px solid #FFF;
+    box-sizing: content-box;
+}
+
+.orderinfobox {
+    overflow: hidden;
+}
+
+.orderwrap .title{
+    height: 33px;
+    line-height: 33px;
+    padding: 14px 0;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #dfdede;
+}
+
+.orderwrap .title .price{
+    display: inline-block;
+    float: right;
+}
+
+.orderwrap .title .price span{
+    color: #e8454a;
+}
+
+.orderwrap .title h3{
+    display: inline-block;
+    padding:0 5px 14px;
+    border-bottom: 1px solid #fa8c35;
+}
+.orderwrap .bd{
+    color:#666;
+    font-size: 14px;
+}
+.orderwrap .bd p{
+    margin-bottom: 20px;
+}
+.orderwrap .bd .t{
+    display: inline-block;
+    width:72px;
+    margin-right: 10px;
+}
+.orderwrap .bd .s{
+    color:#ee060b;
+}
+.orderwrap .title span{
+    float: right;
+    color: #fa8c35;
+    font-size: 14px;
+}
+
+.orderinfobox table{
+    margin-bottom: 0;
+}
+
+.grid_bundle .car_pic img{ width:100%; }
+
+.clientinfobox dl{
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.clientinfobox dl dt{
+    width: 122px;
+    display: block;
+    float: left;
+    font-size: 14px;
+    line-height: 33px;
+    text-align: right;
+    color: #676767;
+}
+.clientinfobox dl dd{
+    margin-left: 140px;
+    overflow: hidden;
+}
+.clientinfobox dl dd .tips .G_wrong{
+    text-align: left;
+}
+.clientinfobox dl dd .ui_input_text{
+    width: 370px;
+    height: 35px;
+}
+
+.ui_input_text input{
+    display: inline-block;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #CFCFCF;
+    vertical-align: middle;
+    padding: 5px 8px;
+    line-height: 1.5;
+    font-size: 14px;
+    outline: 0;
+    width: 351px;
+    float: left;
+}
+
+.clientinfobox dl dd .ui_input_text i{
+    display: inline-block;
+    width: 30px;
+    height: 26px;
+    background: url("../img/ico_warn.png");
+    background-repeat: no-repeat;
+    background-position: -119px -52px;
+    margin: 3px 17px;
+}
+
+/*uploadbox*/
+
+.uploadbox{
+    overflow:hidden;
+}
+
+.uploadbox .box{
+    height: 206px;
+    padding-bottom: 30px;
+}
+
+.uploadbox .filebox{
+    float: left;
+    width: 242px;
+    margin-right: 50px;
+}
+
+.uploadbox .imgbox{
+    display: inline-block;
+    width: 238px;
+    height: 141px;
+    line-height: 141px;
+    margin: 2px;
+    text-align: center;
+	overflow:hidden
+}
+
+.uploadbox .imgbox img{
+    vertical-align: middle;
+	width:100%;
+}
+
+.uploadbox .filebox .ui_button_primary{
+    display: block;
+    width: 242px;
+    height: 40px;
+    line-height: 40px;
+    background: #fa8c35;
+    text-align: center;
+    color: #fff;
+    border: none;
+	cursor:pointer;
+    position: relative;
+}
+.uploadbox .filebox .ui_button_primary u {
+    display: inline-block;
+    letter-spacing: 2px;
+    color: #f7f7f7;
+	text-decoration: none!important;
+}
+.uploadbox .filebox .ui_button_primary input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 241px;
+    height: 41px;
+    overflow: hidden;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.uploadbox .example{
+    float:left;
+}
+
+.uploadbox .example span{
+    display: inline-block;
+    float: left;
+}
+
+.uploadbox .example img{
+    display: inline-block;
+}
+
+.choosebox ul{
+    height: 40px;
+}
+
+.choosebox ul li{
+    margin-right: 15px;
+    height: 36px;
+    width: 100px;
+    line-height: 36px;
+    float: left;
+    text-align: center;
+    border: 1px solid #b8b7bd;
+    color: #000;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+}
+.choosebox ul .disabled{
+    color: #ddd;
+    border: 1px solid #BDBDBD;
+    cursor: default;
+}
+.choosebox ul li i{
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 12px;
+    overflow: hidden;
+    text-indent: -99em;
+    /*background: url(../images/common/ico_warn.png) no-repeat -90px -64px;*/
+}
+.choosebox ul .active{
+    background-color: #fa8c35;
+    color: #fff;
+    border-color: #fa8c35;
+}
+.choosebox ul .active i{
+    display: block;
+}
+.packagesbox{
+    overflow: hidden;
+}
+
+.packagesbox .onepackage{width: 100%;}
+
+.packagesbox ul{
+    width: 1210px;
+    height: auto;
+    overflow: hidden;
+    margin-left: -40px;
+}
+
+.packagesbox ul i{
+    display: block;
+    float: left;
+    width: 30px;
+    height: 193px;
+    line-height: 110px;
+    font-size: 40px;
+    font-style: normal;
+    color: #888;
+}
+
+.packagesbox ul li{
+    float: left;
+    width: 200px;
+    margin-left: 17px;
+}
+
+.packagesbox ul li img{
+    display:block;
+    height: 132px;
+    margin: 0 auto;
+}
+.packagesbox ul li span{
+    display: block;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.invoicebox {
+    overflow: hidden;
+}
+
+.depositbox{
+    height: 40px;
+    padding: 55px 0 15px;
+}
+
+.deposit{
+    height: 40px;
+    line-height: 40px;
+    margin-right: 20px;
+}
+
+.deposit span{
+    color: #ee060b;
+}
+
+.depositbox .submit{
+    display: inline-block;
+    width: 178px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 3px;
+    float: right;
+    font-size: 20px;
+}
+
+/*order2*/
+.promptbox{
+    padding: 25px 0;
+}
+.promptbox p{
+    height: 35px;
+    line-height: 35px;
+}
+
+
+.paybox{
+    display: inline-block;
+    position: relative;
+    margin-left: 20px;
+    padding: 15px 0;
+}
+
+.paybox input{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin-top: -6px;
+}
+
+.paybox label{
+    display: inline-block;
+    margin-left: 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    position: relative;
+}
+.paybox .selected{
+    border:2px solid #f69006;
+}
+.paybox .selected i{
+    display: block;
+    width:33px;
+    height:33px;
+    position: absolute;
+    right:0;
+    top:0;
+    /*background:url(../img/icon-selected.png) no-repeat 0 0;*/
+}
+.bankpaybox{
+    width: 100%;
+}
+
+.paystylebox{
+    width: 1155px;
+    margin-left: -20px;
+    overflow: hidden;
+}
+
+.pay{
+    height: 40px;
+    margin: 10px 0;
+}
+
+.pay input{
+    width: 260px;
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+
+.tableCheckbar td{padding:15px 0;color:#999;}
+.tableCheckbar td .realPay {
+    color: #C00;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: tahoma;
+}
+.tableCheckbar td .f4_b{
+    color: #404040;
+    font-family: arial;
+}
+
+.onTheRoadDetailed{
+    width: 100%;
+    background: #fff;
+}
+.damageInsuranceSlt{
+    margin-left: 13px;
+    height: 25px;
+    line-height: 25px;
+}
+.onTheRoadDetailed table.calcu_body{
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 22px;
+    border: 0;
+}
+.onTheRoadDetailed i.icon-up-arrow{
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ADADAD;
+    border-left: none;
+    border-bottom: none;
+    position: absolute;
+    left: 50%;
+    top: -9px;
+    background: #fff;
+    margin-left: -9px;
+    transform: rotate(-45deg);
+}
+.calcu_body tr td{
+    width: 50%;
+    border: 1px solid #ADADAD;
+    height: 42px;
+    text-align: left;
+    padding: 2px 0 2px 10px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+.calcu_body .gch_price dt{
+    margin-top: 0
+}
+.calcu_body .gch_price dd{
+    font-size: 18px;
+    color: #d60000;
+    margin-left: 10px;
+    font-family: Arial,Helvetica,sans-serif;
+}
+.calcu_body .gch_price dd .yuan{
+    font-size: 14px;
+    font-style: normal;
+    color: #464646;
+    margin-left: 6px;
+}
+.calcu_body .title h2{
+    text-align: center;
+    color: #232323;
+    font-size: 18px;
+}
+
+.calcu_body .tit{
+    background-color: #fafafa;
+}
+.calcu_body dl{
+    height: 50px;
+    line-height: 50px;
+}
+.calcu_body dl dt{float:left;    width: 90px;}
+.calcu_body dl dd{
+    float:left;
+}
+.calcu_body .explain{
+    font-size: 12px;
+    color: #666666;
+    padding-right: 5px;
+}
+.disabled {
+    background: #ececec;
+}
+.usable {
+    background: #fff;
+}
+
+.calcu_body input{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-right: 8px;
+}
+
+.calcu_body .usable,.calcu_body .disabled {
+    padding-left: 20px;
+    width: 120px;
+    height: 26px;
+    line-height: 26px;
+    border: 1px solid #dfdfdf;
+    margin: 0px;
+    margin-right: 8px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.onTheRoadDetailed .all_price{
+    border: 1px solid #ADADAD;
+    border-top: none;
+    text-align: center;
+    padding: 10px;
+    background: #E8E8E8;
+}
+.onTheRoadDetailed .all_price .number{
+    font-size: 28px;
+    color: #C40000;
+    margin: 0 5px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: bold;
+}
+.risk {
+    display: inline-block;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+}
+.risk i{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    /*background: url("../img/bg_index_01.png") no-repeat -6px -30px;*/
+    margin-top: -7px;
+}
+.open .risk i{
+    background-position: -6px -75px;
+}
+.close {
+    background-position: -5px -24px;
+}
+
+.calcu_body tr .money{text-align: center}
+
+.calcu_body .defTip {
+    color: #929292;
+}
+.ewm-box{
+    text-align: center;
+    padding-top: 25px;
+}
+.ewm-box span{
+    display: inline-block;
+    margin: 0 56px;
+}
+
+.order_table .car_pic{
+    width: 280px;
+    height: 217px;
+    margin: 0 auto;
+    border: 1px solid #E8E8E8;
+    position: relative;
+    overflow: hidden;
+}
+.order_table .car_pic .loading{
+    display: block;
+    width:16px;
+    height: 16px;
+    /*background: url(../images/common/5-121204193R7.gif) no-repeat 0 0;*/
+    position: absolute;
+    left: 50%;
+    top:50%;
+    margin: -8px 0 0 -8px;
+}
+.order_table .car_pic img{
+    width: 100%;
+}
+
+/*新加的样式*/
+.headwrap{
+	width: 100%;
+	box-shadow: 0 5px 5px #f5f5f5;
+	overflow: hidden;
+}
+.header{
+	width: 1226px;
+	margin: 0 auto 18px;
+	padding-top: 18px;
+	line-height: 60px;
+	overflow: hidden;
+}
+.header h1 img{
+	vertical-align: middle;
+}
+.header .header-link li{
+	float: left;
+	color: #999999;
+	font-size: 14px;
+}
+.header .header-link li a{
+	color: #999999;
+	float: left;
+}
+.header .header-link li b{
+	margin: 0 18px;
+	float: left;
+    font-weight: normal;
+    font-size: 12px;
+    color: #cccccc;
+}
+.C_page{
+	background: #fff;
+}
+.order-title{
+	line-height: 36px;
+	color: #666666;
+	margin-left: 10px;
+	padding-top: 15px;
+}
+.order-stit{
+	font-weight: bold;
+	color: #333333;
+	font-family: simsun;
+}
+.order-bd{
+	padding: 15px;
+	border: 1px solid #e6e6e6;
+}
+.order-stit{
+	margin-bottom: 15px;
+	margin-left: 13px;
+}
+.flowstep-tip{
+	margin: 0 20px 25px;
+}
+.order-line{
+	height: 0;
+	width: 100%;
+	border-bottom: 1px solid #e6e6e6;
+	margin-bottom: 15px;
+}
+.ewm-box span img{
+	display: block;
+	vertical-align: top;
+	margin: 0 auto;
+}
+.ewm-box span i{
+	margin: 12px 0 60px;
+	font-style: normal;
+	color: #333333;
+	line-height: 30px;
+	display: block;
+}
+.flowstep-tip-gift{
+	margin-bottom: 30px;
+	margin-left: 390px;
+	position: relative;
+	overflow: hidden;
+}
+.flowstep-tip-gift .gift1{
+	float: left;
+	display: inline-block;
+	margin-right: 15px;
+	width: 160px;
+	/*background: url(../images/order_gift_01.png) no-repeat*/
+}
+.flowstep-tip-gift .gift1 img{
+	vertical-align: top;
+}
+.flowstep-tip-gift .gift2{
+	display: inline-block;
+	float: left;
+	line-height: 24px;
+	color: #666666;
+	margin-top: 72px;
+}
+.flowstep-tip-gift .gift2 a{
+	margin-left: 10px;
+}
+.flowstep-tip p.order-p1{
+	margin-bottom: 0;
+}
+.flowstep-tip p.order-p1 a{
+	margin-left: 18px;
+}
+.order-list-info{
+    text-align: center;
+}
+.order-list-info dt{
+	line-height: 70px;
+	color: #fff;
+}
+.order-list-info dt span{
+	vertical-align: bottom;
+}
+.order-list-info dd{
+	line-height: 28px;
+}
+
+.orderwrap .title h3{
+	display: inline-block;
+	font-weight: bold;
+	padding: 0 5px;	
+	border-bottom: none;
+}
+.orderwrap .title {
+    height: 33px;
+    line-height: 33px;
+    padding: 14px 0 0;
+    margin-bottom: 20px;
+    border-bottom: none;
+    border-top: 1px solid #dfdede;
+}
+.packagesbox ul {
+    width: 1125px;
+    height: auto;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+}
+.packagesbox ul li {
+    display: inline-block;
+    zoom: 1;
+    display: inline;
+    width: 168px;
+    margin-left: 0; 
+}
+.packagesbox ul i {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 193px;
+    line-height: 110px;
+    font-size: 40px;
+    font-style: normal;
+    color: #888;
+    margin: 0 20px;
+}
+.packagesbox ul li dt{
+	width: 166px;
+	height: 126px;
+	border: 1px solid #e6e6e6;
+	margin: 0 auto;
+}
+.packagesbox ul li dd{
+	line-height: 54px;
+	color: #666666;
+	text-align: center;
+}
+.orderwrap .order-span span{
+    color: #fa8c35;
+    font-size: 14px;
+    line-height: 30px;
+    margin-bottom: 15px;
+    display: block;
+}
+.packagesbox ul li dt img{
+	width: 166px;
+	height: 126px;
+	vertical-align: top;
+}
+.invoicebox {
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+.invoicebox p{
+	text-indent: 2em;
+}
+
+.invoicebox .discou{
+	padding-top: 20px;
+	margin: 0 20px;
+	border: 1px solid #e6e6e6;
+	overflow: hidden;
+}
+.invoicebox .discou ul{
+	margin-left: 24px;
+	overflow: hidden;
+}
+
+.invoicebox .discou li{
+    float: left;
+	width: 156px;
+    height: 96px;
+	margin-right: 22px;
+	margin-bottom: 20px;
+	position: relative;
+	cursor: pointer;
+    border:2px solid #fff;
+    /*background: #fff url(../images/bg-coupon-normal.png) no-repeat center center;*/
+    text-align: center;
+    position: relative;
+}
+.invoicebox .discou li.hot{
+    /*background: #fff url(../images/bg-coupon-hot.png) no-repeat center center;*/
+}
+.invoicebox .discou li i{
+    display: none;
+    width: 20px;
+    height: 20px;
+    /*background: url(../images/defalut_bg.png) no-repeat;*/
+    position: absolute;
+    right: 1px;
+    bottom: -2px;
+}
+.invoicebox .discou .cur i{
+    display: block;
+}
+
+.invoicebox .discou li dt{
+    height: 68px;
+    line-height: 68px;
+    color: #fff;
+    border: 1px solid #ffbd5e;
+    border-bottom: none;
+}
+.invoicebox .discou li dd{
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+.invoicebox .discou li dt span{
+    vertical-align: bottom;
+}
+.invoicebox .discou .cur dt,.invoicebox .discou .cur dd{
+    border-width: 2px;
+    border-color: #fa8c35;
+}
+.invoicebox .discou .cur dt{
+    height: 67px;
+    line-height: 67px;
+}
+.invoicebox .discou .cur dd{
+    height: 27px;
+    line-height: 27px;
+}
+.invoicebox .discou p{
+	line-height: 36px;
+	background: #f5f5f5;
+	padding-left: 10px;
+	color: #999999;
+	text-indent: 0;
+}
+.invoicebox .discou p span{
+	color: #ee060b;
+	margin-left: 8px;
+}
+.invoicebox .discou p span i{
+	font-style: normal;
+}
+.invoicebox .discou li.active i{
+	width: 100%;
+	height: 100px;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	/*background: url(../images/order_gift_bg.png) center no-repeat;*/
+}
+.depositbox {
+    height: auto;
+    padding: 15px 0 0 0;
+    color: #666666;
+    overflow: hidden;
+}
+.depositbox .depMoney{
+	width: 300px;
+	text-align: right;
+	padding-right: 8px;
+} 
+.depositbox .submit {
+    display: inline-block;
+    width: 178px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 3px;
+    float: right;
+    font-size: 20px;
+    margin-top: 16px;
+    margin-right: 18px;
+}
+.depositbox .depMoney .view-contract{
+	padding-top: 15px;
+	margin-right: 15px;
+	clear: both;
+	overflow: hidden;
+}
+.depositbox .depMoney .view-contract .view-contract-btn{
+	color: #2194fe;
+}
+.paydetail{
+	/*width: 860px;*/
+	overflow: hidden;
+}
+.paydetail .title a{
+	width: 65px;
+	line-height: 30px;
+	text-align: center;
+	color: #fff;
+	background: #2194fe;
+	border-radius: 5px;
+	margin-top: 6px;
+	display: inline-block;
+}
+.paydetail .payCon{
+	margin-left: 90px;
+	overflow: hidden;
+}
+.paydetail .payCon .paytab{
+	width: 100%;
+	border: 1px solid #cfcfcf;
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+.paydetail .payCon .paytab,.paydetail .payCon .paytab tr,.paydetail .payCon .paytab td{
+	text-align: center;
+	color: #666666;
+}
+.paydetail .payCon .paytab .tabTr{
+	font-weight: bold;
+}
+.paydetail .payCon .paytab td{
+    line-height: 45px;
+    text-align: left;
+    text-indent: 4em;
+}
+.paydetail .payCon .paytab td i{
+    font-style: normal;
+    margin-right: 10px;
+    color: #f00;
+}
+.paydetail .payCon .paytab td .selRadio{
+    margin-left: 20px;
+}
+.paydetail .payCon .paytab td .selRadio label{
+    margin-right: 15px;
+    cursor: pointer;
+}
+.paydetail .payCon .paytab td .selRadio label input{
+    margin-right: 3px;
+}
+.paydetail .payCon .paytab td.tabSort{
+	background: #f9f9f9;
+}
+.paydetail .payCon .paytab .subtotal{
+	text-align: right;
+}
+.paydetail .payCon .paytab .subtotal span{
+	color: #ff6600;
+	margin-right: 25px;
+}
+.paydetail .payCon .paytab .subtotal span i{
+    font-style: normal;
+    font-size: 16px;
+    font-weight: normal;
+}
+.deposit i{
+	font-style: normal;
+	margin-left: 15px;
+	display: inline-block;
+}
+.deposit .spq1{
+	color: #666666;
+}
+
+/* 合同 */
+.order-contract{
+    padding: 20px;
+    height: 500px;
+    overflow-y: scroll;
+}
+.order-contract p{
+    font-size:16px;
+    margin-bottom: 15px;
+    margin-right: 30px;
+    overflow: hidden;
+}
+.order-contract p .tit{
+    float: left;
+}
+.order-contract h2{
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    margin: 20px 0 10px;
+}
+.order-contract td{
+    font-size:16px;
+}
+.order-contract .contract-title{
+    color: #333;
+    font-size: 32px;
+    padding: 10px 0;
+    text-align: center;
+}
+.order-contract .information .company, .order-contract .information  .consumer {
+    width: 50%;
+}
+
+.order-contract .information .company .bd,.order-contract .information .consumer .bd{
+    display: block;
+    margin-left: 50px;
+    border-bottom:1px solid #666;
+    text-indent:10px;
+    height: 22px;
+    line-height: 22px;
+}
+.order-contract .information .consumer .id-card{
+    width:215px;
+}
+
+.order-contract .matters .matter-mes table{
+    width:100%;
+}
+.order-contract .matters .matter-mes tr td{
+    padding: 10px;
+}
+.order-contract .other{
+    margin:60px auto;
+}
+.order-contract  table{
+    width:100%;
+}
+
+.order-contract table td{
+    text-align:center;
+    padding: 10px;
+}
+
+.order-contract .buycar .paym{
+    text-align:center;
+}
+.order-contract .carandpay .place s{
+    display:inline-block;
+    width: 50px;
+    border-bottom:1px solid #666;
+    text-decoration: none;
+    text-align: center;
+}
+.order-contract .carandpay .car-price p b{
+    display:inline-block;
+    width: 600px;
+    border-bottom:1px solid #666;
+    text-indent: 2em;
+}
+.order-contract .obligation .spec{
+    display:inline-block;
+    color:#000;
+    font-weight:bold;
+    border-bottom:1px solid #000;
+}
+.order-contract .footer{
+    margin-top:80px;
+}
+.order-contract .footer .company{
+    position: relative;
+    width: 50%;
+}
+.order-contract .footer .con-pic{
+    display: block;
+    width:170px;
+    height: 170px;
+    position:absolute;
+    right: 50%;
+    top:0;
+    /*background: url(../images/common/contract.png) no-repeat;*/
+    background-size: 100%;
+}
+.order-contract .footer .con-pic img{
+    width:170px;
+    height:170px;
+}

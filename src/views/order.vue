@@ -7,7 +7,6 @@
             <bar-item path="/u/order/liftCar" label="待提车"></bar-item>
             <bar-item path="/u/order/completed" label="已完成"></bar-item>
         </bar>
-
         <router-view></router-view>
     </div>
 </template>
@@ -26,4 +25,7 @@
         }
     }
 </script>
+<style scoped>
+
+</style>
 

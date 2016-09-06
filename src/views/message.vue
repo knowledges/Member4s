@@ -2,7 +2,7 @@
     <div>
         <bar class="nav nav-tabs clearfix">
             <bar-item path="/u/message/orders" label="订单"></bar-item>
-            <bar-item path="/u/message/messages" label="系统订单"></bar-item>
+            <bar-item path="/u/message/messages" label="系统消息"></bar-item>
         </bar>
         <router-view></router-view>
     </div>

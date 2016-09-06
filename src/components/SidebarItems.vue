@@ -9,12 +9,12 @@
                 class="ui_icon_18 icon-new-uc icon-new-uc-eye" :class="{ 'i_active_2': 2 === selected }"></i>报价管理</a><em></em></li>
         <li class=""><a v-link="{path:'/u/active',activeClass:'active'}" :class="{ 'active': 3 === selected }" v-on:click="eveClk(3)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-cheku" :class="{ 'i_active_3': 3 === selected }" ></i>活动车款</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/message',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-news"  :class="{ 'i_active_4': 4 === selected }"></i>消息通知</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/exchange',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-integral" :class="{ 'i_active_5': 5 === selected }"></i>积分兑换</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/accout',activeClass:'active'}" :class="{ 'active': 6 === selected }" v-on:click="eveClk(6)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_6': 6 === selected }"></i>账户管理</a><em></em></li>
+        <!--<li class=""><a v-link="{path:'/u/message',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-news"  :class="{ 'i_active_4': 4 === selected }"></i>消息通知</a><em></em></li>-->
+        <li class=""><a v-link="{path:'/u/exchange',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-integral" :class="{ 'i_active_4': 4 === selected }"></i>积分兑换</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/accout',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_5': 5 === selected }"></i>账户管理</a><em></em></li>
     </ul>
 </template>
 
