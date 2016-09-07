@@ -1,7 +1,7 @@
 <template>
     <div class="UC_main_r">
         <div class="U_info" role="新消息">
-            <div class="nav_title clearfix">
+            <div style="display: none;" class="nav_title clearfix">
                 <ul class="nav_title_left">
                     <li class="icon-new-uc icon-news"></li>
                     <li>新消息 <em>12</em> 条</li>
@@ -32,11 +32,11 @@
                     </div>
                 </ul>
                 <ul class="U_info_c_ul u_info_order clearfix">
-                    <li>新订单 <em  class="orange">8</em> </li>
+                    <li>已付定金<em  class="orange">8</em> </li>
                     <li>|</li>
-                    <li>已付定金 <em  class="orange">5</em> </li>
+                    <li>待提车 <em  class="orange">5</em> </li>
                     <li>|</li>
-                    <li>待提车 <em  class="orange">10</em></li>
+                    <li>出库中  <em  class="orange">10</em></li>
                 </ul>
             </div>
         </div>
@@ -134,8 +134,10 @@
                 <ul class="nav_title_left">
                     <li class="nav_title_li_border"></li>
                     <li><strong>积分兑换</strong></li>
-                    <li><a>前往兑换</a></li>
                 </ul>
+                <div class="nav_title_right">
+                    <a href="">前往兑换</a>
+                </div>
             </div>
             <div class="U_info_content">
                 <div class="carousel">

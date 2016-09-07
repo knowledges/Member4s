@@ -1,7 +1,7 @@
 <template>
    <div>
       <bar class="nav nav-tabs clearfix">
-         <bar-item path="/u/active/thisShop/"+any+"/info" v-on:path="path" label="历史"></bar-item>
+         <bar-item v-bind:path="'/u/active/thisShop/'+any+'/info'" label="历史"></bar-item>
       </bar>
       <router-view></router-view>
    </div>
@@ -11,18 +11,12 @@
    import Bar from './../Bar.vue'
    import BarItem from './../BarItem.vue'
    export default {
-      route:{
-         data({to,next}){
-            this.any = to.param.any;
-            this.path ="/u/active/thisShop/"+this.any+"/info";
-
-         }
+      ready(){
+         this.any = this.$route.params.any;
       },
-      ready(){},
       data(){
          return {
-            any:"",
-            path:""
+            any:""
          }
       },
       components:{
