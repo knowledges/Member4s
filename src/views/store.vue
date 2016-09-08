@@ -24,10 +24,10 @@
                     <div class="U_info_c_setting">
                         <a href="javascript:;;">常用信息设置 <i role="三角形" class="arrow-down"></i></a>
                         <ul class="U_info_c_ul_setting">
-                            <li><a href="">基本资料</a> </li>
-                            <li><a href="">地址管理</a></li>
-                            <li><a href="">投向管理</a></li>
-                            <li><a href="">修改密码</a></li>
+                            <li><a v-link="{path:'/u/accout'}">基本资料</a> </li>
+                            <li><a v-link="{path:'/u/accout/address'}">地址管理</a></li>
+                            <li><a v-link="{path:'/u/accout/head'}">头像管理</a></li>
+                            <li><a v-link="{path:'/u/accout/modify'}">修改密码</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -47,7 +47,7 @@
                     <li><strong>最新订单</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a href="">查看订单</a>
+                    <a v-link="/u/order">查看订单</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -84,7 +84,7 @@
                                 </td>
                                 <td>
                                     <p>已付定金</p>
-                                    <a v-link="" style="color:#48a6fc;">订单详情</a>
+                                    <!--<a v-link="" style="color:#48a6fc;">订单详情</a>-->
                                 </td>
                                 <td>
                                     2016-8-31
@@ -108,7 +108,7 @@
                     <li><strong>最新报价</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a href="">报价管理</a>
+                    <a v-link="{path:'/u/manage'}">报价管理</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -122,7 +122,7 @@
                     <li><strong>最新活动</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a href="">报价管理</a>
+                    <a v-link="{path:'/u/active'}">活动车款</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -136,7 +136,7 @@
                     <li><strong>积分兑换</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a href="">前往兑换</a>
+                    <a v-link="{path:'/u/exchange'}">前往兑换</a>
                 </div>
             </div>
             <div class="U_info_content">

@@ -53,6 +53,7 @@
 </template>
 <style>
     .introduce{
+        width:890px;
         margin:30px auto;
     }
     .introduce .orange-icon{

@@ -44,9 +44,9 @@ export  default function (router) {
                                 require(['./components/order/all'], resolve)
                             },
                         },
-                        '/nonPayment':{
+                        '/shipment':{
                             component (resolve) {
-                                require(['./components/order/nonPayment'], resolve)
+                                require(['./components/order/shipment'], resolve)
                             }
                         },
                         '/payment':{
@@ -63,12 +63,7 @@ export  default function (router) {
                             component (resolve) {
                                 require(['./components/order/completed'], resolve)
                             }
-                        },
-                        '/orderDetail':{
-                            component (resolve) {
-                                require(['./components/order/orderDetail'], resolve)
-                            }
-                        },
+                        }
                     }
                 },
                 '/manage':{

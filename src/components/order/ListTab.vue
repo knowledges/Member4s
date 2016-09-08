@@ -21,12 +21,10 @@
                         <td>
                             <dl class="clearfix">
                                 <dt>
-                                    <a v-link="{ path:'/u/order/orderDetail'}">
-                                    	<img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efc15b4c243.jpg" alt="雪佛兰 科鲁兹" width="120" height="80">
-                                    </a>
+                                	<img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efc15b4c243.jpg" alt="雪佛兰 科鲁兹" width="120" height="80">
                                 </dt>
                                 <dd>
-                                    <a v-link="{ path:'/u/order/orderDetail'}" class="orange">日产轩逸2016款 1.6XV CVT自豪版</a>
+                                    <span class="orange">日产轩逸2016款 1.6XV CVT自豪版</span>
                                     <p>外观：白色  内饰：黑色</p>
                                 </dd>
                             </dl>
@@ -39,7 +37,7 @@
                         </td>
                         <td>
                             <p>已付定金</p>
-                            <a v-link="{ path:'/u/order/orderDetail'}" style="color:#48a6fc;">订单详情</a>
+                            <!--<a v-link="{ path:'/u/order/orderDetail'}" style="color:#48a6fc;">订单详情</a>-->
                         </td>
                         <td>
                             2016-8-31
@@ -91,16 +89,15 @@
     line-height: 30px;
     margin-top: 20px;
 }
-.ordTab-tab table tbody tr td dl dd a{
+.ordTab-tab table tbody tr td dl dd span{
     line-height: normal;
 }
-.ordTab-tab table tbody tr td dl dd a.orange{
+.ordTab-tab table tbody tr td dl dd span.orange{
     color: #ff791f;
     width: 220px;
-}
-.ordTab-tab table tbody tr td a {
+    line-height: 20px;
     display: block;
-}	
+}
 .ordTab-tab table thead tr.thead-tr{
 	padding-left: 20px;
 	line-height: 30px;

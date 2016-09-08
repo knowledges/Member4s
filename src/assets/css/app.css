@@ -353,7 +353,6 @@ table {
   padding-top: 15px;
   padding-bottom: 15px;
   width: 295px;
-  min-height: 500px;
   border: 1px solid #e6e6e6;
   background: #fafafa;
 }
@@ -419,11 +418,8 @@ table {
 }
 .uc_main {
   width: 926px;
+  min-height: 650px;
   *float: left;
   border: 1px solid #e6e6e6;
   background: #FFF;
 }
-/*新改的样式*/
-.uc_main_wrapper{
-	position: relative;
-}	

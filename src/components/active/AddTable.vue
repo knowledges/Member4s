@@ -23,7 +23,7 @@
                     </div>
                 </th>
                 <th>
-                    优惠价/元
+                    特价/元
                 </th>
                 <th>
                     活动时间
@@ -41,26 +41,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in arr_items" v-if="$index<pagesize">
-                <td>{{item.id}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.color_A}}</td>
-                <td>{{item.color_B}}</td>
-                <td>{{item.price_A}}</td>
-                <td>{{item.price_B}}</td>
-                <td>
-                    <p>{{item.startTimer}}</p>
-                    <p>{{item.endTimer}}</p>
-                </td>
-                <td>{{item.stock}}</td>
-                <td>{{item.area}}</td>
-                <td>{{item.statue}}</td>
-                <td v-if="stats>0">
-                    <a v-on:click="update(item)">修改</a>
-                    <a v-link="{path:'/u/active/thisShop/1'}">历史</a>
-                    <a v-on:click="del(item)">删除</a>
-                </td>
-            </tr>
+            <!--<tr v-for="item in arr_items" v-if="$index<pagesize">-->
+                <tr>
+                    <td>A1</td>
+                    <td>日产轩逸2016款 1.6XV CVT自豪版</td>
+                    <td>白色</td>
+                    <td>黑色</td>
+                    <td>458500.00</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td v-if="stats>0">
+                        <a v-on:click="update(item)">添加</a>
+                        <a v-link="{path:'/u/active/thisShop/1'}">历史</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -289,20 +286,10 @@
             update(obj){
                 var info= layer.open({
                     type: 1,
-                    title: '活动详情修改',
+                    title: '活动详情添加',
                     skin: 'layui-layer-rim', //加上边框
                     area : ['750px' , '800px'],
                     content: $(".activeinfo")
-                });
-            },
-            del(obj){
-                layer.confirm('确定删除该活动吗？', {
-                    title:'删除活动',
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    layer.msg('删除成功', {icon: 1});
-                }, function(){
-                    layer.msg('取消操作');
                 });
             },
             selectarea(){
@@ -376,7 +363,6 @@
             },
             cityClk(obj,index,e,num){
                 if(num == 0){
-                    debugger;
                    obj.selected = true;
                    this.city_items_province.$set(index,{id:obj.id,name:obj.name,letter:obj.letter,city:obj.city,count:obj.count,selected:true});
                    this.city_items.$set(this._index-1,{id:obj.id,name:obj.name,letter:obj.letter,city:obj.city,selected:true,count:obj.count});
@@ -387,7 +373,6 @@
                         }
                     }
                 }else{
-                    debugger;
                     if(obj.selected == undefined || obj.selected == "undefined"){
                         obj.selected = true;
                         this.city_items_citys.$set(index,{id:obj.id,name:obj.name,selected:true});

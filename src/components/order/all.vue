@@ -4,11 +4,13 @@
 		<button class="G_f14">订单搜索</button>
 	</div>
     <div class="orderList">
-    	<div class="order-top">
-    		<list-top></list-top>
-    	</div>
-    	<div class="order-tab">
-    		<list-tab></list-tab>
+    	<div class="orderListCon">
+    		<div class="order-top">
+	    		<list-top></list-top>
+	    	</div>
+	    	<div class="order-tab">
+	    		<list-tab></list-tab>
+	    	</div>
     	</div>
     	<div id="page" style="text-align: center;"></div>
     </div>
@@ -53,7 +55,10 @@
 </script>
 <style>
 .orderList{
-	padding: 15px 20px;
+	padding: 15px 20px 20px;
+}
+.orderListCon{
+	margin-bottom: 20px;
 }
 #orderSearch{
 	width: 210px;
