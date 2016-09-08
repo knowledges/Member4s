@@ -157,8 +157,8 @@
                 <dt>已选区域：</dt>
                 <dd style="display: inline-block;width: 500px;height: 100%;">
                     <ul>
-                        <li class="selected" v-for="city in city_items | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i></i></li>
-                        <li class="selected" v-for="city in city_items.citys | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i></i></li>
+                        <!--<li class="selected" v-for="city in city_items | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i></i></li>-->
+                        <!--<li class="selected" v-for="city in city_items.citys | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i></i></li>-->
                     </ul>
                 </dd>
             </dl>
@@ -185,8 +185,16 @@
                 <dt></dt>
                 <dd style="width: 500px;height: 100%;" class="city_dd">
                     <ul>
-                        <li v-if="city_items_childs.name" v-on:click="cityClk(city_items_childs,0,$event)" :class="city_items_childs.selected==true?selected:''">{{city_items_childs.name}}</li>
-                        <li v-for="city in city_items_childs.city" v-on:click="cityClk(city,1,$event)" class="city_li" :class="{'selected':city.selected}">{{city.selected}}{{city.id}}{{city.name}}</li>
+                        <li v-for="province in city_items_province"
+                            v-on:click="cityClk(province,$index,$event,0)"
+                            :class="{'selected':province.selected}">
+                            {{province.name}}
+                        </li>
+                        <li v-for="city in city_items_citys"
+                            v-on:click="cityClk(city,$index,$event,1)"
+                            class="city_li" :class="{'selected':city.selected}">
+                            {{city.name}}
+                        </li>
                     </ul>
                 </dd>
             </dl>
@@ -268,6 +276,8 @@
                 },
                 city_items:[],
                 city_items_childs:[],
+                city_items_province:[],
+                city_items_citys:[],
                 citys:[]
             }
         },
@@ -360,42 +370,22 @@
 
                 layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
             },
-            cityClk(obj,idx,e){
-                if(idx ==0){
-                    if ($(".city_dd li").eq(0).attr("disabled") != undefined) {
-                        return;
-                    }
-                    obj.selected = true;
-                    this.items.citys.push({id: obj.id,name: obj.name,selected:true});
-
-
-//                    if($(".city_dd li").eq(0).attr("disabled")!=undefined){
-//                        return;
-//                    }
-//                    $(".city_dd li").eq(0).addClass("selected").attr("disabled",true);
-//                    $(".city_li").attr("disabled",true);
-//
-//                    this.items.citys.push({id: obj.id,name: obj.name});
-
+            cityClk(obj,index,e,num){
+                if(num == 0){
+                   this.city_items_province.$set(index,{id:obj.id,name:obj.name,selected:true})
                 }else{
-                    obj.selected = true;
-//                    debugger;
-//                    this.city_items.push({id: obj.id,name: obj.name,selected:true});
-//                    this.$set("city_items",this.city_items)
-//                    this.$dispatch("city_items");
-//                    var that = $(e.target);
-//                    if($(that).attr("disabled")!=undefined){
-//                        return;
-//                    }
-//                    $(that).addClass("selected");
-//                    this.items.citys.push({id: obj.id,name: obj.name});
+                    this.city_items_citys.$set(index,{id:obj.id,name:obj.name,selected:true})
                 }
+//                this.city_items_childs.$set(index,{id:obj.id,name:obj.name,selected:true})
             },
             selectedCitys(){
                 $(".city_dd li").eq(0).removeClass("selected").removeAttr("disabled");
                 $(".city_li").removeAttr("disabled");
+
                 var _idx = $("#selectedCitys option:selected").val();
-                this.city_items_childs= this.city_items[_idx-1];
+                this.city_items_province =[];
+                this.city_items_province.push( this.city_items[_idx-1] );
+                this.city_items_citys = this.city_items[_idx-1].city;
             },
             agree(){
 
