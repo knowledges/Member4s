@@ -4,7 +4,7 @@ import VueResource from 'vue-resource'
 import routerConfig from './router'
 // import pullToRefresh from './directives/pullToRefresh'
 // import infiniteScroll from './directives/infiniteScroll'
-// import * as filters from './filters'
+import * as filters from './filters'
 import app from './main'
 
 // Router
@@ -30,7 +30,7 @@ Vue.http.options.root = '/data/'
 // Vue.directive('infiniteScroll', infiniteScroll)
 
 // Filters
-// Vue.filter('date', filters.dateFilter)
+Vue.filter('date', filters.dateFilter)
 
 router.start(app, '#app')
 

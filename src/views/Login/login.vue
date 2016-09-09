@@ -104,7 +104,6 @@
         route:{
         },
         ready(){
-            debugger;
         },
         data(){
             return {
@@ -117,8 +116,8 @@
                 var that = this;
                 var ii = layer.load();
                 console.log("成功："+config.API_BASE);
-//                var url = config.API_BASE+"/login/auth/4s/web";
-                var url = " http://192.168.13.111/YchLrestServer/api/login/auth/4s/web";
+                var url = config.API_BASE+"/login/auth/4s/web";
+//                var url = " http://192.168.13.111/YchLrestServer/api/login/auth/4s/web";
                 var param = {};
                 param.username = that.username;
                 param.password = that.password;
@@ -143,8 +142,10 @@
                     if(response.code == 0){
                         layer.close(ii);
                         sessionStorage.setItem("SESSIONID",JSON.stringify(response.data));
+                        config.SESSIONID  = response.data.session.sessionid;
+                        config.USERID = response.data.id;
                         layer.msg('登录成功！');
-                        that.$route.router.go("/u")
+                        that.$route.router.go("/u");
                     }else if (response.code == -1){
                         layer.close(ii);
                         layer.msg(response.desc);

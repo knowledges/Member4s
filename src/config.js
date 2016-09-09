@@ -36,6 +36,7 @@ export default {
     //API_BASE:"https://www.woodche.com/YchLrestServer/api",
 
     API_BASE:"http://192.168.13.111/YchLrestServer/api",
-
+    // API_BASE:"http://192.168.13.250:3000/api",
     SESSIONID:"",
+    USERID:""
 }

@@ -47,7 +47,7 @@
                     <li><strong>最新订单</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="/u/order">查看订单</a>
+                    <a v-link="{path:'/u/order'}">查看订单</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -172,8 +172,8 @@
         route:{
             data({to}){
                 this.$http.get('TableTitle.json').then(function (response) {
-//                    var cToObj=response.data;
-                    var cToObj=eval("("+response.data+")");
+                    var cToObj=response.data;
+//                    var cToObj=eval("("+response.data+")");
                     this.$set("arr_title_offer",cToObj.data.array_0);
                     this.$set("arr_title_active",cToObj.data.array_1);
                 })
