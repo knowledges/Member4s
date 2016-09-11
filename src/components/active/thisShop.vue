@@ -33,7 +33,11 @@
     import $ from 'jquery'
     export default {
         ready(){
-            this.getSpecialList(0);
+            this.$http.get('task.json').then(function (response) {
+                var cToObj=eval("("+response.data+")");
+                this.$set("arr_items",cToObj.data);
+            });
+//            this.getSpecialList(0);
         },
         data(){
             return {
@@ -55,64 +59,64 @@
             ShopTable
         },
         methods:{
-            getSpecialList(status){
-                var arr = [];
-                if(status == 0){
-                    arr = [1,2,3,4,5,6];
-                }else{
-                    arr.push(status);
-                }
-                var ii = layer.load();
-                var that = this;
-                var url=  config.API_BASE +"/4s/special/list";
-                var query={};
-//                query.user_id =  config.USERID;
-                query.user_id =  "186";
-                query.status = arr;
-                query.pagenum = this.pagesize;
-                query.page = 1;
-//                query.createtime =dateFilter(new Date().getTime(),4);
-
-                var param = {query:query};
-                $.ajax({
-                    url:url,
-                    method:'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    data:JSON.stringify(param),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID);
-                    },
-                    success:function (response) {
-                        if(response.code == 0){
-                            that.$set("arr_items",response.data);
-
-                            if(response.data.length>that.pagesize){
-                                laypage({
-                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
-                                    pages: 100, //总页数
-                                    skip: true, //是否开启跳页
-                                    skin: '#ff9205;',
-                                    groups: 7, //连续显示分页数
-                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
-                                    last: 100, //将尾页显示为总页数。若不显示，设置false即可
-                                    jump: function(obj, first){
-                                        //回调
-                                        //得到了当前页，用于向服务端请求对应数据
-                                        var curr = obj.curr;
-                                    }
-                                });
-                            }
-                        }
-                        layer.close(ii);
-                    },error:function (fail) {
-                        if(fail.status == "401"){
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
-                    }
-                });
-            },
+//            getSpecialList(status){
+//                var arr = [];
+//                if(status == 0){
+//                    arr = [1,2,3,4,5,6];
+//                }else{
+//                    arr.push(status);
+//                }
+//                var ii = layer.load();
+//                var that = this;
+//                var url=  config.API_BASE +"/4s/special/list";
+//                var query={};
+////                query.user_id =  config.USERID;
+//                query.user_id =  "186";
+//                query.status = arr;
+//                query.pagenum = this.pagesize;
+//                query.page = 1;
+////                query.createtime =dateFilter(new Date().getTime(),4);
+//
+//                var param = {query:query};
+//                $.ajax({
+//                    url:url,
+//                    method:'POST',
+//                    contentType: 'application/json; charset=utf-8',
+//                    dataType: 'json',
+//                    data:JSON.stringify(param),
+//                    beforeSend:function (request) {
+//                        request.setRequestHeader("sessionid",config.SESSIONID);
+//                    },
+//                    success:function (response) {
+//                        if(response.code == 0){
+//                            that.$set("arr_items",response.data);
+//
+//                            if(response.data.length>that.pagesize){
+//                                laypage({
+//                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+//                                    pages: 100, //总页数
+//                                    skip: true, //是否开启跳页
+//                                    skin: '#ff9205;',
+//                                    groups: 7, //连续显示分页数
+//                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
+//                                    last: 100, //将尾页显示为总页数。若不显示，设置false即可
+//                                    jump: function(obj, first){
+//                                        //回调
+//                                        //得到了当前页，用于向服务端请求对应数据
+//                                        var curr = obj.curr;
+//                                    }
+//                                });
+//                            }
+//                        }
+//                        layer.close(ii);
+//                    },error:function (fail) {
+//                        if(fail.status == "401"){
+//                            layer.msg('登录失效，请重新登陆！');
+//                            that.$route.router.go("/login");
+//                        }
+//                    }
+//                });
+//            },
             statusChange(){
                 this.getSpecialList(this.selectedKey);
             }
