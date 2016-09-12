@@ -53,11 +53,11 @@
                 }
             });
 
-//            this.$http.get('task.json').then(function (response) {
-//                var cToObj=eval("("+response.data+")");
-//                this.$set("arr_items",cToObj.data);
-//            });
-            this.getSpecialList(0,1);
+            this.$http.get('task.json').then(function (response) {
+                var cToObj=eval("("+response.data+")");
+                this.$set("arr_items",cToObj.data);
+            });
+//            this.getSpecialList(0,1);
 
         },
         data(){
@@ -157,7 +157,7 @@
                 });
             },
             statusChange(){
-                this.getSpecialList(this.selectedKey,1);
+//                this.getSpecialList(this.selectedKey,1);
             }
         }
     }

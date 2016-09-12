@@ -457,7 +457,7 @@
 
                     }
                     obj.selected = true;
-                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true});
+                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
 
                 }else{
 
@@ -490,9 +490,15 @@
                         if(this.city_items[i].selected == true){
                             total =total-1;
                         }
+                    }
+
+                    if(this.city_items[0].insert == undefined){
+
+                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
 
                     }
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:total});
+
+                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:total,"insert":true});
                 }
             },
             removeCity(obj){
@@ -504,7 +510,7 @@
                         obj.total = this.provincecity[obj.city].length -1;
                         for(var i = 0; i<this.provincecity[obj.city].length;i++){
                             if(i==0){
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined'})
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
                             }else{
                                 this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
                             }
