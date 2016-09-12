@@ -24,12 +24,11 @@
 <script>
     export default{
         ready(){
-//            var sessionid = sessionStorage.getItem("SESSIONID") ;
+            this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
 //            if(sessionid=="" || sessionid==null){
 //                layer.msg('登录消失，请重新登陆！');
 //                this.$route.router.go("/")
 //            }
-//            this.SESSIONID = JSON.parse(sessionid);
         },
         data(){
             return {

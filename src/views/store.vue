@@ -10,13 +10,13 @@
             </div>
             <div class="U_info_content">
                 <ul class="U_info_c_ul clearfix">
-                    <li><h3>喵喵店主 <em>，欢迎您！</em></h3></li>
+                    <li><h3>{{SESSIONID.user_name}} <em>，欢迎您！</em></h3></li>
                     <li>
                         <i class="font-icon">初</i>
                         初级会员
                     </li>
                     <li>
-                        积分：<em class="orange">2000</em>
+                        积分：<em class="orange">{{SESSIONID.total_jifen}}</em>
                     </li>
                     <li>
                         <a href=""  class="orange">积分规则>></a>
@@ -171,6 +171,7 @@
     export default {
         route:{
             data({to}){
+                this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
                 this.$http.get('TableTitle.json').then(function (response) {
                     var cToObj=response.data;
 //                    var cToObj=eval("("+response.data+")");
@@ -195,6 +196,7 @@
                 c_width:'',
                 cur:0,
                 c_sum:2,
+                SESSIONID:{}
             }
         },
         components:{

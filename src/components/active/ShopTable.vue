@@ -65,7 +65,7 @@
                 <td v-if="stats>0">
                     <a v-on:click="update(item)">修改</a>
                     <a v-link="{path:'/u/active/thisShop/1'}">历史</a>
-                    <a v-on:click="del(item)">删除</a>
+                    <a v-on:click="del(item,$index)">删除</a>
                 </td>
             </tr>
             <tr  v-if="arr_items.length<=0">
@@ -339,9 +339,8 @@
                     content: $(".activeinfo")
                 });
             },
-            del(obj){
+            del(obj,_index){
                 var that = this;
-                debugger;
                 layer.confirm('确定删除该活动吗？', {
                     title:'删除活动',
                     btn: ['确定','取消'] //按钮
@@ -357,7 +356,9 @@
                             request.setRequestHeader("sessionid",config.SESSIONID);
                         },
                         success:function (request) {
-                            debugger;
+                            /*TODO 缺少一个交互*/
+                            that.arr_items.$remove(obj);
+
                             if(request.code == 0){
                                 layer.msg('删除成功', {icon: 1});
                             }

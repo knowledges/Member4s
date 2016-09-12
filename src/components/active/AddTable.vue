@@ -41,13 +41,12 @@
             </tr>
             </thead>
             <tbody>
-            <!--<tr v-for="item in arr_items" v-if="$index<pagesize">-->
-                <tr>
-                    <td>A1</td>
-                    <td>日产轩逸2016款 1.6XV CVT自豪版</td>
-                    <td>白色</td>
-                    <td>黑色</td>
-                    <td>458500.00</td>
+                <tr v-for="item in arr_items">
+                    <td>{{item.carModelName}}</td>
+                    <td>{{item.carName}}</td>
+                    <td>{{item.exteriorColorName}}</td>
+                    <td>{{item.interiorColorName}}</td>
+                    <td>{{item.price}}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -65,21 +64,21 @@
         <div class="layer_1">
             <dl class="clearfix">
                 <dt>品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
-                <dd>奥迪</dd>
+                <dd v-text="">奥迪</dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
-                <dd>A1</dd>
+                <dd v-text=""></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
-                <dd>2016款 30 FSL 舒适型</dd>
+                <dd v-text=""></dd>
             </dl>
             <dl class="clearfix">
                 <dt>外观颜色：</dt>
-                <dd>黑色</dd>
+                <dd v-text=""></dd>
                 <dt>内饰颜色：</dt>
-                <dd>灰色</dd>
+                <dd v-text=""></dd>
             </dl>
             <dl class="clearfix">
                 <dt>市&nbsp;&nbsp;场&nbsp;&nbsp;价：</dt>
-                <dd>{{items.market}}元</dd>
+                <dd>{{items.price}}元</dd>
             </dl>
             <dl class="clearfix">
                 <dt>特&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：</dt>
@@ -155,10 +154,40 @@
                 <dt>已选区域：</dt>
                 <dd style="display: inline-block;width: 500px;height: 100%;">
                     <ul>
-                        <li class="selected" v-for="city in city_items | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i v-on:click="removeProvince(city)" ></i></li>
-                    </ul>
-                    <ul v-for="items in city_items">
-                        <li class="selected" v-for="city in items.city | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['山西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['内蒙古自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['辽宁省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['吉林省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['黑龙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['上海市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['江苏省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['浙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['安徽省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['福建省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['江西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['山东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['河南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['湖北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['湖南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['广东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['广西壮族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['海南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['重庆市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['四川省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['贵州省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['云南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['西藏自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['陕西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['甘肃省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['青海省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['宁夏回族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['新疆维吾尔自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['香港特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['澳门特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['台湾省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
                     </ul>
                 </dd>
             </dl>
@@ -173,11 +202,9 @@
             <dl class="clearfix">
                 <dt></dt>
                 <dd>
-                    <select name="" id="selectedCitys" v-on:change="selectedCitys">
-                        <option value="0">==请选择==</option>
-                        <optgroup label="{{item.letter}}" v-for="item in city_items">
-                            <option value="{{$index+1}}" v-bind:p_id="item.id">{{item.name}}</option>
-                        </optgroup>
+                    <select v-model="selectedKey" v-on:change="selectedProvinces">
+                        <option value="0" selected>==请选择==</option>
+                        <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                     </select>
                 </dd>
             </dl>
@@ -185,15 +212,14 @@
                 <dt></dt>
                 <dd style="width: 500px;height: 100%;" class="city_dd">
                     <ul>
-                        <li v-for="province in city_items_province"
-                            v-on:click="cityClk(province,$index,$event,0)"
-                            :class="{'selected':province.selected==true}">
-                            {{province.name}}
-                        </li>
-                        <li v-for="city in city_items_citys"
-                            v-on:click="cityClk(city,$index,$event,1)"
+                        <!--<li v-for="province in city_items_province"-->
+                        <!--v-on:click="cityClk(province,$index,$event,0)"-->
+                        <!--:class="{'selected':province.selected==true}">-->
+                        <!--{{province.name}}-->
+                        <!--</li>-->
+                        <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
                             class="city_li" :class="{'selected':city.selected==true}">
-                            {{city.name}}
+                            {{city.city}}
                         </li>
                     </ul>
                 </dd>
@@ -221,10 +247,10 @@
             idx: String,
             explain: String,
             pagesize: Number,
-            arr_title: {
-                type: Array,
-                default: ()=>[]
-            },
+//            arr_title: {
+//                type: Array,
+//                default: ()=>[]
+//            },
             arr_items: {
                 type: Array,
                 default: ()=>[]
@@ -235,8 +261,11 @@
 //        },
         ready(){
             var _this = this;
-            $.get("/data/city.json",function (data) {
-                _this.city_items = data;
+
+            $.get("/data/newcity.json",function (response) {
+                var list = response.data;
+                _this.provinces = list.provinces;
+                _this.provincecity = list.provincecity;
             });
 
             $('#start-date').Zebra_DatePicker({
@@ -255,7 +284,11 @@
         data(){
             return {
                 items:{
-                    market:458500.00,
+                    carModelName:"",
+                    carName:"",
+                    interiorColorName:"",
+                    exteriorColorName:"",
+                    price:458500.00,
                     offer:"",
                     offer_:false,
                     offer_msg:"",
@@ -274,12 +307,11 @@
                     file_msg:"",
                     desc:"",
                 },
-                city_items:[],
-                city_items_childs:[],
-                city_items_province:[],
-                city_items_citys:[],
-                citys:[],
-                _index:""
+                _index:"",
+                selectedKey:"",
+                provinces:"",
+                provincecity:"",
+                city_items:[]
             }
         },
         methods:{
@@ -361,63 +393,80 @@
 
                 layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
             },
-            cityClk(obj,index,e,num){
-                if(num == 0){
-                   obj.selected = true;
-                   this.city_items_province.$set(index,{id:obj.id,name:obj.name,letter:obj.letter,city:obj.city,count:obj.count,selected:true});
-                   this.city_items.$set(this._index-1,{id:obj.id,name:obj.name,letter:obj.letter,city:obj.city,selected:true,count:obj.count});
-                    if(obj.city != undefined){
-                        for(var i = 0; i<obj.city.length;i++){
-                            this.city_items_citys.$set(i,{id:obj.city[i].id,name:obj.city[i].name,selected:false});
-                            this.city_items[this._index-1].city.$set(i,{id:obj.city[i].id,name:obj.city[i].name,selected:false});
+            cityClk(obj,_index){
+
+//               /*点击下标是否第一个*/
+                if(_index == 0){
+//                    /*判断是直辖市*/
+                    if(this.city_items.length>1){
+
+                        for(var i =1 ;i < this.city_items.length;i++){
+                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
                         }
+
                     }
+                    obj.selected = true;
+                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true});
+
                 }else{
+
                     if(obj.selected == undefined || obj.selected == "undefined"){
-                        obj.selected = true;
-                        this.city_items_citys.$set(index,{id:obj.id,name:obj.name,selected:true});
-                        var city_items = this.city_items[this._index-1];
-                        city_items.city.$set(index,{id:obj.id,name:obj.name,selected:true});
-                        city_items.count = city_items.count-1;
-                        if(city_items.count<=0){
-                            this.city_items_province.$set(0,{id:city_items.id,name:city_items.name,letter:city_items.letter,city:city_items.city,count:city_items.count,selected:true});
-                            this.city_items.$set(this._index-1,{id:city_items.id,name:city_items.name,letter:city_items.letter,selected:true,city:city_items.city,count:city_items.count});
-                            for(var i = 0; i<city_items.city.length;i++){
-                                this.city_items[this._index-1].city.$set(i,{id:city_items.city[i].id,name:city_items.city[i].name,selected:false});
+                        this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
+                        this.city_items[0].total =this.city_items[0].total-1;
+                        console.log(this.city_items[0].total);
+                        if(this.city_items[0].total == 0){
+                            /*total 先不设置*/
+                            this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
+
+                            for(var i = 1; i<this.city_items.length;i++){
+                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
                             }
+
                         }
                     }
+
                 }
             },
-            selectedCitys(){
+            selectedProvinces(){
+                this.city_items = this.provincecity[this.selectedKey];
 
-                this._index = $("#selectedCitys option:selected").val();
-                this.city_items_province =[];
-                this.city_items_province.push(this.city_items[this._index-1]);
-                this.city_items_citys = this.city_items[this._index-1].city;
-            },
-            removeProvince(city){
-                city.selected = 'undefined';
-                var _cur = city.letter,_idx="";
-                for(var i = 0 ; i< this.city_items.length;i++){
-                    if(this.city_items[i].letter == _cur){
-                        _idx = i;
+                if(this.city_items.length>1){
+
+                    var total = this.city_items.length-1;
+
+                    for(var i = 1; i<this.city_items.length;i++){
+                        /*剔除已选择过的*/
+                        if(this.city_items[i].selected == true){
+                            total =total-1;
+                        }
+
                     }
-                }
-                var city_items = this.city_items[_idx];
-                this.city_items.$set(_idx,{id:city_items.id,name:city_items.name,letter:_cur,city:city_items.city,selected:'undefined',count:city.city.length});
-                for(var i = 0; i<city.city.length;i++){
-                    city.city[i].selected = 'undefined';
-                    this.city_items[_idx].city.$set(i,{id:city.city[i].id,name:city.city[i].name,selected:'undefined'});
-                }
-
-                /*强制如果删除是当前页的省，就手动删掉class*/
-                if(this.city_items_province[0].name == city.name){
-                    $(".city_dd ul li").eq(0).removeClass("selected");
+                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:total});
                 }
             },
-            removeCity(city){
-                city.selected = 'undefined';
+            removeCity(obj){
+                /*判断是否是直辖市*/
+                if(obj.city == obj.province){
+
+                    if(this.provincecity[obj.city].length>1){
+                        /*total*/
+                        obj.total = this.provincecity[obj.city].length -1;
+                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
+                            if(i==0){
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined'})
+                            }else{
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
+                            }
+
+                        }
+
+                    }else{
+                        obj.selected = 'undefined';
+                    }
+
+                }else{
+                    obj.selected = 'undefined';
+                }
             },
             agree(){
 

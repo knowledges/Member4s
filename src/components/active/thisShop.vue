@@ -1,24 +1,22 @@
 <template>
     <div class="wrap">
         <div class="brand-list clearfix">
-            <p class="G_fl">主营品牌：<span>123</span></p>
-            <p class="G_fl">副营品牌：<span></span></p>
+            <p class="G_fl">主营品牌：<span>奥迪</span></p>
+            <p class="G_fl">副营品牌：<span>一汽大众</span> <span>别克</span><span>标致</span> </p>
         </div>
         <div class="select-bar clearfix">
             <div class="select-box G_fl">
-                <form action="#">
-                    <select v-model="selectedKey" v-on:change="statusChange">
-                        <option value="0" selected="selected">全部</option>
-                        <option value="3" >在售</option>
-                        <option value="4">停售</option>
-                        <option value="5">过期</option>
-                        <option value="2">未开始</option>
-                        <option value="1">审核中</option>
-                        <option value="6">审核失败</option>
-                    </select>
-                </form>
+                <select v-model="selectedKey" v-on:change="statusChange">
+                    <option value="0" selected="selected">全部</option>
+                    <option value="3" >在售</option>
+                    <option value="4">停售</option>
+                    <option value="5">过期</option>
+                    <option value="2">未开始</option>
+                    <option value="1">审核中</option>
+                    <option value="6">审核失败</option>
+                </select>
             </div>
-            <div class="total-num G_fr">共：<span>222</span>条</div>
+            <div class="total-num G_fr">共：<span>{{count }}</span>条</div>
         </div>
         <!--:arr_title="arr_title"-->
         <shop-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize" :arr_items="arr_items"></shop-table>
@@ -33,11 +31,34 @@
     import $ from 'jquery'
     export default {
         ready(){
-            this.$http.get('task.json').then(function (response) {
-                var cToObj=eval("("+response.data+")");
-                this.$set("arr_items",cToObj.data);
+
+            var that = this;
+
+            $.ajax({
+                url:config.API_BASE+"/nl/common/provincecity",
+                method:"POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType:"json",
+                beforeSend:function (request) {
+                    request.setRequestHeader("sessionid",config.SESSIONID);
+                },
+                success:function (response) {
+                    that.$set("arr_items",response.data.data);
+                },
+                error:function (fail) {
+                    if(fail.status == "401"){
+                        layer.msg('登录失效，请重新登陆！');
+                        that.$route.router.go("/login");
+                    }
+                }
             });
-//            this.getSpecialList(0);
+
+//            this.$http.get('task.json').then(function (response) {
+//                var cToObj=eval("("+response.data+")");
+//                this.$set("arr_items",cToObj.data);
+//            });
+            this.getSpecialList(0,1);
+
         },
         data(){
             return {
@@ -51,7 +72,7 @@
 //                arr_title:[],
                 arr_items:[],
                 cur: 1,
-                all: 35,
+                count: 0,
                 pagesize:10
             }
         },
@@ -59,66 +80,84 @@
             ShopTable
         },
         methods:{
-//            getSpecialList(status){
-//                var arr = [];
-//                if(status == 0){
-//                    arr = [1,2,3,4,5,6];
-//                }else{
-//                    arr.push(status);
-//                }
-//                var ii = layer.load();
-//                var that = this;
-//                var url=  config.API_BASE +"/4s/special/list";
-//                var query={};
-////                query.user_id =  config.USERID;
-//                query.user_id =  "186";
-//                query.status = arr;
-//                query.pagenum = this.pagesize;
-//                query.page = 1;
-////                query.createtime =dateFilter(new Date().getTime(),4);
-//
-//                var param = {query:query};
-//                $.ajax({
-//                    url:url,
-//                    method:'POST',
-//                    contentType: 'application/json; charset=utf-8',
-//                    dataType: 'json',
-//                    data:JSON.stringify(param),
-//                    beforeSend:function (request) {
-//                        request.setRequestHeader("sessionid",config.SESSIONID);
-//                    },
-//                    success:function (response) {
-//                        if(response.code == 0){
-//                            that.$set("arr_items",response.data);
-//
-//                            if(response.data.length>that.pagesize){
-//                                laypage({
-//                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
-//                                    pages: 100, //总页数
-//                                    skip: true, //是否开启跳页
-//                                    skin: '#ff9205;',
-//                                    groups: 7, //连续显示分页数
-//                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
-//                                    last: 100, //将尾页显示为总页数。若不显示，设置false即可
-//                                    jump: function(obj, first){
-//                                        //回调
-//                                        //得到了当前页，用于向服务端请求对应数据
-//                                        var curr = obj.curr;
-//                                    }
-//                                });
-//                            }
-//                        }
-//                        layer.close(ii);
-//                    },error:function (fail) {
-//                        if(fail.status == "401"){
-//                            layer.msg('登录失效，请重新登陆！');
-//                            that.$route.router.go("/login");
-//                        }
-//                    }
-//                });
-//            },
+            getSpecialList(status,cur){
+                console.log(cur);
+                var arr = [];
+                if(status == 0){
+                    arr = [1,2,3,4,5,6];
+                }else{
+                    arr[0]=parseInt(status);
+                }
+                var ii = layer.load();
+                var that = this;
+                var url=  config.API_BASE +"/4s/special/list";
+                var query={};
+//                query.user_id =  config.USERID;
+                query.user_id =  "186";
+                query.status = arr;
+                query.pagenum = that.pagesize;
+                query.page = cur;
+
+                var param = {query:query};
+                $.ajax({
+                    url:url,
+                    method:'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data:JSON.stringify(param),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID);
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            that.count = response.data.count;
+                            that.$set("arr_items",response.data.rows);
+
+                            if(response.data.count>that.pagesize){
+
+                                laypage({
+                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+                                    pages: Math.ceil(that.count/that.pagesize), //总页数
+                                    curr:cur||1,
+                                    skip: true, //是否开启跳页
+                                    skin: '#ff9205;',
+                                    groups: 7, //连续显示分页数
+                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
+                                    last: Math.ceil(that.count/that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
+                                    jump: function(obj, first){
+                                        //回调
+                                        //得到了当前页，用于向服务端请求对应数据
+                                        var curr = obj.curr;
+                                        if(!first){
+                                            that.getSpecialList(that.selectedKey,curr);
+                                        }
+                                    }
+                                });
+
+                                that.$nextTick(function () {
+
+                                    $(".laypage_btn").unbind("click").on('click',function(){
+                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                            that.getSpecialList(that.selectedKey,$(".laypage_skip").val());
+                                        }else{
+                                            layer.msg('请输入正确的跳转页码');
+                                        }
+                                    })
+
+                                })
+                            }
+                        }
+                        layer.close(ii);
+                    },error:function (fail) {
+                        if(fail.status == "401"){
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+            },
             statusChange(){
-                this.getSpecialList(this.selectedKey);
+                this.getSpecialList(this.selectedKey,1);
             }
         }
     }

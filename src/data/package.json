@@ -1,150 +1,20 @@
 {
   "code": 0,
   "desc": "",
-  "data": {
-    "brand": {
-      "966": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚"
-        }
-      ],
-      "6979": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚"
-        }
-      ]
-    },
-    "carModel": {
-      "966,1906": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1906",
-          "carModelName": "凯尊"
-        }
-      ],
-      "966,1908": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1908",
-          "carModelName": "K9"
-        }
-      ],
-      "966,1909": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1909",
-          "carModelName": "索兰托"
-        }
-      ],
-      "966,1910": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1910",
-          "carModelName": "霸锐"
-        }
-      ],
-      "966,1911": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1911",
-          "carModelName": "佳乐"
-        }
-      ],
-      "966,1913": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1913",
-          "carModelName": "VQ"
-        }
-      ],
-      "966,1914": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1914",
-          "carModelName": "速迈"
-        }
-      ],
-      "966,1915": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1915",
-          "carModelName": "Picanto"
-        }
-      ],
-      "966,1917": [
-        {
-          "brandId": "966",
-          "brandName": "进口起亚",
-          "carModelId": "1917",
-          "carModelName": "Provo"
-        }
-      ],
-      "966,1918": [
-        {
-          "brandId": "966",
-          "brandN...": "2014款  1.6L AT Premium Special"
-        }
-      ],
-      "6979,7390,6725": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚",
-          "carModelId": "7390",
-          "carModelName": "福瑞迪",
-          "carId": "6725",
-          "carName": "2014款 1.6L MT Premium Special"
-        }
-      ],
-      "6979,7390,922f2a170bbe96be19072366c173309e": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚",
-          "carModelId": "7390",
-          "carModelName": "福瑞迪",
-          "carId": "922f2a170bbe96be19072366c173309e",
-          "carName": "2016款 1.6L AT GLS"
-        }
-      ],
-      "6979,7390,ba085dc957e3a1b59c84f5db56a24c0d": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚",
-          "carModelId": "7390",
-          "carModelName": "福瑞迪",
-          "carId": "ba085dc957e3a1b59c84f5db56a24c0d",
-          "carName": "2016款 1.6L MT GLS"
-        }
-      ],
-      "6979,7390,cac976975721457006816d032cee2074": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚",
-          "carModelId": "7390",
-          "carModelName": "福瑞迪",
-          "carId": "cac976975721457006816d032cee2074",
-          "carName": "2016款 1.6L AT GL"
-        }
-      ],
-      "6979,7390,de20ad2770f27ce4b8bfd94647694fc7": [
-        {
-          "brandId": "6979",
-          "brandName": "东风悦达起亚",
-          "carModelId": "7390",
-          "carModelName": "福瑞迪",
-          "carId": "de20ad2770f27ce4b8bfd94647694fc7",
-          "carName": "2016款 1.6L MT GL"
-        }
-      ]
+  "data": [
+    {
+      "brandId": "5",
+      "brandName": "奥迪",
+      "carModelId": "2068",
+      "carModelName": "A4",
+      "carId": "2071",
+      "carName": "2014款 40 TFSI allroad quattro plus版",
+      "interiorColorId": "4c3a5a5455f0fdccfa6fead1807f7769",
+      "interiorColorName": "黑色/钛灰色",
+      "exteriorColorId": "26204",
+      "exteriorColorName": "幻影黑",
+      "price": "418000",
+      "mergeColor": "4c3a5a5455f0fdccfa6fead1807f7769,26204"
     }
-  }
+  ]
 }
