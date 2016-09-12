@@ -445,7 +445,7 @@
                 layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
             },
             cityClk(obj,_index){
-
+                console.log(_index);
 //               /*点击下标是否第一个*/
                 if(_index == 0){
 //                    /*判断是直辖市*/
@@ -458,7 +458,7 @@
                     }
                     obj.selected = true;
                     this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
-
+                    console.log("选中的："+JSON.stringify(this.city_items[_index]));
                 }else{
 
                     if(obj.selected == undefined || obj.selected == "undefined"){
@@ -493,12 +493,13 @@
                     }
 
                     if(this.city_items[0].insert == undefined){
-
+                        console.log("jinlaile");
                         this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
 
                     }
 
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:total,"insert":true});
+                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
+                    console.log("第一次："+ JSON.stringify(this.city_items[0]));
                 }
             },
             removeCity(obj){
@@ -516,7 +517,7 @@
                             }
 
                         }
-
+                        console.log("rem:"+JSON.stringify(this.provincecity[obj.city]));
                     }else{
                         obj.selected = 'undefined';
                     }
