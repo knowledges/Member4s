@@ -46,6 +46,10 @@
     export default {
         ready(){
             var that = this;
+
+            /*
+            * 筛选条件
+            * */
             $.ajax({
                 url:config.API_BASE+"/4s/activity/carActivity/"+config.USERID,
                 method:'POST',
@@ -82,21 +86,6 @@
 
             })
 
-            laypage({
-                cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
-                pages: 100, //总页数
-                skip: true, //是否开启跳页
-                skin: '#ff9205;',
-                groups: 7, //连续显示分页数
-                first: 1, //将首页显示为数字1,。若不显示，设置false即可
-                last: 100, //将尾页显示为总页数。若不显示，设置false即可
-                jump: function(obj, first){
-                    //回调
-                    //得到了当前页，用于向服务端请求对应数据
-                    var curr = obj.curr;
-                }
-            });
-
 //            this.$http.get('package.json').then(function (response) {
 //                var cToObj=eval("("+response.data+")");
 //                this.$set("arr_items",cToObj);
@@ -116,7 +105,7 @@
 //                arr_title:[],
                 arr_items:[],
                 cur: 1,
-                all: 35,
+                count: 0,
                 pagesize:10
             }
         },
@@ -124,11 +113,13 @@
             AddTable
         },
         methods:{
+            /*分页*/
             getActivityList(cur,car_id){
+                var ii = layer.load();
                 var that = this;
                 var query = {};
-                    query.pagenum = cur;
-                    query.page = this.pagesize;
+                    query.pagenum = this.pagesize;
+                    query.page = cur;
                     query.car_id = car_id;
                 var params = {"query":query};
 
@@ -143,8 +134,46 @@
                     },
                     success:function (response) {
                         if(response.code == 0){
-                            debugger;
+                            that.count = response.data.count;
+                            that.$set("arr_items",response.data.rows);
+
+                            if(response.data.count>that.pagesize){
+
+                                laypage({
+                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+                                    pages: Math.ceil(that.count/that.pagesize), //总页数
+                                    curr:cur||1,
+                                    skip: true, //是否开启跳页
+                                    skin: '#ff9205;',
+                                    groups: 7, //连续显示分页数
+                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
+                                    last: Math.ceil(that.count/that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
+                                    jump: function(obj, first){
+                                        //回调
+                                        //得到了当前页，用于向服务端请求对应数据
+                                        var curr = obj.curr;
+                                        if(!first){
+                                            that.getActivityList(curr,car_id);
+                                        }
+                                    }
+                                });
+
+                                that.$nextTick(function () {
+
+                                    $(".laypage_btn").unbind("click").on('click',function(){
+                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                            that.getActivityList($(".laypage_skip").val(),car_id);
+                                        }else{
+                                            layer.msg('请输入正确的跳转页码');
+                                        }
+                                    })
+
+                                })
+
+                            }
+
                         }
+                        layer.close(ii);
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
@@ -159,7 +188,6 @@
             brandClk(obj,e){
                 var brandId = obj.brandId;
                 this.screen_carModels = this.carModels[brandId];
-                debugger;
                 var _index = 0;
                 this.$nextTick(function () {
 
@@ -200,8 +228,7 @@
                     $(".car dd").find('a').removeClass("actived");
                     $(".car dd").eq(_index).find('a').addClass("actived");
 
-                    getActivityList(1,carId);
-
+                    this.getActivityList(1,carId);
                 });
 
             }

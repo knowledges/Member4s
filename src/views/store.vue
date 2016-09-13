@@ -24,10 +24,10 @@
                     <div class="U_info_c_setting">
                         <a href="javascript:;;">常用信息设置 <i role="三角形" class="arrow-down"></i></a>
                         <ul class="U_info_c_ul_setting">
-                            <li><a v-link="{path:'/u/accout'}">基本资料</a> </li>
-                            <li><a v-link="{path:'/u/accout/address'}">地址管理</a></li>
-                            <li><a v-link="{path:'/u/accout/head'}">头像管理</a></li>
-                            <li><a v-link="{path:'/u/accout/modify'}">修改密码</a></li>
+                            <li><a v-link="{path:'/u/accout',activeClass:'active'}">基本资料</a> </li>
+                            <li><a v-link="{path:'/u/accout/address',activeClass:'active'}">地址管理</a></li>
+                            <li><a v-link="{path:'/u/accout/head',activeClass:'active'}">头像管理</a></li>
+                            <li><a v-link="{path:'/u/accout/modify',activeClass:'active'}">修改密码</a></li>
                         </ul>
                     </div>
                 </ul>
