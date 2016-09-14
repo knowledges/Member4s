@@ -54,7 +54,15 @@
                     <td></td>
                     <td v-if="stats>0">
                         <a v-on:click="update(item)">添加</a>
-                        <a v-bind:href="'/u/active/thisShop/'+item.carId">历史</a>
+                        <a v-bind:href="'/u/active/thisShop/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>
+                    </td>
+                </tr>
+                <tr  v-if="arr_items.length<=0">
+                    <td colspan="11">
+                        <div class="order-nodata">
+                            <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                            <p>您可进入 <a v-link="{ path:'/u/manage'}" style="display: inline-block">报价管理</a> 页面更新底价信息</p>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -272,7 +280,7 @@
                         that.$route.router.go("/login");
                     }
                 }
-            })
+            });
 
 //            $.get("/data/newcity.json",function (response) {
 //                var list = response.data;
@@ -337,7 +345,6 @@
         methods:{
             update(obj){
                 this.rem_item = obj;
-                //debugger;
                 this.items.brandName = obj.brandName;
                 this.items.carModelName = obj.carModelName;
                 this.items.car_id = obj.carId;
@@ -347,7 +354,6 @@
                 this.items.interiorColorName = obj.interiorColorName;
                 this.items.exterior_color_id = obj.exteriorColorId;
                 this.items.exteriorColorName = obj.exteriorColorName;
-                console.log(JSON.stringify(obj));
                 this.mask_2= layer.open({
                     type: 1,
                     title: '活动详情添加',
@@ -486,7 +492,6 @@
                         layer.close(ii);
                     }
                     ,error: function(xhr, type){
-                       console.log(JSON.stringify(xhr));
                     }
                 });
 
@@ -509,7 +514,6 @@
                     if(obj.selected == undefined || obj.selected == "undefined"){
                         this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
                         this.city_items[0].total =this.city_items[0].total-1;
-                        console.log(this.city_items[0].total);
                         if(this.city_items[0].total == 0){
                             /*total 先不设置*/
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
@@ -583,7 +587,6 @@
                 }
             },
             selectAllClk(){
-                debugger;
                 this.global = true;
                 $("#selectedKey").find("option[value=0]").attr({"selected":true});
                 $("#selectedKey").attr({"disabled":true});
@@ -801,5 +804,26 @@
     }
     option{
         text-align: center;
+    }
+
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>

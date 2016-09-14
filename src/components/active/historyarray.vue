@@ -58,20 +58,21 @@
         },
         methods:{
             getHistoryList(cur){
-                console.log(this.$route.params.any);
+                var any = this.$route.params.any.split('/');
+
                 var ii = layer.load();
                 var that = this;
                 var query = {};
                 query.user_id = "199";
-                query.interior_color_id = "1574e9c6b41793d8b39374cc8424a359";
-                query.exterior_color_id= "0037ba11d61238ddc35680d4a67e3663";
+                query.interior_color_id = any[2];
+                query.exterior_color_id= any[1];
                 query.pagenum = that.pagesize;
                 query.page = cur;
-                query.car_id = that.$route.params.any;
+                query.car_id = any[0];
                 var params = {"query":query};
 
                 $.ajax({
-                    url:config.API_BASE+"/4s/activity/list/",
+                    url:config.API_BASE+"/4s/activityTrend/list/",
                     method:"POST",
                     contentType: 'application/json; charset=utf-8',
                     dataType:"json",

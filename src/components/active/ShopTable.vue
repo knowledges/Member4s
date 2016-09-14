@@ -63,9 +63,11 @@
                     <p v-if="item.status==6">审核失败</p>
                 </td>
                 <td v-if="stats>0">
-                    <a v-on:click="update(item)">修改</a>
-                    <a v-link="{path:'/u/active/thisShop/1'}">历史</a>
-                    <a v-on:click="del(item,$index)">删除</a>
+                    <a v-if="item.status==3">停售</a>
+                    <a v-if="item.status==4">在售</a>
+                    <a v-if="item.status==2 || item.status==4 || item.status==6" v-on:click="update(item)">修改</a>
+                    <a v-if="item.status==2 || item.status==5 " v-on:click="del(item,$index)">删除</a>
+                    <!--<a v-link="{path:'/u/active/thisShop/1'}">历史</a>-->
                 </td>
             </tr>
             <tr  v-if="arr_items.length<=0">
@@ -83,26 +85,26 @@
         <div class="layer_1">
             <dl class="clearfix">
                 <dt>品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
-                <dd>奥迪</dd>
+                <dd v-text="items.brandName"></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
-                <dd>A1</dd>
+                <dd v-text="items.carModelName"></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
-                <dd>2016款 30 FSL 舒适型</dd>
+                <dd v-text="items.carName"></dd>
             </dl>
             <dl class="clearfix">
                 <dt>外观颜色：</dt>
-                <dd>黑色</dd>
+                <dd v-text="items.exteriorColorName"></dd>
                 <dt>内饰颜色：</dt>
-                <dd>灰色</dd>
+                <dd v-text="items.interiorColorName"></dd>
             </dl>
             <dl class="clearfix">
                 <dt>市&nbsp;&nbsp;场&nbsp;&nbsp;价：</dt>
-                <dd>{{items.market}}元</dd>
+                <dd>{{items.price}}元</dd>
             </dl>
             <dl class="clearfix">
                 <dt>特&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：</dt>
                 <dd style="position: relative">
-                    <input type="text" name="offer" v-model="items.offer"><em>元</em>
+                    <input type="text" name="offer" v-model="items.special_price"><em>元</em>
                 </dd>
                 <dd v-if="items.offer_" class="error"> <i></i>{{items.offer_msg}}</dd>
             </dl>
@@ -124,10 +126,7 @@
                 <dt>销售区域：</dt>
                 <dd style="display: inline-block;height: 100%;width: 550px;">
                     <ul id="areas_" class="clearfix">
-                        <li v-for="city in city_items | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}</li>
-                        <ul v-for="items in city_items">
-                            <li v-for="city in items.city | filterBy 'true' in 'selected'" track-by="$index">{{city.name}}</li>
-                        </ul>
+                        <li v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</li>
                         <a href="javascript:;;" v-on:click="selectarea" class="a_style">选择区域</a>
                     </ul>
                 </dd>
@@ -173,6 +172,7 @@
                 <dt>已选区域：</dt>
                 <dd style="display: inline-block;width: 500px;height: 100%;">
                     <ul>
+                        <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
                         <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
                         <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -214,14 +214,14 @@
                 <dt>可选区域：</dt>
                 <dd>
                     <ul>
-                        <li>全国</li>
+                        <li v-on:click="selectAllClk" id="global">全国</li>
                     </ul>
                 </dd>
             </dl>
             <dl class="clearfix">
                 <dt></dt>
                 <dd>
-                    <select v-model="selectedKey" v-on:change="selectedProvinces">
+                    <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
                         <option value="0" selected>==请选择==</option>
                         <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                     </select>
@@ -280,12 +280,29 @@
 //            ActiveInfo
 //        },
         ready(){
-            var _this = this;
+            var that = this;
 
-            $.get("/data/newcity.json",function (response) {
-                var list = response.data;
-                _this.provinces = list.provinces;
-                _this.provincecity = list.provincecity;
+            /*获取省市关系*/
+            $.ajax({
+                url:config.API_BASE+"/nl/common/provincecity",
+                method:"POST",
+                contentType:"application/json; charset=utf-8",
+                datatype:"json",
+                beforeSend:function (request) {
+                    request.setRequestHeader("sessionid",config.SESSIONID);
+                },
+                success:function (response) {
+                    var list = response.data;
+                    that.$set("provinces",list.provinces);
+                    that.$set("provincecity",list.provincecity);
+                    that.$set("clone_provincecity",list.provincecity);
+                },
+                error:function (fail) {
+                    if(fail.status == "401"){
+                        layer.msg('登录失效，请重新登陆！');
+                        that.$route.router.go("/login");
+                    }
+                }
             });
 
             $('#start-date').Zebra_DatePicker({
@@ -304,8 +321,13 @@
         data(){
             return {
                 items:{
-                    market:458500.00,
-                    offer:"",
+                    brandName:"",
+                    carModelName:"",
+                    carName:"",
+                    interiorColorName:"",
+                    exteriorColorName:"",
+                    price:"",
+                    special_price:"",
                     offer_:false,
                     offer_msg:"",
                     start_date:"",
@@ -315,8 +337,11 @@
                     number:"",
                     number_:false,
                     number_msg:"",
+                    areas:[],
                     selectarea_:false,
                     selectarea_msg:"",
+                    file_src:"",
+                    file_img:"",
                     file_value:"",
                     file_:false,
                     file_msg:"",
@@ -326,12 +351,78 @@
                 selectedKey:"",
                 provinces:"",
                 provincecity:"",
-                city_items:[]
+                city_items:[],
+                global:false,
+                mask_1:"",
+                mask_2:"",
+                rem_item:[]
             }
         },
         methods:{
             update(obj){
-                var info= layer.open({
+                console.log(JSON.stringify(obj));
+                this.rem_item = obj;
+                this.items.areas = [];
+                this.items.id = obj.id;
+                this.items.brandName = obj.brand_name;
+                this.items.carModelName = obj.car_model_name;
+                this.items.car_id = obj.car_id;
+                this.items.carName = obj.car_name;
+                this.items.price = obj.auth_price;
+                this.items.special_price = obj.special_price;
+                this.items.interior_color_id = obj.exterior_color_id;
+                this.items.interiorColorName = obj.interior_color_name;
+                this.items.exterior_color_id = obj.interior_color_id;
+                this.items.exteriorColorName = obj.exterior_color_name;
+                this.items.number = obj.number;
+                this.items.start_date = obj.start_date;
+                this.items.end_date = obj.end_date;
+                this.items.file_img = obj.car_image;
+                var str = obj.sales_area;
+                var list = str.substring(1,str.length-1).split(",");
+                for(var i = 0 ; i< list.length;i++){
+                    if(list[i].trim()=="全国"){
+                        this.items.areas.push({"sales_area_name":"全国","sales_area_level":"1"})
+                        this.global = true;
+                        $("#selectedKey").attr({"disabled":true});
+                        $("#global").addClass("selected");
+                    }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
+                        var that = this;
+                        that.items.areas.push({"sales_area_name":list[i],"sales_area_level":"2"})
+                        var arr = that.provincecity[list[i].trim()];
+                        if(arr.length>1){
+                            /*把省插入到第一的位置*/
+                            arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
+
+
+                            for(var j =0 ;j <arr.length;j++){
+                                if(j == 0){
+                                    /*赋值总数去掉省*/
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
+                                }else{
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
+                                }
+                            }
+                        }else{
+                            arr[i].selected = true;
+                            that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
+                        }
+
+                    }else{
+                        var that = this;
+                        that.items.areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
+                        $.map(that.provincecity,function (val,key) {
+                            for(var j = 0;j<val.length;j++){
+                                if(list[i].trim() == val[j].city){
+                                    val[j].selected = true;
+                                    that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
+                                }
+                            }
+                        })
+                    }
+                }
+
+                this.mask_2= layer.open({
                     type: 1,
                     title: '活动详情修改',
                     skin: 'layui-layer-rim', //加上边框
@@ -385,6 +476,7 @@
                 });
             },
             uploadfile(e){
+                this.items.file_img = "";
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var result = e.target.result;
@@ -407,7 +499,7 @@
             },
             save(){
                 var items = this.items;
-                if(items.offer == "" ||items.offer>items.market){
+                if(items.special_price == "" ||items.special_price>items.market){
                     items.offer_ = true;
                     items.offer_msg="低价不可高于市场价";
                 }else{
@@ -428,21 +520,98 @@
                     items.timer_ = false;
                 }
 
-                if(items.citys.length<=0){
+                if($("#areas_ > li").length<=0){
                     items.selectarea_ = true;
                     items.selectarea_msg = "请选择区域";
                 }else{
                     items.selectarea_ = false;
                 }
 
-                if(items.file_value==""){
+//                items.file_value=="" ||
+                if(items.file_img == "" && items.file_value==""){
                     items.file_=true;
                     items.file_msg = "请上传头像";
                 }else{
                     items.file_=false;
                 }
 
-                layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
+                var that = this;
+                var ii = layer.load();
+
+                if(that.items.file_img == ""){
+
+                    var formd = new FormData();
+                    formd.append("img",$("#upload-file")[0].files[0]);
+
+                    $.ajax({
+                        type: "POST",
+                        contentType: false,
+                        processData: false,
+                        url: "http://test3.gouchehui.com:8082/index.php/api/upload_file",
+                        data:formd,
+                        success: function(data) {
+                            if(data.code==0){
+                                that.items.file_img=data.img_url;
+                                that.updataActive();
+                            }
+                            layer.close(ii);
+                        }
+                        ,error: function(xhr, type){
+                        }
+                    });
+                }else{
+                    that.updataActive();
+                    layer.close(ii);
+                }
+            },
+            updataActive(){
+                var that = this;
+
+                var query={};
+                //query.user_id =  config.USERID;
+                query.id = that.items.id;
+                query.user_id =  "186";
+                query.interior_color_id = that.items.interior_color_id;
+                query.exterior_color_id = that.items.exterior_color_id;
+                query.car_image = that.items.file_img;
+                query.car_id = that.items.car_id;
+                query.price = that.items.price;
+                query.special_price = that.items.special_price;
+                query.start_date = that.items.start_date+" 00:00:01";
+                query.end_date = that.items.end_date+" 59:59:58";
+                query.number = that.items.number;
+                query.status = "";
+                query.remark = "";
+                query.description = that.items.desc;
+                query.createuser = "186";
+                query.areas = that.items.areas;
+
+                var params = {"query":query};
+                console.log(JSON.stringify(params));
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/activity/updateCarActivity/",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID);
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
+                            that.arr_items.$remove(that.rem_item);
+                            layer.close(that.mask_2);
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                })
             },
             cityClk(obj,_index){
 //               /*点击下标是否第一个*/
@@ -462,7 +631,6 @@
                     if(obj.selected == undefined || obj.selected == "undefined"){
                         this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
                         this.city_items[0].total =this.city_items[0].total-1;
-                        console.log(this.city_items[0].total);
                         if(this.city_items[0].total == 0){
                             /*total 先不设置*/
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
@@ -498,6 +666,7 @@
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
+            agree(){},
             removeCity(obj){
                 /*判断是否是直辖市*/
                 if(obj.city == obj.province){
@@ -521,8 +690,16 @@
                     obj.selected = 'undefined';
                 }
             },
-            agree(){
-
+            selectAllClk(){
+                this.global = true;
+                $("#selectedKey").find("option[value=0]").attr({"selected":true});
+                $("#selectedKey").attr({"disabled":true});
+                $("#global").addClass("selected");
+            },
+            removeAll(){
+                $("#selectedKey").removeAttr("disabled");
+                $("#global").removeClass("selected");
+                this.global = false;
             }
         }
 

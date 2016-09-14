@@ -107,8 +107,8 @@
         },
         data(){
             return {
-                username:"sssaaa",
-                password:"gchjsb"
+                username:"baomagouchehui",
+                password:"123456"
             }
         },
         methods:{

@@ -70,9 +70,33 @@
                         * */
                         that.$nextTick(function () {
                             $(".brands dd").eq(0).find('a').addClass("actived");
-                            that.brandClk({"brandId":5,"brandName":"奥迪"},null);
-                            that.scrModelClk({"carModelId":"2068","carModelName":"A4"},null);
-                            that.scrCarClk({"carId":"2071","carName":"2014款 40 TFSI allroad quattro plus版"},null);
+                            var one = 0,two=0,tree=0;
+                            var brandsKey = 0,carsKey = 0,carModelsKey=0;
+
+                            $.map(that.brands,function (val,key) {
+                                if(one <=1){
+                                    brandsKey = key;
+                                    ++one;
+                                }
+                            });
+
+                            $.map(that.cars,function (val,key) {
+                                if(two <=1){
+                                    carsKey = key;
+                                    ++two;
+                                }
+                            });
+
+                            $.map(that.carModels,function (val,key) {
+                                if(tree <=1){
+                                    carModelsKey = key;
+                                    ++tree;
+                                }
+                            });
+
+                            that.brandClk({"brandId":that.brands[brandsKey][0].brandId,"brandName":that.brands[brandsKey][0].brandName},null);
+                            that.scrModelClk({"carModelId":that.brands[carModelsKey][0].carModelId,"carModelName":that.brands[carModelsKey][0].carModelId},null);
+                            that.scrCarClk({"carId":that.brands[carsKey][0].carId,"carName":that.brands[carsKey][0].carName},null);
                         })
 
                     }
@@ -190,7 +214,7 @@
                 this.screen_carModels = this.carModels[brandId];
                 var _index = 0;
                 this.$nextTick(function () {
-
+                    console.log(JSON.stringify(this.screen_carModels));
                     this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
 
                     if(e!=null){
