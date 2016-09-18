@@ -19,6 +19,14 @@
                 </tr>
             </thead>
             <tbody>
+                <tr  v-if="historys.length<=0">
+                    <td colspan="10">
+                        <div class="order-nodata">
+                            <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                            <!--<p>您可进入 <a v-link="{ path:'/u/manage'}" style="display: inline-block">报价管理</a> 页面更新底价信息</p>-->
+                        </div>
+                    </td>
+                </tr>
                 <tr v-for="history in historys">
                     <td>{{history.createTime}}</td>
                     <td>{{history.brandName}}</td>
@@ -45,7 +53,6 @@
     import config from './../../config'
     export default{
         ready(){
-            console.log("sessionid:",config.SESSIONID);
             this.getHistoryList(1);
         },
         data(){
@@ -63,7 +70,7 @@
                 var ii = layer.load();
                 var that = this;
                 var query = {};
-                query.user_id = "199";
+                query.user_id = config.USERID();
                 query.interior_color_id = any[2];
                 query.exterior_color_id= any[1];
                 query.pagenum = that.pagesize;
@@ -78,7 +85,7 @@
                     dataType:"json",
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID||JSON.parse(sessionStorage.getItem("SESSIONID")).session.sessionid);
+                        request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
                         if(response.code == 0){
@@ -86,7 +93,7 @@
                             that.$set("historys",response.data.rows);
 
                             layer.close(ii);
-                            console.log("总数："+ Math.ceil(that.count/that.pagesize))
+
                             laypage({
                                 cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
                                 pages: Math.ceil(that.count/that.pagesize), //总页数
@@ -109,15 +116,13 @@
                             that.$nextTick(function () {
 
                                 $(".laypage_btn").unbind("click").on('click',function(){
-                                    if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                    if($(".laypage_skip").val()>0 && $(".laypage_skip").val() <= Math.ceil(that.count/that.pagesize)){
                                         that.getSpecialList($(".laypage_skip").val());
                                     }else{
                                         layer.msg('请输入正确的跳转页码');
                                     }
                                 })
-
                             })
-
                         }
                     },
                     error:function(fail){
@@ -180,5 +185,26 @@
     .table{
         position: relative;
         margin: 10px 15px;
+    }
+
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>

@@ -106,7 +106,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .upload_div{
         padding: 30px 60px;
     }

@@ -1,30 +1,20 @@
 <template>
     <ul class="UC_nav">
-        <!--<li class=""><a v-link="{path:'/u/store',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-home i_active_0"></i>4s店主页</a><em></em></li>-->
-        <!--<li class=""><a v-link="{path:'/u/order',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-order i_active_1"></i>购车订单</a><em></em></li>-->
-        <!--<li class=""><a v-link="{path:'/u/manage',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-eye"></i>报价管理</a><em></em></li>-->
-        <!--<li class=""><a v-link="{path:'/u/active',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-cheku"></i>活动车款</a><em></em></li>-->
-        <!--<li class=""><a v-link="{path:'/u/exchange',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-integral"></i>积分兑换</a><em></em></li>-->
-        <!--<li class=""><a v-link="{path:'/u/accout',activeClass:'active'}"><i-->
-                <!--class="ui_icon_18 icon-new-uc icon-new-uc-set"></i>账户管理</a><em></em></li>-->
-
-        <li class=""><a v-link="{path:'/u/store'}" :class="{ 'active': 0 === selected }" v-on:click="eveClk(0)"><i
+        <!--普通会员-->
+        <li class=""><a v-link="{path:'/u/store',activeClass:'active'}" :class="{ 'active': 0 === selected }" v-on:click="eveClk(0)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-home" :class="{ 'i_active_0': 0 === selected }"></i>4s店主页</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/order',activeClass:'active'}" :class="{ 'active': 1 === selected }" v-on:click="eveClk(1)"><i
+        <li class=""><a v-link="{path:'/u/order/all',activeClass:'active'}" :class="{ 'active': 1 === selected }" v-on:click="eveClk(1)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-order" :class="{ 'i_active_1': 1 === selected }"></i>购车订单</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/manage',activeClass:'active'}" :class="{ 'active': 2 === selected }" v-on:click="eveClk(2)"><i
+        <li class=""><a v-link="{path:'/u/manage/myOffer',activeClass:'active'}" :class="{ 'active': 2 === selected }" v-on:click="eveClk(2)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-eye" :class="{ 'i_active_2': 2 === selected }"></i>报价管理</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/active',activeClass:'active'}" :class="{ 'active': 3 === selected }" v-on:click="eveClk(3)"><i
+        <li class=""><a v-link="{path:'/u/active/thisShop/find/0',activeClass:'active'}" :class="{ 'active': 3 === selected }" v-on:click="eveClk(3)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-cheku" :class="{ 'i_active_3': 3 === selected }" ></i>活动车款</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/exchange',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
+        <!--<li class=""><a v-link="{path:'/u/message',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-news"  :class="{ 'i_active_4': 4 === selected }"></i>消息通知</a><em></em></li>-->
+        <li class=""><a v-link="{path:'/u/exchange/cashing',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-integral" :class="{ 'i_active_4': 4 === selected }"></i>积分兑换</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/accout',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_6': 6 === selected }"></i>账户管理</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/accout/info',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_5': 5 === selected }"></i>账户管理</a><em></em></li>
     </ul>
 </template>
 
@@ -56,17 +46,16 @@
     .icon-new-uc-home {
         background-position: 0 0px;
     }
-    a:active .i_active_0{
+    .i_active_0{
         background-position: -32px 0px!important;
     }
     a:hover .icon-new-uc-home {
         background-position: -60px 0;
     }
-
     .icon-new-uc-order {
         background-position: 0 -42px;
     }
-    a:active .i_active_1{
+    .i_active_1{
         background-position: -32px -42px!important;
     }
     a:hover .icon-new-uc-order {

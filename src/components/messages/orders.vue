@@ -10,7 +10,7 @@
 	    			<div class="order-news">
 	    				<i class="ui_icon_18 icon-new-uc icon-new-in-mes"></i>您有新的订单，订单号：<span>G35554545475474</span>，您可进入 <a v-link="{ path:'/u/message/messages', exact:true, replace:true, append:true}">购车订单</a> 页面查看详情。
 	    			</div>
-	    			<order-tab></order-tab>
+	    			<!--<order-tab></order-tab>-->
 	    		</li>
 	    	</ul>
     	</div>
@@ -19,7 +19,7 @@
 </template>
 <script>
     import {loader} from '../../util/util'
-    import OrderTab from '../order/OrderTab.vue'
+//  import OrderTab from '../order/OrderTab.vue'
     import $ from 'jquery'
 	
     export default {
@@ -62,7 +62,7 @@
             }
         },
         components:{
-            OrderTab
+//          OrderTab
         },
         methods:{
             listen(data){

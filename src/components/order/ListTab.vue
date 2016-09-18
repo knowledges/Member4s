@@ -1,5 +1,5 @@
 <template>
-	<div class="U_info_content">
+	<div class="U_info_content" v-for="item in orderdata">
         <div class="ordTab-tab">
             <table>
             	<colgroup>
@@ -12,8 +12,8 @@
             	</colgroup>
                 <thead>
                     <tr class="thead-tr G_f12">
-                    	<th colspan="2">下单时间：<span>2016-08-16</span>订单号：<span>G35554545475474</span></th>
-                    	<th colspan="4"></th>
+                    	<th colspan="3">下单时间：<span class="orderYd">{{item.createtime}}</span>订单号：<span>{{item.out_trade_no}}</span></th>
+                    	<th colspan="3"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,30 +21,40 @@
                         <td>
                             <dl class="clearfix">
                                 <dt>
-                                	<img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efc15b4c243.jpg" alt="雪佛兰 科鲁兹" width="120" height="80">
+                                	<img v-bind:src="item.exterior_img" v-bind:alt="item.carstyle" width="120" height="80">
                                 </dt>
                                 <dd>
-                                    <span class="orange">日产轩逸2016款 1.6XV CVT自豪版</span>
-                                    <p>外观：白色  内饰：黑色</p>
+                                    <span class="orange">{{item.carstyle}}</span>
+                                    <p>外观：<span>{{item.exterior_color_name}}</span>  内饰：<span>{{item.interior_color_name}}</span></p>
                                 </dd>
                             </dl>
                         </td>
                         <td>
-                            124,800
+                            {{item.low_price}}
                         </td>
                         <td>
-                            2,100
+                            {{item.money}}
                         </td>
                         <td>
-                            <p>已付定金</p>
+                            <p v-if="item.status == 0">未支付</p>
+                            <p v-if="item.status == 1">已支付</p>
+                            <p v-if="item.status == 2">已失效</p>
+                            <p v-if="item.status == 3">审核中</p>
+                            <p v-if="item.status == 4">通过审核</p>
+                            <p v-if="item.status == 5">未通过审核</p>
+                            <p v-if="item.status == 6">出库中</p>
+                            <p v-if="item.status == 7">提车中</p>
+                            <p v-if="item.status == 8">已完成</p>
+                            <p v-if="item.status == 9">支付中</p>
+                            <p v-if="item.status == 10">支付失败</p>
                             <!--<a v-link="{ path:'/u/order/orderDetail'}" style="color:#48a6fc;">订单详情</a>-->
                         </td>
                         <td>
-                            2016-8-31
+                            {{item.buy_time}}
                         </td>
                         <td>
-                            <p>姓名：王小二</p>
-                            <p>手机：15164638848</p>
+                            <p>姓名：{{item.buyer_name}}</p>
+                            <p>手机：{{item.buyer_tel}}</p>
                         </td>
                     </tr>
                 </tbody>
@@ -53,7 +63,19 @@
     </div>
 </template>
 <script>
-	
+export default {
+    props:{
+    	pagenum: Number,
+    	orderdata:{
+    		type:Array,
+            default:()=>[]
+    	},
+        arr_items:{
+            type:Array,
+            default:()=>[]
+        }
+    }
+}
 </script>
 <style scoped>
 .tab-col1{
@@ -91,10 +113,11 @@
 }
 .ordTab-tab table tbody tr td dl dd span{
     line-height: normal;
+    margin-right: 10px;
 }
 .ordTab-tab table tbody tr td dl dd span.orange{
     color: #ff791f;
-    width: 220px;
+    width: 210px;
     line-height: 20px;
     display: block;
 }

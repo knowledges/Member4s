@@ -98,7 +98,7 @@ export  default function (router) {
                                 require(['./components/active/thisShop'], resolve)
                             }
                         },
-                        '/thisShop':{
+                        '/thisShop/find/:findId':{
                             component (resolve) {
                                 require(['./components/active/thisShop'], resolve)
                             }
@@ -110,7 +110,7 @@ export  default function (router) {
                         },
                     }
                 },
-                '/active/thisShop/*any':{
+                '/active/thisShop/find/:find/*any':{
                     component (resolve) {
                         require(['./components/active/history'], resolve)
                     },

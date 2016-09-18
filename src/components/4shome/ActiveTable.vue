@@ -3,38 +3,82 @@
         <table>
             <thead>
             <tr>
-                <th v-for="title in arr_title_active">
-                    {{title.name}}
-                    <em v-if="judge && $index==idx"> ! </em>
-                    <div class="popup"  v-if="judge && $index==idx">
-                        <h3 v-text="explain"></h3>
+                <th>
+                    车型
+                </th>
+                <th>
+                    车款
+                </th>
+                <th>
+                    外观颜色
+                </th>
+                <th>
+                    内饰颜色
+                </th>
+                <th>
+                    官方价/元
+                    <em> ! </em>
+                    <div class="popup">
+                        <h3>如您对官方价有疑问，请致电400-138-0808。</h3>
                     </div>
                 </th>
-                <th v-if="stats>0">操作</th>
+                <th>
+                    特价/元
+                </th>
+                <th>
+                    活动时间
+                </th>
+                <th>
+                    库存/辆
+                </th>
+                <th>
+                    销售区域
+                </th>
+                <th>
+                    状态
+                </th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-                <!--<tr v-if="arr_active.length<=0">-->
-                    <!--<td colspan="{{arr_title_active.length+1}}">-->
-                        <!--<p>没有搜索到内容......</p>-->
-                    <!--</td>-->
-                <!--</tr>-->
-            <!--<tr v-for="item in arr_active" v-if="$index<pagesize">-->
+                <tr v-if="$.isEmptyObject(arr_active)">
+                    <td colspan="11">
+                        <p>没有搜索到内容......</p>
+                    </td>
+                </tr>
                 <tr>
-                    <td>A1</td>
-                    <td>2016款 30 FSL 舒适型</td>
-                    <td>白色</td>
-                    <td>灰色</td>
-                    <td>485800.00</td>
-                    <td>1,600.00</td>
-                    <td>45700,00</td>
-                    <td>10</td>
-                    <td>2</td>
-                    <td>南京市</td>
-                    <td v-if="stats>0">
-                        <a v-on:click="update">修改</a>
-                        <a>历史</a>
-                        <a>删除</a>
+                    <td>{{arr_active.car_model_name}}</td>
+                    <td>{{arr_active.car_name}}</td>
+                    <td>{{arr_active.interior_color_name}}</td>
+                    <td>{{arr_active.exterior_color_name}}</td>
+                    <td>{{arr_active.price}}</td>
+                    <td>{{arr_active.special_price}}</td>
+                    <td>
+                        <p>{{arr_active.start_date}}</p>
+                        <p>{{arr_active.end_date}}</p>
+                    </td>
+                    <td>{{arr_active.number}}</td>
+                    <td>
+                        <span v-if="arr_area_active.length>0">有数据</span>
+                        <span v-if="arr_area_active.length<=0">暂无数据</span>
+                        <span v-for="arr in arr_area_active">
+                            {{arr.sales_area_name}}
+                        </span>
+                    </td>
+                    <td>
+                        <p v-if="arr_active.status==1">审核中</p>
+                        <p v-if="arr_active.status==2">未开始</p>
+                        <p v-if="arr_active.status==3">在售</p>
+                        <p v-if="arr_active.status==4">停售</p>
+                        <p v-if="arr_active.status==5">过期</p>
+                        <p v-if="arr_active.status==6">审核失败</p>
+                    </td>
+                    <td>
+                        <a v-if="arr_active.status==3" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">停售</a>
+                        <a v-if="arr_active.status==4" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">在售</a>
+                        <a v-if="arr_active.status==2 || arr_active.status==4 || arr_active.status==6" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">修改</a>
+                        <a v-if="arr_active.status==2 || arr_active.status==5 " v-bind:href="'/u/active/thisShop/find/'+arr_active.id">删除</a>
+                        <!--<a v-link="{path:'/u/active/thisShop/1'}">历史</a>-->
                     </td>
                 </tr>
             </tbody>
@@ -51,29 +95,16 @@
             explain:String,
             pagesize:Number,
             column:Number,
-            arr_title_active:{
+            arr_area_active:{
                 type:Array,
-                default:function () {
-                    return []
-                }
+                default:()=>[]
             },
             arr_active:{
-                type:Array,
+                type:Object,
                 default:()=>[]
             }
         },
         methods:{
-            update(){
-                layer.open({
-                    type: 2,
-                    title: '身份验证',
-                    maxmin: true,
-                    shadeClose: true, //点击遮罩关闭层
-                    skin: 'layui-layer-rim', //加上边框
-                    area : ['380px' , '310px'],
-                    content: '/static/components/template/verify/identity.html'
-                });
-            }
         }
     }
 </script>

@@ -51,12 +51,12 @@
             * 筛选条件
             * */
             $.ajax({
-                url:config.API_BASE+"/4s/activity/carActivity/"+config.USERID,
+                url:config.API_BASE+"/4s/activity/carActivity/"+config.USERID(),
                 method:'POST',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID);
+                    request.setRequestHeader("sessionid",config.SESSIONID());
                 },
                 success:function (response) {
                     if(response.code == 0){
@@ -96,16 +96,16 @@
 
                             that.brandClk({"brandId":that.brands[brandsKey][0].brandId,"brandName":that.brands[brandsKey][0].brandName},null);
                             that.scrModelClk({"carModelId":that.brands[carModelsKey][0].carModelId,"carModelName":that.brands[carModelsKey][0].carModelId},null);
-                            that.scrCarClk({"carId":that.brands[carsKey][0].carId,"carName":that.brands[carsKey][0].carName},null);
+//                            that.scrCarClk({"carId":that.brands[carsKey][0].carId,"carName":that.brands[carsKey][0].carName},null);
                         })
 
                     }
-                },
-                error:function (fail) {
-                    if(fail.status == "401"){
-                        layer.msg('登录失效，请重新登陆！');
-                        that.$route.router.go("/login");
-                    }
+//                },
+//                error:function (fail) {
+//                    if(fail.status == "401"){
+//                        layer.msg('登录失效，请重新登陆！');
+//                        that.$route.router.go("/login");
+//                    }
                 }
 
             })
@@ -154,7 +154,7 @@
                     dataType: 'json',
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID);
+                        request.setRequestHeader("sessionid",window.SESSION.getSessionId());
                     },
                     success:function (response) {
                         if(response.code == 0){
@@ -198,12 +198,12 @@
 
                         }
                         layer.close(ii);
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
+//                    },
+//                    error:function (fail) {
+//                        if(fail.status == "401"){
+//                            layer.msg('登录失效，请重新登陆！');
+//                            that.$route.router.go("/login");
+//                        }
                     }
                 })
 
@@ -214,7 +214,6 @@
                 this.screen_carModels = this.carModels[brandId];
                 var _index = 0;
                 this.$nextTick(function () {
-                    console.log(JSON.stringify(this.screen_carModels));
                     this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
 
                     if(e!=null){

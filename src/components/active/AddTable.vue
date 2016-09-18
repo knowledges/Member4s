@@ -54,7 +54,7 @@
                     <td></td>
                     <td v-if="stats>0">
                         <a v-on:click="update(item)">添加</a>
-                        <a v-bind:href="'/u/active/thisShop/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>
+                        <a v-bind:href="'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>
                     </td>
                 </tr>
                 <tr  v-if="arr_items.length<=0">
@@ -266,19 +266,19 @@
                 contentType:"application/json; charset=utf-8",
                 datatype:"json",
                 beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID);
+                    request.setRequestHeader("sessionid",config.SESSIONID());
                 },
                 success:function (response) {
                     var list = response.data;
                     that.$set("provinces",list.provinces);
                     that.$set("provincecity",list.provincecity);
                     that.$set("clone_provincecity",list.provincecity);
-                },
-                error:function (fail) {
-                    if(fail.status == "401"){
-                        layer.msg('登录失效，请重新登陆！');
-                        that.$route.router.go("/login");
-                    }
+//                },
+//                error:function (fail) {
+//                    if(fail.status == "401"){
+//                        layer.msg('登录失效，请重新登陆！');
+//                        that.$route.router.go("/login");
+//                    }
                 }
             });
 
@@ -444,8 +444,7 @@
                         if(data.code==0){
                             that.items.file_img=data.img_url;
                             var query={};
-                            //query.user_id =  config.USERID;
-                            query.user_id =  "186";
+                            query.user_id =  config.USERID();
                             query.interior_color_id = that.items.interior_color_id;
                             query.exterior_color_id = that.items.exterior_color_id;
                             query.car_image = that.items.file_img;
@@ -470,7 +469,7 @@
                                 dataType:"json",
                                 data:JSON.stringify(params),
                                 beforeSend:function (request) {
-                                    request.setRequestHeader("sessionid",config.SESSIONID);
+                                    request.setRequestHeader("sessionid",config.SESSIONID());
                                 },
                                 success:function (response) {
                                     if(response.code == 0){

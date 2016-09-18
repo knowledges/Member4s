@@ -2,9 +2,9 @@
     <div>
         <bar class="nav nav-tabs clearfix">
             <bar-item path="/u/order/all" label="所有订单"></bar-item>
-            <bar-item path="/u/order/nonPayment" label="未付定金"></bar-item>
             <bar-item path="/u/order/payment" label="已付定金"></bar-item>
             <bar-item path="/u/order/liftCar" label="待提车"></bar-item>
+            <bar-item path="/u/order/shipment" label="出库中"></bar-item>
             <bar-item path="/u/order/completed" label="已完成"></bar-item>
         </bar>
         <router-view></router-view>

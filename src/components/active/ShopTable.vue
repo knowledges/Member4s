@@ -63,8 +63,8 @@
                     <p v-if="item.status==6">审核失败</p>
                 </td>
                 <td v-if="stats>0">
-                    <a v-if="item.status==3">停售</a>
-                    <a v-if="item.status==4">在售</a>
+                    <a v-if="item.status==3" v-on:click="stop(item,$index)">停售</a>
+                    <a v-if="item.status==4" v-on:click="goto(item,$index)">在售</a>
                     <a v-if="item.status==2 || item.status==4 || item.status==6" v-on:click="update(item)">修改</a>
                     <a v-if="item.status==2 || item.status==5 " v-on:click="del(item,$index)">删除</a>
                     <!--<a v-link="{path:'/u/active/thisShop/1'}">历史</a>-->
@@ -171,7 +171,7 @@
             <dl class="clearfix">
                 <dt>已选区域：</dt>
                 <dd style="display: inline-block;width: 500px;height: 100%;">
-                    <ul>
+                    <ul class="filter_li">
                         <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
                         <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -289,7 +289,7 @@
                 contentType:"application/json; charset=utf-8",
                 datatype:"json",
                 beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID);
+                    request.setRequestHeader("sessionid",config.SESSIONID());
                 },
                 success:function (response) {
                     var list = response.data;
@@ -351,6 +351,7 @@
                 selectedKey:"",
                 provinces:"",
                 provincecity:"",
+                clone_provincecity:"",
                 city_items:[],
                 global:false,
                 mask_1:"",
@@ -359,8 +360,48 @@
             }
         },
         methods:{
-            update(obj){
+            updateCarActivityStatus(obj,stauts,_index){
+                var that = this;
+                var ii = layer.load();
+                var query = {};
+                query.id=obj.id;
+                query.user_id = window.SESSION.getUserId();
+                query.status = stauts;
+                var params = {"query":query};
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/activity/updateCarActivityStatus/",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",window.SESSION.getSessionId());
+                    },
+                    success:function (response) {
+                        layer.close(ii);
+                        if(response.code==0){
+                            window.history.go(0);
+                            layer.msg('完成修改');
+                        }
+//                    },
+//                    error:function (fail) {
+//                        if(fail.status == "401"){
+//                            layer.msg('登录失效，请重新登陆！');
+//                            that.$route.router.go("/login");
+//                        }
+                    }
+                })
+            },
+            stop(obj,_index){
                 console.log(JSON.stringify(obj));
+                this.updateCarActivityStatus(obj,4,_index);
+            },
+            goto(obj,_index){
+                console.log(JSON.stringify(obj));
+                this.updateCarActivityStatus(obj,3,_index);
+            },
+            update(obj){
                 this.rem_item = obj;
                 this.items.areas = [];
                 this.items.id = obj.id;
@@ -444,7 +485,7 @@
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
                         beforeSend:function (request) {
-                            request.setRequestHeader("sessionid",config.SESSIONID);
+                            request.setRequestHeader("sessionid",config.SESSIONID());
                         },
                         success:function (request) {
                             /*TODO 缺少一个交互*/
@@ -454,11 +495,11 @@
                                 layer.msg('删除成功', {icon: 1});
                             }
                             layer.close(ii);
-                        },error:function (fail) {
-                            if(fail.status == "401"){
-                                layer.msg('登录失效，请重新登陆！');
-                                that.$route.router.go("/login");
-                            }
+//                        },error:function (fail) {
+//                            if(fail.status == "401"){
+//                                layer.msg('登录失效，请重新登陆！');
+//                                that.$route.router.go("/login");
+//                            }
                         }
                     });
 
@@ -467,7 +508,7 @@
                 });
             },
             selectarea(){
-                var index = layer.open({
+                this.mask_1 = layer.open({
                     type: 1,
                     title: '选择区域',
                     skin: 'layui-layer-rim', //加上边框
@@ -570,7 +611,7 @@
                 var query={};
                 //query.user_id =  config.USERID;
                 query.id = that.items.id;
-                query.user_id =  "186";
+                query.user_id = config.USERID();
                 query.interior_color_id = that.items.interior_color_id;
                 query.exterior_color_id = that.items.exterior_color_id;
                 query.car_image = that.items.file_img;
@@ -583,11 +624,10 @@
                 query.status = "";
                 query.remark = "";
                 query.description = that.items.desc;
-                query.createuser = "186";
+                query.createuser = config.USERID();
                 query.areas = that.items.areas;
 
                 var params = {"query":query};
-                console.log(JSON.stringify(params));
 
                 $.ajax({
                     url:config.API_BASE+"/4s/activity/updateCarActivity/",
@@ -596,20 +636,20 @@
                     dataType:"json",
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID);
+                        request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
                         if(response.code == 0){
                             layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
-                            that.arr_items.$remove(that.rem_item);
+//                            that.arr_items.$remove(that.rem_item);
                             layer.close(that.mask_2);
                         }
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
+//                    },
+//                    error:function (fail) {
+//                        if(fail.status == "401"){
+//                            layer.msg('登录失效，请重新登陆！');
+//                            that.$route.router.go("/login");
+//                        }
                     }
                 })
             },
@@ -666,7 +706,20 @@
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
-            agree(){},
+            agree(){
+                layer.close(this.mask_1);
+                var list = $(".filter_li li");
+                this.items.areas = [];
+                for(var i = 0 ; i< list.length;i++){
+                    if(list.eq(i).text()=="全国"){
+                        this.items.areas[0] = {"sales_area_name":"全国","sales_area_level":"1"}
+                    }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
+                        this.items.areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"2"})
+                    }else{
+                        this.items.areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"3"})
+                    }
+                }
+            },
             removeCity(obj){
                 /*判断是否是直辖市*/
                 if(obj.city == obj.province){

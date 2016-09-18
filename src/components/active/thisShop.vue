@@ -28,10 +28,11 @@
     import ShopTable from './../../components/active/ShopTable.vue'
     import config from './../../config'
     import {dateFilter} from './../../filters'
+    import util from './../../util/util'
     import $ from 'jquery'
     export default {
         ready(){
-
+            this.find = this.$route.params.find;
             var that = this;
 
             $.ajax({
@@ -40,16 +41,16 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType:"json",
                 beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID);
+                    request.setRequestHeader("sessionid",config.SESSIONID());
                 },
                 success:function (response) {
                     that.$set("arr_items",response.data.data);
-                },
-                error:function (fail) {
-                    if(fail.status == "401"){
-                        layer.msg('登录失效，请重新登陆！');
-                        that.$route.router.go("/login");
-                    }
+//                },
+//                error:function (fail) {
+//                    if(fail.status == "401"){
+//                        layer.msg('登录失效，请重新登陆！');
+//                        that.$route.router.go("/login");
+//                    }
                 }
             });
 
@@ -73,7 +74,8 @@
                 arr_items:[],
                 cur: 1,
                 count: 0,
-                pagesize:10
+                pagesize:10,
+                find:""
             }
         },
         components:{
@@ -91,11 +93,13 @@
                 var that = this;
                 var url=  config.API_BASE +"/4s/special/list";
                 var query={};
-//                query.user_id =  config.USERID;
-                query.user_id =  "186";
+                query.user_id =  config.USERID();
                 query.status = arr;
                 query.pagenum = that.pagesize;
                 query.page = cur;
+                if(that.find!=0){
+                    query.id = that.find;
+                }
 
                 var param = {query:query};
                 $.ajax({
@@ -105,7 +109,7 @@
                     dataType: 'json',
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID);
+                        request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
                         if(response.code == 0){
@@ -147,11 +151,11 @@
                             }
                         }
                         layer.close(ii);
-                    },error:function (fail) {
-                        if(fail.status == "401"){
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
+//                    },error:function (fail) {
+//                        if(fail.status == "401"){
+//                            layer.msg('登录失效，请重新登陆！');
+//                            that.$route.router.go("/login");
+//                        }
                     }
                 });
             },

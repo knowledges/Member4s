@@ -1,7 +1,7 @@
 <template>
     <div>
         <bar class="nav nav-tabs clearfix">
-            <bar-item path="/u/active/thisShop" label="本店活动"></bar-item>
+            <bar-item path="/u/active/thisShop/find/0" label="本店活动"></bar-item>
             <bar-item path="/u/active/add" label="新增活动"></bar-item>
         </bar>
         <router-view></router-view>

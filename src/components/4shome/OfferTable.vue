@@ -3,43 +3,73 @@
         <table>
             <thead>
             <tr>
-                <th v-for="title in arr_title_offer">
-                    {{title.name}}
-                    <em v-if="judge && $index==idx"> ! </em>
-                    <div class="popup"  v-if="judge && $index==idx">
-                        <h3 v-text="explain"></h3>
+                <th>
+                    车型
+                </th>
+                <th>
+                    车款
+                </th>
+                <th>
+                    外观颜色
+                </th>
+                <th>
+                    内饰颜色
+                </th>
+                <th>
+                    官方价/元
+                    <em> ! </em>
+                    <div class="popup">
+                        <h3>如您对官方价有疑问，请致电400-138-0808。</h3>
                     </div>
                 </th>
-                <th v-if="stats>0">操作</th>
+                <th>
+                    优惠/元
+                </th>
+                <th>
+                    报价/元
+                </th>
+                <th>
+                    库存/辆
+                </th>
+                <th>
+                    在途/辆
+                </th>
+                <th>
+                    销售区域
+                </th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-                <!--<tr v-if="arr_offer.length<=0">-->
-                    <!--<td colspan="{{arr_title_offer.length+1}}">-->
-                        <!--<p>没有搜索到内容......</p>-->
-                    <!--</td>-->
-                <!--</tr>-->
-                <!--<tr v-for="item in arr_offer" v-if="$index<pagesize">-->
-                <tr>
-                    <td>A1</td>
-                    <td>2016款 30 FSL 舒适型</td>
-                    <td>白色</td>
-                    <td>灰色</td>
-                    <td>485800.00</td>
-                    <td>1,600.00</td>
-                    <td>
-                        <p>2016年8月31日</p>
-                        <p>2016年12月15日</p>
-                    </td>
-                    <td>10</td>
-                    <td>2</td>
-                    <td>南京市</td>
-                    <td v-if="stats>0">
-                        <a v-on:click="update">修改</a>
-                        <a>历史</a>
-                        <a>删除</a>
-                    </td>
-                </tr>
+            <tr v-if="$.isEmptyObject(arr_offer.length)">
+                <td colspan="11">
+                    <p>没有搜索到内容......</p>
+                </td>
+            </tr>
+            <tr>
+                <td>{{arr_offer.car_model_name}}</td>
+                <td>{{arr_offer.car_name}}</td>
+                <td>{{arr_offer.interior_color_name}}</td>
+                <td>{{arr_offer.exterior_color_name}}</td>
+                <td>{{arr_offer.price}}</td>
+                <td>{{arr_offer.discount}}</td>
+                <td>{{arr_offer.low_price}}</td>
+                <td>{{arr_offer.stock}}</td>
+                <td>{{arr_offer.onway}}</td>
+                <td>
+                    <span v-if="arr_area_offer.length<=0">
+                        暂无数据
+                    </span>
+                    <span v-for="arr in arr_area_offer">
+                        {{arr.sales_area_name}}
+                    </span>
+                </td>
+                <td>
+                    <a v-on:click="jumpPage(arr_offer.id)">修改</a>
+                    <a v-on:click="jumpPage(arr_offer.id)">历史</a>
+                    <a v-on:click="jumpPage(arr_offer.id)">删除</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -53,14 +83,12 @@
             idx:String,
             explain:String,
             pagesize:Number,
-            arr_title_offer:{
+            arr_area_offer:{
                 type:Array,
-                default:function () {
-                    return []
-                }
+                default:()=>[]
             },
             arr_offer:{
-                type:Array,
+                type:Object,
                 default:()=>[]
             }
         },

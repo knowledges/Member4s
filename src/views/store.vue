@@ -19,7 +19,7 @@
                         积分：<em class="orange">{{SESSIONID.total_jifen}}</em>
                     </li>
                     <li>
-                        <a href=""  class="orange">积分规则>></a>
+                        <a v-link="{path:'/u/exchange/rule'}"  class="orange">积分规则>></a>
                     </li>
                     <div class="U_info_c_setting">
                         <a href="javascript:;;">常用信息设置 <i role="三角形" class="arrow-down"></i></a>
@@ -32,11 +32,11 @@
                     </div>
                 </ul>
                 <ul class="U_info_c_ul u_info_order clearfix">
-                    <li>已付定金<em  class="orange">8</em> </li>
+                    <li>已付定金<em  class="orange">{{baseinfo.deposit}}</em> </li>
                     <li>|</li>
-                    <li>待提车 <em  class="orange">5</em> </li>
+                    <li>待提车 <em  class="orange">{{baseinfo.mentioncars}}</em> </li>
                     <li>|</li>
-                    <li>出库中  <em  class="orange">10</em></li>
+                    <li>出库中  <em  class="orange">{{baseinfo.library}}</em></li>
                 </ul>
             </div>
         </div>
@@ -47,7 +47,7 @@
                     <li><strong>最新订单</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/order'}">查看订单</a>
+                    <a v-link="{path:'/u/order/all'}">查看订单</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -68,36 +68,46 @@
                                 <td>
                                     <dl class="clearfix">
                                         <dt>
-                                            <img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efc15b4c243.jpg" alt="雪佛兰 科鲁兹" width="120" height="80">
+                                            <img v-bind:src="neworder.exterior_img" alt="雪佛兰 科鲁兹" width="120" height="80">
                                         </dt>
                                         <dd>
-                                            <a v-link="" class="orange">日产轩逸2016款 1.6XV CVT自豪版</a>
-                                            <p>外观：白色  内饰：黑色</p>
+                                            <a href="javascript:;;" class="orange">{{neworder.carstyle}}</a>
+                                            <p>外观：{{neworder.interior_color_name}}  内饰：{{neworder.exterior_color_name}}</p>
                                         </dd>
                                     </dl>
                                 </td>
                                 <td>
-                                    124,800
+                                    {{neworder.low_price}}
                                 </td>
                                 <td>
-                                    2,000
+                                    {{neworder.money}}
                                 </td>
                                 <td>
-                                    <p>已付定金</p>
+                                    <p v-if="neworder.status==0">未支付</p>
+                                    <p v-if="neworder.status==1">已支付（未完善）</p>
+                                    <p v-if="neworder.status==2">已失效</p>
+                                    <p v-if="neworder.status==3">审核中</p>
+                                    <p v-if="neworder.status==4">通过审核</p>
+                                    <p v-if="neworder.status==5">未通过审核</p>
+                                    <p v-if="neworder.status==6">出库中</p>
+                                    <p v-if="neworder.status==7">提车中</p>
+                                    <p v-if="neworder.status==8">已完成</p>
+                                    <p v-if="neworder.status==9">支付中</p>
+                                    <p v-if="neworder.status==10">支付失败</p>
                                     <!--<a v-link="" style="color:#48a6fc;">订单详情</a>-->
                                 </td>
                                 <td>
-                                    2016-8-31
+                                    {{neworder.buy_time}}
                                 </td>
                                 <td>
-                                    <p>姓名：王小二</p>
-                                    <p>手机：15164638848</p>
+                                    <p>姓名：{{neworder.buyer_name}}</p>
+                                    <p>手机：{{neworder.buyer_tel}}</p>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p>下单时间：2016年8月31日17:10:02 订单号：XXXXXXXXXXXXXXXXXXXXXXX</p>
+                <p>下单时间：{{neworder.createtime}} 订单号：{{neworder.out_trade_no}}</p>
             </div>
         </div>
         <div class="U_new_eye" role="报价">
@@ -108,11 +118,11 @@
                     <li><strong>最新报价</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/manage'}">报价管理</a>
+                    <a v-link="{path:'/u/manage/myOffer'}">报价管理</a>
                 </div>
             </div>
             <div class="U_info_content">
-                <offer-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="1"  :arr_title_offer="arr_title_offer" :arr_offer="arr_offer"></offer-table>
+                <offer-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="1"  :arr_area_offer="arr_area_offer" :arr_offer="arr_offer"></offer-table>
             </div>
         </div>
         <div class="U_new_active" role="活动">
@@ -122,11 +132,11 @@
                     <li><strong>最新活动</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/active'}">活动车款</a>
+                    <a v-link="{path:'/u/active/thisShop'}">活动车款</a>
                 </div>
             </div>
             <div class="U_info_content">
-                <active-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="1"  :arr_title_active="arr_title_active" :arr_active="arr_active"></active-table>
+                <active-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="1"  :arr_area_active="arr_area_active" :arr_active="arr_active"></active-table>
             </div>
         </div>
         <div class="U_new_integral" role="积分兑换">
@@ -136,7 +146,7 @@
                     <li><strong>积分兑换</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/exchange'}">前往兑换</a>
+                    <a v-link="{path:'/u/exchange/cashing'}">前往兑换</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -144,14 +154,78 @@
                     <button class="left" v-on:click="pre()" role="上一页"><</button>
                     <div class="carousel_div">
                         <ul class="arousel_ul clearfix">
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/big/2016-03-01/big_56d543d2afb56.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efa81e6e794.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55efa7f5e4bab.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-22/5600b097487ab.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-15/55f7b213ca6c5.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-10/55f124fb63079.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-08-20/55d535152d4c9.jpg" alt="" width="260" height="170"></a></li>
-                            <li><a v-link=""><img src="http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web/Upload/modelimg/2015-09-09/55ef95b2af52d.jpg" alt="" width="260" height="170"></a></li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-1.jpg">
+                                        <p class="G_fl">积分：<span>400</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-2.jpg">
+                                        <p class="G_fl">积分：<span>400</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-3.jpg">
+                                        <p class="G_fl">积分：<span>400</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-4.jpg">
+                                        <p class="G_fl">积分：<span>400</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-5.jpg">
+                                        <p class="G_fl">积分：<span>2000</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-6.jpg">
+                                        <p class="G_fl">积分：<span>3800</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-7.jpg">
+                                        <p class="G_fl">积分：<span>6500</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li v-on:click="goCashing">
+                                <div class="gift-left-box G_fl">
+                                    <div class="num_full clearfix">
+                                        <img src="/img/gift-8.jpg">
+                                        <p class="G_fl">积分：<span>7000</span></p>
+                                        <p class="G_fl">数量：<span>充足</span></p>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                     <button class="right" v-on:click="next()" role="下一页">></button>
@@ -162,26 +236,53 @@
 </template>
 
 <script>
-    import {loader} from '../util/util'
     import NavPagination from '../components/NavPagination.vue'
     import OfferTable from  '../components/4shome/OfferTable.vue'
     import ActiveTable from '../components/4shome/ActiveTable.vue'
     import $ from 'jquery'
-
+    import config from './../config'
+    import util from './../util/util'
     export default {
         route:{
             data({to}){
                 this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-                this.$http.get('TableTitle.json').then(function (response) {
-                    var cToObj=response.data;
-//                    var cToObj=eval("("+response.data+")");
-                    this.$set("arr_title_offer",cToObj.data.array_0);
-                    this.$set("arr_title_active",cToObj.data.array_1);
-                })
             }
         },
         ready(){
             this.c_width= $(".carousel_div").width();
+
+            var ii = layer.load();
+            var that = this;
+            var params = {"query":{"user_id":config.USERID()}};
+            $.ajax({
+                url:config.API_BASE+"/4s/home/index",
+                method:"POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType:"json",
+                data:JSON.stringify(params),
+                beforeSend:function (request) {
+                    request.setRequestHeader("sessionid",config.SESSIONID());
+                },
+                success:function (response) {
+                    layer.close(ii);
+                    if(response.code==0){
+                        var data = response.data;
+                        that.baseinfo = data.baseinfo;
+                        that.neworder = data.neworder;
+                        that.arr_active = data.newactivity;
+                        that.arr_area_active = data.pricearea;
+                        that.arr_offer= data.newprice;
+                        that.arr_area_offer = data.specialpricearea;
+                    }
+               /* },
+                error:function (fail) {
+                    if(fail.status == "401"){
+                        layer.msg('登录失效，请重新登陆！');
+                        that.$route.router.go("/login");
+                    }*/
+                }
+            })
+
         },
         data(){
             return {
@@ -189,14 +290,16 @@
                 judge:true,
                 idx:'4',
                 explain:"如您对官方价有疑问，请致电400-138-0808。",
-                arr_title_offer:[],
-                arr_title_active:[],
+                arr_area_offer:[],
+                arr_area_active:[],
                 arr_offer:[],
                 arr_active:[],
                 c_width:'',
                 cur:0,
                 c_sum:2,
-                SESSIONID:{}
+                SESSIONID:{},
+                baseinfo:[],
+                neworder:[]
             }
         },
         components:{
@@ -218,6 +321,9 @@
                 }
                 this.cur++;
                 $(".arousel_ul").animate({"left":"-"+this.cur*this.c_width+"px"},1500);
+            },
+            goCashing(){
+                this.$route.router.go("/u/exchange/cashing");
             }
         }
     }
@@ -405,6 +511,7 @@
     .carousel ul > li {
         float: left;
         margin: 0 15px;
+        cursor:pointer;
     }
     .carousel button{
         position: absolute;
@@ -425,5 +532,21 @@
     .right{
         top: 25%;
         right: -10px;
+    }
+    .gift-left-box {
+        margin-left: 0!important;
+        margin-bottom: 30px;
+    }
+    .num_full {
+        background: #f0f0f0;
+        width: 260px;
+    }
+    .num_full p {
+        width: 45%;
+        margin-left: 10px;
+    }
+    .G_fl {
+        float: left;
+        _display: inline;
     }
 </style>

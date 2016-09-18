@@ -3,22 +3,22 @@
         <div class="fill_in_info">
             <dl class="clearfix">
                 <dt>当前密码：</dt>
-                <dd><input type="password" v-model="cur_password" id="cur_" minlength="6" maxlength="16" placeholder="请输入当前使用密码"></dd>
+                <dd><input type="password" v-model="password" id="cur_" minlength="6" maxlength="16" placeholder="请输入当前使用密码"></dd>
                 <dd v-if="cur_match" style="color: red"><i></i>{{cur_msg}}</dd>
             </dl>
             <dl class="clearfix">
                 <dt>新密码：</dt>
                 <dd>
-                    <input type="password" v-model="new_password" id="new_" v-on:keyup="inputPwd" minlength="6" maxlength="16" placeholder=" (6-16个英文字母、数字或符号)">
+                    <input type="password" v-model="newpassword" id="new_" v-on:keyup="inputPwd" minlength="6" maxlength="16" placeholder=" (6-16个英文字母、数字或符号)">
                 </dd>
-                <dd v-if="new_match"  style="color: red"><i></i>{{new_msg}}</dd>
+                <dd v-if="new_match" style="color: red"><i></i>{{new_msg}}</dd>
             </dl>
             <dl class="clearfix">
                 <dt>确认密码：</dt>
                 <dd>
                     <input type="password" v-model="agree_password" id="agree_" placeholder="请再次输入新密码">
                 </dd>
-                <dd v-if="agree_match"  style="color: red"><i></i>{{agree_msg}}</dd>
+                <dd v-if="agree_match" style="color: red"><i></i>{{agree_msg}}</dd>
             </dl>
             <dl class="clearfix">
                 <dt></dt>
@@ -43,12 +43,13 @@
 </template>
 
 <script>
+	import config from '../../config'
     import $ from 'jquery'
     export default{
         data(){
             return{
-                cur_password:'',
-                new_password:'',
+                password:'',
+                newpassword:'',
                 agree_password:'',
                 cur_match:false,
                 cur_msg:"",
@@ -75,20 +76,19 @@
                 var _timer = null;
                 _timer = setTimeout(function (e) {
                     clearTimeout(_timer);
-                    console.log("1");
-                    var new_password = that.new_password;
-                    if(new_password.length>=6){
-                        if(/[a-zA-Z]+/.test(new_password)||/[0-9]+/.test(new_password)||/\W+\D+/.test(new_password)){
+                    var newpassword = that.newpassword;
+                    if(newpassword.length>=6){
+                        if(/[a-zA-Z]+/.test(newpassword)||/[0-9]+/.test(newpassword)||/\W+\D+/.test(newpassword)){
                             that.low = true;
                             that.middle = false;
                             that.high = false;
                         }
-                        if((/[a-zA-Z]+/.test(new_password) && /[0-9]+/.test(new_password))|| (/[a-zA-Z]+/.test(new_password) && /\W+\D+/.test(new_password))||(/[0-9]+/.test(new_password) && /\W+\D+/.test(new_password))){
+                        if((/[a-zA-Z]+/.test(newpassword) && /[0-9]+/.test(newpassword))|| (/[a-zA-Z]+/.test(newpassword) && /\W+\D+/.test(newpassword))||(/[0-9]+/.test(newpassword) && /\W+\D+/.test(newpassword))){
                             that.low = false;
                             that.middle = true;
                             that.high = false;
                         }
-                        if(/[a-zA-Z]+/.test(new_password) && /[0-9]+/.test(new_password) && /\W+\D+/.test(new_password)){
+                        if(/[a-zA-Z]+/.test(newpassword) && /[0-9]+/.test(newpassword) && /\W+\D+/.test(newpassword)){
                             that.low = false;
                             that.middle = false;
                             that.high = true;
@@ -101,52 +101,114 @@
                 },500);
             },
             savePwd(){
-                if(this.cur_password =="" ){
+            	if(config.SESSIONID == ""){
+					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
+					config.SESSIONID  = this.SESSIONID.session.sessionid;
+					config.USERID  = this.SESSIONID.id;
+					console.log(config.SESSIONID);
+					console.log(config.USERID);
+				}
+            	
+                if(this.password =="" ){
                     this.cur_match = true;
                     this.cur_msg = "当前密码不能为空";
                     $("#cur_").addClass("lost");
-                }else if(this.cur_password.length<6 ){
+                }else if(this.password.length < 6){
                     this.cur_match = true;
-                    this.cur_msg = "密码长度不能小于6-16位";
+                    this.cur_msg = "密码长度不能小于6位";
                     $("#cur_").addClass("lost");
-                } else{
-                    this.cur_match = false;
-                    this.cur_msg = "";
-                    $("#cur_").removeClass("lost");
-                }
-
-                if(this.new_password =="" ){
+                }else if(this.password.length > 16){
+                    this.cur_match = true;
+                    this.cur_msg = "密码长度不能大于16位";
+                    $("#cur_").addClass("lost");
+                }else if(this.newpassword ==""){
+                	this.cur_match = false;
+                	this.cur_msg = "";
                     this.new_match = true;
                     this.new_msg = "新密码不能为空";
+                    $("#cur_").removeClass("lost");
                     $("#new_").addClass("lost");
-                }else if(this.new_password.length<6 ){
+                }else if(this.newpassword.length < 6 ){
+                	this.cur_match = false;
+                	this.cur_msg = "";
                     this.new_match = true;
-                    this.new_msg = "密码长度不能小于6-16位";
+                    this.new_msg = "密码长度不能小于6位";
+                    $("#cur_").removeClass("lost");
                     $("#new_").addClass("lost");
-                }else if(this.new_password == this.cur_password){
+                }else if(this.newpassword.length > 16 ){
+                	this.cur_match = false;
+                	this.cur_msg = "";
                     this.new_match = true;
-                    this.new_msg = "新密码不能与旧密码一致";
+                    this.new_msg = "密码长度不能大于16位";
+                    $("#cur_").removeClass("lost");
                     $("#new_").addClass("lost");
-                    return ;
-                }else{
-                    this.new_match = false;
-                    this.new_msg = "";
-                    $("#new_").removeClass("lost");
-                }
-
-                if(this.agree_password==""){
+                }else if(this.agree_password==""){
+                	this.cur_match = false;
+                	this.cur_msg = "";
+                	this.new_match = false;
+                	this.new_msg = "";
                     this.agree_match = true;
                     this.agree_msg = "确认密码不能为空";
+                    $("#cur_").removeClass("lost");
+                    $("#new_").removeClass("lost");
                     $("#agree_").addClass("lost");
-                }else if(this.new_password!=this.agree_password){
+                }else if(this.newpassword!=this.agree_password){
+                	this.cur_match = false;
+                	this.cur_msg = "";
+                	this.new_match = false;
+                	this.new_msg = "";
                     this.agree_match = true;
                     this.agree_msg = "确认密码与新密码不一致";
+                    $("#cur_").removeClass("lost");
+                    $("#new_").removeClass("lost");
                     $("#agree_").addClass("lost");
-                    return;
                 }else{
+                	this.cur_match = false;
+                	this.cur_msg = "";
+                	this.new_match = false;
+                	this.new_msg = "";
                     this.agree_match = false;
                     this.agree_msg = "";
+                    $("#cur_").removeClass("lost");
+                    $("#new_").removeClass("lost");
                     $("#agree_").removeClass("lost");
+                  
+//                修改密码
+    				var that = this;
+	            	var url = config.API_BASE+"/4s/accountmanagement/resetpassword";
+	                var query = {};
+	                	query.id = config.USERID;
+	                	query.password = that.password;
+	                	query.newpassword = that.newpassword;
+//						query.id = "186";
+					var param = { query:query };
+                    $.ajax({
+	                    url:url,
+	                    type:'POST',
+	                    dataType: 'JSON',
+	                    contentType: 'application/json; charset=utf-8',
+	                    data:JSON.stringify(param),
+	                    beforeSend:function (request) {
+		                    request.setRequestHeader("sessionid",config.SESSIONID);
+		                },
+		                success:function(response){
+							if(response.code == 0){
+		                        layer.msg('密码修改成功',{icon:1});
+		                        setTimeout("window.history.go(0)",1500);
+			                }else if(response.code == -3){
+			                	layer.msg('原密码输入不正确',{icon:2});
+			                }else{
+			                	layer.msg('密码修改失败',{icon:2});
+			                }
+						},
+						error:function(fail){
+							if(fail.status =="401"){
+								layer.msg("请您重新登录");
+							}else{
+								that.$route.router.go("/login");
+							}
+						}
+	                });
                 }
             }
         }

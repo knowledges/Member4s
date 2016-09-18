@@ -39,7 +39,6 @@
             return {
                 stats:0,
                 judge:false,
-                idx:'4',
                 explain:"如您对官方价有疑问，请致电400-138-0808。",
                 arr_title: [
                     {
@@ -53,18 +52,14 @@
                     {
                         "name": "积分",
                         "width":""
-                    },
-                    {
-                        "name": "备注",
-                        "width":""
                     }
                 ],
                 arr_items:[
-                    {time: '2016-08-07 09:27', xingwei: '积分兑换500元苏果购物卡', integral: '+500', remarks:'订单号：201614512124'},
-                    {time: '2016-08-07 04:27', xingwei: '积分兑换500元苏果购物卡', integral: '-50', remarks:'订单号：201614512124'},
-                    {time: '2016-08-08 06:27', xingwei: '积分兑换500元苏果购物卡', integral: '+100', remarks:'订单号：201614512124'},
-                    {time: '2016-08-19 07:27', xingwei: '积分兑换500元苏果购物卡', integral: '-200', remarks:'订单号：201614512124'},
-                    {time: '2016-08-15 08:27', xingwei: '积分兑换500元苏果购物卡', integral: '+500', remarks:'订单号：201614512124'}
+                    {time: '2016-08-07 09:27', xingwei: '积分兑换500元苏果购物卡', integral: '+500'},
+                    {time: '2016-08-07 04:27', xingwei: '积分兑换500元苏果购物卡', integral: '-50'},
+                    {time: '2016-08-08 06:27', xingwei: '积分兑换500元苏果购物卡', integral: '+100'},
+                    {time: '2016-08-19 07:27', xingwei: '积分兑换500元苏果购物卡', integral: '-200'},
+                    {time: '2016-08-15 08:27', xingwei: '积分兑换500元苏果购物卡', integral: '+500'}
                 ],
                 cur: 1,
                 all: 35,
@@ -99,22 +94,14 @@
         height:36px;
     }
     .table-wrap .time{
-        width:200px;
+        width:290px;
     }
     .table-wrap .action{
-        width:260px;
-    }
-    .table-wrap .add{
-        color:#00AA00;
-    }
-    .table-wrap .minus{
-        color:#f21717;
+        width:350px;
     }
     .table-wrap .integral{
-        width:125px;
+        width:215px;
     }
-    .table-wrap .note{
-        width:270px;
-    }
+
 
 </style>
