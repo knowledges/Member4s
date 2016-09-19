@@ -64,7 +64,6 @@
                         that.brands = list.brand;
                         that.cars = list.car;
                         that.carModels = list.carModel;
-
                         /*
                         * v-for 遍历完
                         * */
@@ -74,29 +73,12 @@
                             var brandsKey = 0,carsKey = 0,carModelsKey=0;
 
                             $.map(that.brands,function (val,key) {
-                                if(one <=1){
+                                if(one <1){
                                     brandsKey = key;
                                     ++one;
                                 }
                             });
-
-                            $.map(that.cars,function (val,key) {
-                                if(two <=1){
-                                    carsKey = key;
-                                    ++two;
-                                }
-                            });
-
-                            $.map(that.carModels,function (val,key) {
-                                if(tree <=1){
-                                    carModelsKey = key;
-                                    ++tree;
-                                }
-                            });
-
                             that.brandClk({"brandId":that.brands[brandsKey][0].brandId,"brandName":that.brands[brandsKey][0].brandName},null);
-                            that.scrModelClk({"carModelId":that.brands[carModelsKey][0].carModelId,"carModelName":that.brands[carModelsKey][0].carModelId},null);
-//                            that.scrCarClk({"carId":that.brands[carsKey][0].carId,"carName":that.brands[carsKey][0].carName},null);
                         })
 
                     }
@@ -154,7 +136,7 @@
                     dataType: 'json',
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",window.SESSION.getSessionId());
+                        request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
                         if(response.code == 0){

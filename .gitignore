@@ -9,6 +9,7 @@ bin-release/
 .settings/
 .idea
 node_modules/
+dist/
 
 # Executables
 *.swf

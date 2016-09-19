@@ -41,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr v-if="$.isEmptyObject(arr_active)">
+                <tr v-if="arr_active.car_model_name == '' && arr_active.car_name==''">
                     <td colspan="11">
                         <p>没有搜索到内容......</p>
                     </td>
@@ -74,10 +74,11 @@
                         <p v-if="arr_active.status==6">审核失败</p>
                     </td>
                     <td>
-                        <a v-if="arr_active.status==3" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">停售</a>
-                        <a v-if="arr_active.status==4" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">在售</a>
-                        <a v-if="arr_active.status==2 || arr_active.status==4 || arr_active.status==6" v-bind:href="'/u/active/thisShop/find/'+arr_active.id">修改</a>
-                        <a v-if="arr_active.status==2 || arr_active.status==5 " v-bind:href="'/u/active/thisShop/find/'+arr_active.id">删除</a>
+                        <a v-if="arr_active.status==3" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">停售</a>
+                        <a v-if="arr_active.status==4" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">在售</a>
+                        <a v-if="arr_active.status==2 || arr_active.status==4 || arr_active.status==6" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">修改</a>
+                        <!--<a v-if="arr_active.status==2 || arr_active.status==5 " v-bind:href="'/u/active/thisShop/find/'+arr_active.id">删除</a>-->
+                        <a v-if="arr_active.status==2 || arr_active.status==5 " v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">删除</a>
                         <!--<a v-link="{path:'/u/active/thisShop/1'}">历史</a>-->
                     </td>
                 </tr>
@@ -87,6 +88,7 @@
 </template>
 
 <script>
+    import $ from 'jquery'
     export default {
         props:{
             stats:Number,
@@ -101,10 +103,8 @@
             },
             arr_active:{
                 type:Object,
-                default:()=>[]
+                default:()=>{}
             }
-        },
-        methods:{
         }
     }
 </script>

@@ -144,10 +144,11 @@
                 <ul class="nav_title_left">
                     <li class="nav_title_li_border"></li>
                     <li><strong>积分兑换</strong></li>
+                    <li><a v-link="{path:'/u/exchange/cashing'}">前往兑换</a></li>
                 </ul>
-                <div class="nav_title_right">
-                    <a v-link="{path:'/u/exchange/cashing'}">前往兑换</a>
-                </div>
+                <!--<div class="nav_title_right">
+
+                </div>-->
             </div>
             <div class="U_info_content">
                 <div class="carousel">
@@ -157,7 +158,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-1.jpg">
+                                        <img src="../assets/img/gift-1.jpg">
                                         <p class="G_fl">积分：<span>400</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -166,7 +167,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-2.jpg">
+                                        <img src="../assets/img/gift-2.jpg">
                                         <p class="G_fl">积分：<span>400</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -175,7 +176,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-3.jpg">
+                                        <img src="../assets/img/gift-3.jpg">
                                         <p class="G_fl">积分：<span>400</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -184,7 +185,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-4.jpg">
+                                        <img src="../assets/img/gift-4.jpg">
                                         <p class="G_fl">积分：<span>400</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -193,7 +194,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-5.jpg">
+                                        <img src="../assets/img/gift-5.jpg">
                                         <p class="G_fl">积分：<span>2000</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -202,7 +203,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-6.jpg">
+                                        <img src="../assets/img/gift-6.jpg">
                                         <p class="G_fl">积分：<span>3800</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -211,7 +212,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-7.jpg">
+                                        <img src="../assets/img/gift-7.jpg">
                                         <p class="G_fl">积分：<span>6500</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -220,7 +221,7 @@
                             <li v-on:click="goCashing">
                                 <div class="gift-left-box G_fl">
                                     <div class="num_full clearfix">
-                                        <img src="/img/gift-8.jpg">
+                                        <img src="../assets/img/gift-8.jpg">
                                         <p class="G_fl">积分：<span>7000</span></p>
                                         <p class="G_fl">数量：<span>充足</span></p>
                                     </div>
@@ -246,43 +247,46 @@
         route:{
             data({to}){
                 this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
+
+                var ii = layer.load();
+                var that = this;
+                var params = {"query":{"user_id":config.USERID()}};
+                $.ajax({
+                    url:config.API_BASE+"/4s/home/index",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        layer.close(ii);
+                        if(response.code==0){
+                            var data = response.data;
+                            that.baseinfo = data.baseinfo;
+                            that.neworder = data.neworder;
+                            that.$set("arr_active",data.newactivity);
+//                        that.arr_active = data.newactivity;
+                            that.arr_area_active = data.pricearea;
+                            that.$set("arr_offer",data.newprice);
+//                        that.arr_offer= data.newprice;
+                            that.arr_area_offer = data.specialpricearea;
+                        }
+                        /* },
+                         error:function (fail) {
+                         if(fail.status == "401"){
+                         layer.msg('登录失效，请重新登陆！');
+                         that.$route.router.go("/login");
+                         }*/
+                    }
+                })
             }
         },
         ready(){
             this.c_width= $(".carousel_div").width();
-
-            var ii = layer.load();
-            var that = this;
-            var params = {"query":{"user_id":config.USERID()}};
-            $.ajax({
-                url:config.API_BASE+"/4s/home/index",
-                method:"POST",
-                contentType: 'application/json; charset=utf-8',
-                dataType:"json",
-                data:JSON.stringify(params),
-                beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID());
-                },
-                success:function (response) {
-                    layer.close(ii);
-                    if(response.code==0){
-                        var data = response.data;
-                        that.baseinfo = data.baseinfo;
-                        that.neworder = data.neworder;
-                        that.arr_active = data.newactivity;
-                        that.arr_area_active = data.pricearea;
-                        that.arr_offer= data.newprice;
-                        that.arr_area_offer = data.specialpricearea;
-                    }
-               /* },
-                error:function (fail) {
-                    if(fail.status == "401"){
-                        layer.msg('登录失效，请重新登陆！');
-                        that.$route.router.go("/login");
-                    }*/
-                }
-            })
-
+            $(".UC_nav").find('a').removeClass("active").find("i").removeClass("i_active_1 i_active_2 i_active_3 i_active_4 i_active_5 i_active_0")
+            $(".UC_nav").find('li').eq(0).find('a').addClass("active").find("i").addClass("i_active_0");
         },
         data(){
             return {
@@ -292,8 +296,8 @@
                 explain:"如您对官方价有疑问，请致电400-138-0808。",
                 arr_area_offer:[],
                 arr_area_active:[],
-                arr_offer:[],
-                arr_active:[],
+                arr_offer:{},
+                arr_active:{},
                 c_width:'',
                 cur:0,
                 c_sum:2,

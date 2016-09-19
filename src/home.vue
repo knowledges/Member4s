@@ -51,7 +51,7 @@
     }
 </script>
 <style>
-    @import './assets/css/app.css';
+    @import 'assets/css/app.css';
     [v-cloak] {
         display: none;
     }

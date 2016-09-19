@@ -155,8 +155,8 @@
     }
 </script>
 <style>
-    @import '/css/app.css';
-    @import '/css/login.css';
+    @import './../../assets/css/app.css';
+    @import './../../assets/css/login.css';
     [v-cloak] {
         display: none;
     }

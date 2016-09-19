@@ -1,41 +1,57 @@
 <template>
     <ul class="UC_nav">
         <!--普通会员-->
-        <li class=""><a v-link="{path:'/u/store',activeClass:'active'}" :class="{ 'active': 0 === selected }" v-on:click="eveClk(0)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-home" :class="{ 'i_active_0': 0 === selected }"></i>4s店主页</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/order/all',activeClass:'active'}" :class="{ 'active': 1 === selected }" v-on:click="eveClk(1)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-order" :class="{ 'i_active_1': 1 === selected }"></i>购车订单</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/manage/myOffer',activeClass:'active'}" :class="{ 'active': 2 === selected }" v-on:click="eveClk(2)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-eye" :class="{ 'i_active_2': 2 === selected }"></i>报价管理</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/active/thisShop/find/0',activeClass:'active'}" :class="{ 'active': 3 === selected }" v-on:click="eveClk(3)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-cheku" :class="{ 'i_active_3': 3 === selected }" ></i>活动车款</a><em></em></li>
-        <!--<li class=""><a v-link="{path:'/u/message',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
+        <li class=""><a v-link="{path:'/u/store'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-home"></i>4s店主页</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/order/all'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-order"></i>购车订单</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/manage/myOffer'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-eye"></i>报价管理</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/active/thisShop/find/0'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-cheku"></i>活动车款</a><em></em></li>
+        <!--<li class=""><a v-link="{path:'/u/message'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-news"  :class="{ 'i_active_4': 4 === selected }"></i>消息通知</a><em></em></li>-->
-        <li class=""><a v-link="{path:'/u/exchange/cashing',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-integral" :class="{ 'i_active_4': 4 === selected }"></i>积分兑换</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/accout/info',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i
-                class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_5': 5 === selected }"></i>账户管理</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/exchange/cashing'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-integral"></i>积分兑换</a><em></em></li>
+        <li class=""><a v-link="{path:'/u/accout/info'}"><i
+                class="ui_icon_18 icon-new-uc icon-new-uc-set"></i>账户管理</a><em></em></li>
+
+
+        <!--<li class=""><a v-link="{path:'/u/store',activeClass:'active'}" :class="{ 'active': 0 === selected }" v-on:click="eveClk(0)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-home" :class="{ 'i_active_0': 0 === selected }"></i>4s店主页</a><em></em></li>-->
+        <!--<li class=""><a v-link="{path:'/u/order/all',activeClass:'active'}" :class="{ 'active': 1 === selected }" v-on:click="eveClk(1)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-order" :class="{ 'i_active_1': 1 === selected }"></i>购车订单</a><em></em></li>-->
+        <!--<li class=""><a v-link="{path:'/u/manage/myOffer',activeClass:'active'}" :class="{ 'active': 2 === selected }" v-on:click="eveClk(2)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-eye" :class="{ 'i_active_2': 2 === selected }"></i>报价管理</a><em></em></li>-->
+        <!--<li class=""><a v-link="{path:'/u/active/thisShop/find/0',activeClass:'active'}" :class="{ 'active': 3 === selected }" v-on:click="eveClk(3)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-cheku" :class="{ 'i_active_3': 3 === selected }" ></i>活动车款</a><em></em></li>-->
+        <!--&lt;!&ndash;<li class=""><a v-link="{path:'/u/message',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-news"  :class="{ 'i_active_4': 4 === selected }"></i>消息通知</a><em></em></li>&ndash;&gt;-->
+        <!--<li class=""><a v-link="{path:'/u/exchange/cashing',activeClass:'active'}" :class="{ 'active': 4 === selected }" v-on:click="eveClk(4)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-integral" :class="{ 'i_active_4': 4 === selected }"></i>积分兑换</a><em></em></li>-->
+        <!--<li class=""><a v-link="{path:'/u/accout/info',activeClass:'active'}" :class="{ 'active': 5 === selected }" v-on:click="eveClk(5)"><i-->
+                <!--class="ui_icon_18 icon-new-uc icon-new-uc-set" :class="{ 'i_active_5': 5 === selected }"></i>账户管理</a><em></em></li>-->
     </ul>
 </template>
 
 <script>
     import $ from 'jquery'
     export default{
-        ready(){
-            let that = $(".UC_nav li").find("a[class='active']").parent();
-            let idx = $(".UC_nav li").index(that);
-            this.selected = idx!=-1 ? idx:0
-        },
-        data(){
-            return {
-                selected:'',
-            }
-        },
-        methods:{
-            eveClk(index){
-                this.selected = index;
-            }
-        }
+//        ready(){
+//            let that = $(".UC_nav li").find("a[class='active']").parent();
+//            let idx = $(".UC_nav li").index(that);
+//            this.selected = idx!=-1 ? idx:0
+//        },
+//        data(){
+//            return {
+//                selected:'',
+//            }
+//        },
+//        methods:{
+//            eveClk(index){
+//                this.selected = index;
+//            }
+//        }
     }
 </script>
 <style>

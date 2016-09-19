@@ -12,9 +12,10 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   hashbang: true,
-  history: true,
+  history: false,
   saveScrollPosition: true,
-  suppressTransitionError: true
+  suppressTransitionError: true,
+  root:"/member4s"
 })
 
 routerConfig(router)

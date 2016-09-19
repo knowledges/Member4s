@@ -31,8 +31,14 @@
     import util from './../../util/util'
     import $ from 'jquery'
     export default {
+        route:{
+            data(){
+                this.find = this.$route.params.findId;
+                console.log("findId:"+this.find);
+                this.getSpecialList(this.find ,1);
+            }
+        },
         ready(){
-            this.find = this.$route.params.find;
             var that = this;
 
             $.ajax({
@@ -58,8 +64,6 @@
 //                var cToObj=eval("("+response.data+")");
 //                this.$set("arr_items",cToObj.data);
 //            });
-            this.getSpecialList(0,1);
-
         },
         data(){
             return {
@@ -167,6 +171,12 @@
 </script>
 
 <style>
+    select{
+        display: inline-block;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
     .wrap{
         width:890px;
         margin:0 auto;

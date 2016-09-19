@@ -41,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-if="$.isEmptyObject(arr_offer.length)">
+            <tr v-if="arr_offer.car_model_name=='' && arr_offer.car_name==''">
                 <td colspan="11">
                     <p>没有搜索到内容......</p>
                 </td>
@@ -93,7 +93,7 @@
             }
         },
         methods:{
-            update(){
+           /* update(){
                 layer.open({
                     type: 2,
                     title: '身份验证',
@@ -103,7 +103,7 @@
                     area : ['380px' , '310px'],
                     content: '/static/components/template/verify/identity.html'
                 });
-            }
+            }*/
         }
     }
 </script>

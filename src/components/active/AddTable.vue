@@ -54,7 +54,8 @@
                     <td></td>
                     <td v-if="stats>0">
                         <a v-on:click="update(item)">添加</a>
-                        <a v-bind:href="'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>
+                        <a v-link="{path:'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId}">历史</a>
+                        <!--<a v-bind:href="'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>-->
                     </td>
                 </tr>
                 <tr  v-if="arr_items.length<=0">
@@ -151,7 +152,7 @@
                 <dt></dt>
                 <dd>
                     <button v-on:click="save">保存</button>
-                    <button>取消</button>
+                    <button v-on:click="cancle">取消</button>
                 </dd>
             </dl>
         </div>
@@ -232,7 +233,7 @@
                 <dt></dt>
                 <dd>
                     <button v-on:click="agree">确定</button>
-                    <button>取消</button>
+                    <button v-on:click="cancle1">取消</button>
                 </dd>
             </dl>
         </div>
@@ -457,7 +458,7 @@
                             query.status = "";
                             query.remark = "";
                             query.description = that.items.desc;
-                            query.createuser = "186";
+                            query.createuser =  config.USERID();
                             query.areas = that.items.areas;
 
                             var params = {"query":query};
@@ -495,6 +496,9 @@
                 });
 
             },
+            cancle(){
+                layer.close(this.mask_2);
+            },
             cityClk(obj,_index){
 //               /*点击下标是否第一个*/
                 if(_index == 0){
@@ -531,7 +535,7 @@
 
                 if(this.city_items.length>1){
 
-                    var total = this.city_items.length-1;
+                    var total = this.city_items.length;
 
                     for(var i = 1; i<this.city_items.length;i++){
                         /*剔除已选择过的*/
@@ -585,6 +589,9 @@
                     }
                 }
             },
+            cancle1(){
+                layer.close(this.mask_1);
+            },
             selectAllClk(){
                 this.global = true;
                 $("#selectedKey").find("option[value=0]").attr({"selected":true});
@@ -603,6 +610,12 @@
 
 <style scoped>
     @import "./../../assets/css/datepicker.css";
+    select{
+        display: inline-block;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
 
     table {
         width: 100%;
@@ -755,6 +768,7 @@
     div dl dd button {
         padding: 5px 60px;
         margin: 20px 15px;
+        font-size: 16px;
         background: #fa8c35;
         color: #FFF;
         border: none;
@@ -778,7 +792,7 @@
     }
 
     .layer_2 ul li {
-        /*margin: 10px ;*/
+        margin:5px 10px!important;
         position: relative;
         border: 2px solid #ccc;
         background:#FFF;
@@ -820,7 +834,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/img/ico_warn.png);
+        background-image: url(/assets/img/ico_warn.png);
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

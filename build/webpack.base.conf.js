@@ -1,13 +1,14 @@
 var path = require('path')
 var webpack = require('webpack')
+ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
     app: './src/app.js'
   },
   output: {
-    path: path.resolve(__dirname, '../dist/static'),
-    publicPath: '/static/',
+    path:path.resolve(__dirname, '../dist/static'),
+     publicPath: '/member4s/static/',
     filename: '[name].js'
   },
   plugins: [
@@ -15,8 +16,14 @@ module.exports = {
       $: "jquery",
       jQuery: "jquery",
       "window.jQuery": "jquery"
-    })
-  ],
+    }),
+    new CopyWebpackPlugin([
+      {
+        from:  path.resolve(__dirname, '../src/assets'),
+        to: '../assets',
+      }
+    ])
+],
   resolve: {
     extensions: ['', '.js', '.vue', '.less'],
     alias: {

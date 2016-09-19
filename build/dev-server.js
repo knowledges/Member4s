@@ -12,6 +12,7 @@ app.use('/data', express.static(path.join(__dirname, '../src/data')))
 app.use('/img', express.static(path.join(__dirname, '../src/assets/img')))
 app.use('/js', express.static(path.join(__dirname, '../src/assets/js')))
 app.use('/css', express.static(path.join(__dirname, '../src/assets/css')))
+app.use('/assets', express.static(path.join(__dirname, '../src/assets')))
 
 // app.use(favicon(path.join(__dirname, '../favicon.ico')))
 // handle fallback for HTML5 history API

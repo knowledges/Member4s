@@ -161,7 +161,7 @@
                 <dt></dt>
                 <dd>
                     <button v-on:click="save">保存</button>
-                    <button>取消</button>
+                    <button v-on:click="cancle">取消</button>
                 </dd>
             </dl>
         </div>
@@ -247,7 +247,7 @@
                 <dt></dt>
                 <dd>
                     <button v-on:click="agree">确定</button>
-                    <button>取消</button>
+                    <button v-on:click="cancle1">取消</button>
                 </dd>
             </dl>
         </div>
@@ -365,7 +365,7 @@
                 var ii = layer.load();
                 var query = {};
                 query.id=obj.id;
-                query.user_id = window.SESSION.getUserId();
+                query.user_id = config.USERID();
                 query.status = stauts;
                 var params = {"query":query};
 
@@ -376,7 +376,7 @@
                     dataType:"json",
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",window.SESSION.getSessionId());
+                        request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
                         layer.close(ii);
@@ -411,9 +411,9 @@
                 this.items.carName = obj.car_name;
                 this.items.price = obj.auth_price;
                 this.items.special_price = obj.special_price;
-                this.items.interior_color_id = obj.exterior_color_id;
+                this.items.interior_color_id = obj.interior_color_id;
                 this.items.interiorColorName = obj.interior_color_name;
-                this.items.exterior_color_id = obj.interior_color_id;
+                this.items.exterior_color_id = obj.exterior_color_id;
                 this.items.exteriorColorName = obj.exterior_color_name;
                 this.items.number = obj.number;
                 this.items.start_date = obj.start_date;
@@ -605,6 +605,9 @@
                     layer.close(ii);
                 }
             },
+            cancle(){
+                layer.close(this.mask_2);
+            },
             updataActive(){
                 var that = this;
 
@@ -641,8 +644,8 @@
                     success:function (response) {
                         if(response.code == 0){
                             layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
-//                            that.arr_items.$remove(that.rem_item);
                             layer.close(that.mask_2);
+                            window.history.go(0);
                         }
 //                    },
 //                    error:function (fail) {
@@ -720,6 +723,9 @@
                     }
                 }
             },
+            cancle1(){
+                layer.close(this.mask_1);
+            },
             removeCity(obj){
                 /*判断是否是直辖市*/
                 if(obj.city == obj.province){
@@ -761,6 +767,13 @@
 
 <style scoped>
     @import "./../../assets/css/datepicker.css";
+
+    select{
+        display: inline-block;
+        height: 35px;
+        line-height: 35px;
+        font-size: 14px;
+    }
 
     table {
         width: 100%;
@@ -936,7 +949,7 @@
     }
 
     .layer_2 ul li {
-        /*margin: 10px ;*/
+        margin:5px 10px!important ;
         position: relative;
         border: 2px solid #ccc;
         background:#FFF;
@@ -977,7 +990,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/img/ico_warn.png);
+        background-image: url(/assets/img/ico_warn.png);
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;
