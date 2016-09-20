@@ -101,9 +101,11 @@
     import $ from 'jquery'
     import config from './../../config'
     export default {
-        route:{
-        },
         ready(){
+            var session = JSON.parse(sessionStorage.getItem("SESSIONID"));
+            if(session != null){
+                this.$route.router.go("/u");
+            }
         },
         data(){
             return {
@@ -116,7 +118,11 @@
         methods:{
             loginClk(){
                 var that = this;
-                var ii = layer.load();
+
+                var ii = layer.load(1, {
+                    content:'加载中......',
+                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                });
                 var url = config.API_BASE+"/login/auth/4s/web";
 //                var url = " http://192.168.13.111/YchLrestServer/api/login/auth/4s/web";
                 var param = {};

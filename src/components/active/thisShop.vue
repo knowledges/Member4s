@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
         <div class="brand-list clearfix">
-            <p class="G_fl">主营品牌：<span>奥迪</span></p>
-            <p class="G_fl">副营品牌：<span>一汽大众</span> <span>别克</span><span>标致</span> </p>
+            <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
+            <p class="G_fl">副营品牌：<span v-for="list in brandlist">{{list.brand_name}}</span></p>
         </div>
         <div class="select-bar clearfix">
             <div class="select-box G_fl">
@@ -36,34 +36,54 @@
                 this.find = this.$route.params.findId;
                 console.log("findId:"+this.find);
                 this.getSpecialList(this.find ,1);
+
+                var that = this;
+
+                $.ajax({
+                    url:config.API_BASE+"/nl/common/provincecity",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        that.$set("arr_items",response.data.data);
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/accountmanagement/information",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify({"query":{"uid":config.USERID()}}),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        var list = response.data;
+                        that.brand_name = list.brand_name;
+                        that.brandlist = list.brandlist;
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
             }
         },
         ready(){
-            var that = this;
-
-            $.ajax({
-                url:config.API_BASE+"/nl/common/provincecity",
-                method:"POST",
-                contentType: 'application/json; charset=utf-8',
-                dataType:"json",
-                beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID());
-                },
-                success:function (response) {
-                    that.$set("arr_items",response.data.data);
-//                },
-//                error:function (fail) {
-//                    if(fail.status == "401"){
-//                        layer.msg('登录失效，请重新登陆！');
-//                        that.$route.router.go("/login");
-//                    }
-                }
-            });
-
-//            this.$http.get('task.json').then(function (response) {
-//                var cToObj=eval("("+response.data+")");
-//                this.$set("arr_items",cToObj.data);
-//            });
         },
         data(){
             return {
@@ -79,7 +99,9 @@
                 cur: 1,
                 count: 0,
                 pagesize:10,
-                find:""
+                find:"",
+                brand_name:"",
+                brandlist:[]
             }
         },
         components:{
@@ -93,7 +115,10 @@
                 }else{
                     arr[0]=parseInt(status);
                 }
-                var ii = layer.load();
+                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+                /*var ii = layer.load(1, {
+                    shade : [0.5,'#000'] //0.1透明度的白色背景
+                });*/
                 var that = this;
                 var url=  config.API_BASE +"/4s/special/list";
                 var query={};
@@ -155,11 +180,12 @@
                             }
                         }
                         layer.close(ii);
-//                    },error:function (fail) {
-//                        if(fail.status == "401"){
-//                            layer.msg('登录失效，请重新登陆！');
-//                            that.$route.router.go("/login");
-//                        }
+                    },error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
                     }
                 });
             },

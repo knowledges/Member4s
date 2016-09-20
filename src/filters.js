@@ -1,4 +1,3 @@
-
 let format = (value) => {
   return value >= 10 ? value : '0' + value
 }

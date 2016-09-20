@@ -4,8 +4,8 @@
             <div class="uc_person_info">
                 <div class="facePic">
                     <div class="productImg">
-                        <a href="http://www.gouchehui.com/member.php/MemberGeneral/n_uc_base_info_pic.html">
-                            <img v-bind:src="SESSIONID.head_url">
+                        <a href="http://www.gouchehui.com/member.php/MemberGeneral/n_uc_base_info_pic.html" style="display: inline-block; height: 120px;width: 120px;">
+                            <img v-bind:src="SESSIONID.head_url" style="display: inline-block; height: 100%;">
                         </a>
                     </div>
                 </div>

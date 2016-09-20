@@ -396,16 +396,34 @@
             },
             save(){
                 var items = this.items;
-                if(items.special_price == "" ||items.special_price>items.market){
+                if(items.special_price == "" ){
                     items.offer_ = true;
-                    items.offer_msg="低价不可高于市场价";
+                    items.offer_msg="特价不能为空";
+                    return;
+                }else if(items.special_price>items.market){
+                    items.offer_ = true;
+                    items.offer_msg="特价不可高于市场价";
+                    return;
                 }else{
                     items.offer_ = false;
+                }
+
+                if(items.start_date == "" || items.end_date == ""){
+                    items.timer_ = true;
+                    items.timer_msg="开始时间或结束时间不能为空";
+                    return;
+                }else if(items.start_date>items.end_date){
+                    items.timer_ = true;
+                    items.timer_msg="结束时间不可早于开始时间";
+                    return;
+                }else{
+                    items.timer_ = false;
                 }
 
                 if(items.number == "" || items.number<=0){
                     items.number_ = true;
                     items.number_msg = "数量不小于1";
+                    return;
                 }else{
                     items.number_ = false;
                 }
@@ -413,6 +431,7 @@
                 if(items.start_date == "" && items.end_date == ""){
                     items.timer_ = true;
                     items.timer_msg="结束时间不可早于开始时间";
+                    return;
                 }else{
                     items.timer_ = false;
                 }
@@ -420,19 +439,25 @@
                 if($("#areas_ > li").length<=0){
                     items.selectarea_ = true;
                     items.selectarea_msg = "请选择区域";
+                    return;
                 }else{
                     items.selectarea_ = false;
                 }
 
                 if(items.file_value==""){
                     items.file_=true;
-                    items.file_msg = "请上传头像";
+                    items.file_msg = "请上传图片";
+                    return;
                 }else{
                     items.file_=false;
                 }
 
             var that = this;
-            var ii = layer.load();
+
+            var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+           /* var ii = layer.load(1, {
+                    shade : [0.5,'#000']
+                });*/
             var formd = new FormData();
             formd.append("img",$("#upload-file")[0].files[0]);
             $.ajax({
@@ -453,7 +478,7 @@
                             query.price = that.items.price;
                             query.special_price = that.items.special_price;
                             query.start_date = that.items.start_date+" 00:00:01";
-                            query.end_date = that.items.end_date+" 59:59:58";
+                            query.end_date = that.items.end_date+" 23:59:58";
                             query.number = that.items.number;
                             query.status = "";
                             query.remark = "";
@@ -477,6 +502,26 @@
                                         layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
                                         that.arr_items.$remove(that.rem_item);
                                         layer.close(that.mask_2);
+                                        /*clear*/
+                                        that.special_price="";
+                                        that.offer_=false;
+                                        that.offer_msg="";
+                                        that.start_date="";
+                                        that.end_date="";
+                                        that.timer_=false;
+                                        that.timer_msg="";
+                                        that.number="";
+                                        that.number_=false;
+                                        that.number_msg="";
+                                        that.areas=[];
+                                        that.selectarea_=false;
+                                        that.selectarea_msg="";
+                                        that.file_src="";
+                                        that.file_img="";
+                                        that.file_value="";
+                                        that.file_=false;
+                                        that.file_msg="";
+                                        that.desc="";
                                     }
                                 },
                                 error:function (fail) {

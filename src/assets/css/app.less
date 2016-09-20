@@ -434,3 +434,17 @@ table {
   border: 1px solid #e6e6e6;
   background: #FFF;
 }
+.back-transition {
+  -webkit-transition: opacity .3s ease-in;
+  -moz-transition: opacity .3s  ease-in;
+  -o-transition: opacity .3s  ease-in;
+  transition: opacity .3s  ease-in;
+  opacity: 100;
+  filter: alpha(opacity=100);
+}
+.back-enter, .back-leave {
+  opacity: 0;
+}
+/*.back-leave {
+  opacity: 0
+}*/

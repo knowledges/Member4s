@@ -1,9 +1,9 @@
 <template>
-    <div class="wrap">
+    <div class="wrap"  transition="fade">
         <div class="top-bar">
             <div class="brand-list clearfix">
-                <p class="G_fl">主营品牌：<span>奥迪</span></p>
-                <p class="G_fl">副营品牌：<span>一汽大众</span><span>别克</span><span>标致</span></p>
+                <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
+                <p class="G_fl">副营品牌：<span v-for="list in brandlist">{{list.brand_name}}</span></p>
             </div>
             <div class="details">
                 <dl class="brands clearfix">
@@ -23,13 +23,13 @@
 
                 <dl class="model clearfix">
                     <dt class="G_fl">车型：</dt>
-                    <dd v-for="model in screen_carModels"><a v-on:click="scrModelClk(model,$event)">{{model.carModelName}}</a></dd>
+                    <dd v-for="model in screen_carModels"  v-if="screen_carModels.length>0"><a v-on:click="scrModelClk(model,$event)">{{model.carModelName}}</a></dd>
                 </dl>
 
                 <div class="style">
                     <dl class="car clearfix">
                         <dt class="G_fl">车款：</dt>
-                        <dd v-for="car in screen_car"><a v-on:click="scrCarClk(car,$event)" class="style-box">{{car.carName}}</a></dd>
+                        <dd v-for="car in screen_car" v-if="screen_car.length>0"><a v-on:click="scrCarClk(car,$event)" class="style-box">{{car.carName}}</a></dd>
                     </dl>
                 </div>
             </div>
@@ -82,20 +82,39 @@
                         })
 
                     }
-//                },
-//                error:function (fail) {
-//                    if(fail.status == "401"){
-//                        layer.msg('登录失效，请重新登陆！');
-//                        that.$route.router.go("/login");
-//                    }
+                },
+                error:function (fail) {
+                    if(fail.status == "401"){
+                        sessionStorage.removeItem("SESSIONID");
+                        layer.msg('登录失效，请重新登陆！');
+                        that.$route.router.go("/login");
+                    }
                 }
 
             })
-
-//            this.$http.get('package.json').then(function (response) {
-//                var cToObj=eval("("+response.data+")");
-//                this.$set("arr_items",cToObj);
-//            });
+            /*4S店*/
+            $.ajax({
+                url:config.API_BASE+"/4s/accountmanagement/information",
+                method:"POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType:"json",
+                data:JSON.stringify({"query":{"uid":config.USERID()}}),
+                beforeSend:function (request) {
+                    request.setRequestHeader("sessionid",config.SESSIONID());
+                },
+                success:function (response) {
+                    var list = response.data;
+                    that.brand_name = list.brand_name;
+                    that.brandlist = list.brandlist;
+                },
+                error:function (fail) {
+                    if(fail.status == "401"){
+                        sessionStorage.removeItem("SESSIONID");
+                        layer.msg('登录失效，请重新登陆！');
+                        that.$route.router.go("/login");
+                    }
+                }
+            });
         },
         data(){
             return {
@@ -112,7 +131,9 @@
                 arr_items:[],
                 cur: 1,
                 count: 0,
-                pagesize:10
+                pagesize:10,
+                brand_name:"",
+                brandlist:[]
             }
         },
         components:{
@@ -121,7 +142,10 @@
         methods:{
             /*分页*/
             getActivityList(cur,car_id){
-                var ii = layer.load();
+                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+               /* var ii = layer.load(1, {
+                    shade : [0.5,'#000']
+                });*/
                 var that = this;
                 var query = {};
                     query.pagenum = this.pagesize;
@@ -180,12 +204,13 @@
 
                         }
                         layer.close(ii);
-//                    },
-//                    error:function (fail) {
-//                        if(fail.status == "401"){
-//                            layer.msg('登录失效，请重新登陆！');
-//                            that.$route.router.go("/login");
-//                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
                     }
                 })
 
@@ -209,33 +234,38 @@
             scrModelClk(obj,e){
                 var carModelId = obj.carModelId;
                 this.screen_car = this.cars[carModelId];
-                var _index = 0;
-                this.$nextTick(function () {
-
-                    this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
-
-                    if(e!=null){
-                        _index = $(e.target).parent().index()-1;
-                    }
-                    $(".model dd").find('a').removeClass("actived");
-                    $(".model dd").eq(_index).find('a').addClass("actived");
-                })
-
-
+                if(this.screen_car!=undefined){
+                    var _index = 0;
+                    this.$nextTick(function () {
+                        this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
+                        if(e!=null){
+                            _index = $(e.target).parent().index()-1;
+                        }
+                        $(".model dd").find('a').removeClass("actived");
+                        $(".model dd").eq(_index).find('a').addClass("actived");
+                    })
+                }else{
+                    this.$set("screen_car",[]);
+                }
             },
             scrCarClk(obj,e){
                 var carId = obj.carId ,carName = obj.carName;
-                var _index = 0;
-                this.$nextTick(function () {
-                    if(e!=null){
-                        _index = $(e.target).parent().index()-1;
-                    }
-                    $(".car dd").find('a').removeClass("actived");
-                    $(".car dd").eq(_index).find('a').addClass("actived");
+                if(carId!=null){
+                    var _index = 0;
+                    this.$nextTick(function () {
+                        if(e!=null){
+                            _index = $(e.target).parent().index()-1;
+                        }
+                        $(".car dd").find('a').removeClass("actived");
+                        $(".car dd").eq(_index).find('a').addClass("actived");
 
-                    this.getActivityList(1,carId);
-                });
-
+                        this.getActivityList(1,carId);
+                    });
+                }else{
+                    $("#page2").empty();
+                    this.$set("screen_car",[]);
+                    this.$set("arr_items",[]);
+                }
             }
         }
     }
@@ -302,6 +332,7 @@
     .top-bar .details .style .style-box{
         display:inline-block;
         padding: 0 10px;
+        margin: 2px 0;
         height:24px;
         border:1px dashed  #ccc;
         background:#f5f5f5;
@@ -317,5 +348,4 @@
         color:#fff;
         background:#fa8c35;
     }
-
 </style>

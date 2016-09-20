@@ -11,7 +11,7 @@
                 </div>
                 <div class="uc_main GB_main_r">
                     <div class="uc_main_wrapper">
-                        <router-view></router-view>
+                        <router-view  transition="back"></router-view>
                     </div>
                 </div>
             </div>

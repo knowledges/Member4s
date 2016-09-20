@@ -345,7 +345,7 @@
                     file_value:"",
                     file_:false,
                     file_msg:"",
-                    desc:"",
+                    desc:""
                 },
                 _index:"",
                 selectedKey:"",
@@ -381,7 +381,7 @@
                     success:function (response) {
                         layer.close(ii);
                         if(response.code==0){
-                            window.history.go(0);
+//                            window.history.go(0);
                             layer.msg('完成修改');
                         }
 //                    },
@@ -394,82 +394,102 @@
                 })
             },
             stop(obj,_index){
-                console.log(JSON.stringify(obj));
-                this.updateCarActivityStatus(obj,4,_index);
+                var that = this;
+                layer.confirm('您确定要停售吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    that.updateCarActivityStatus(obj,4,_index);
+                }, function(){
+                });
+
             },
             goto(obj,_index){
-                console.log(JSON.stringify(obj));
-                this.updateCarActivityStatus(obj,3,_index);
+                var that = this;
+                layer.confirm('您确定要在售吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    that.updateCarActivityStatus(obj,3,_index);
+                }, function(){
+                });
+
             },
             update(obj){
-                this.rem_item = obj;
-                this.items.areas = [];
-                this.items.id = obj.id;
-                this.items.brandName = obj.brand_name;
-                this.items.carModelName = obj.car_model_name;
-                this.items.car_id = obj.car_id;
-                this.items.carName = obj.car_name;
-                this.items.price = obj.auth_price;
-                this.items.special_price = obj.special_price;
-                this.items.interior_color_id = obj.interior_color_id;
-                this.items.interiorColorName = obj.interior_color_name;
-                this.items.exterior_color_id = obj.exterior_color_id;
-                this.items.exteriorColorName = obj.exterior_color_name;
-                this.items.number = obj.number;
-                this.items.start_date = obj.start_date;
-                this.items.end_date = obj.end_date;
-                this.items.file_img = obj.car_image;
-                var str = obj.sales_area;
-                var list = str.substring(1,str.length-1).split(",");
-                for(var i = 0 ; i< list.length;i++){
-                    if(list[i].trim()=="全国"){
-                        this.items.areas.push({"sales_area_name":"全国","sales_area_level":"1"})
-                        this.global = true;
-                        $("#selectedKey").attr({"disabled":true});
-                        $("#global").addClass("selected");
-                    }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
-                        var that = this;
-                        that.items.areas.push({"sales_area_name":list[i],"sales_area_level":"2"})
-                        var arr = that.provincecity[list[i].trim()];
-                        if(arr.length>1){
-                            /*把省插入到第一的位置*/
-                            arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
+                var that = this;
+                layer.confirm('您确定要修改吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(index){
+                    layer.close(index);
+
+                    that.rem_item = obj;
+                    that.items.areas = [];
+                    that.items.id = obj.id;
+                    that.items.brandName = obj.brand_name;
+                    that.items.carModelName = obj.car_model_name;
+                    that.items.car_id = obj.car_id;
+                    that.items.carName = obj.car_name;
+                    that.items.price = obj.auth_price;
+                    that.items.special_price = obj.special_price;
+                    that.items.interior_color_id = obj.interior_color_id;
+                    that.items.interiorColorName = obj.interior_color_name;
+                    that.items.exterior_color_id = obj.exterior_color_id;
+                    that.items.exteriorColorName = obj.exterior_color_name;
+                    that.items.number = obj.number;
+                    that.items.start_date = obj.start_date;
+                    that.items.end_date = obj.end_date;
+                    that.items.file_img = obj.car_image;
+                    that.items.desc = obj.description;
+                    var str = obj.sales_area;
+                    var list = str.substring(1,str.length-1).split(",");
+                    for(var i = 0 ; i< list.length;i++){
+                        if(list[i].trim()=="全国"){
+                            that.items.areas.push({"sales_area_name":"全国","sales_area_level":"1"})
+                            that.global = true;
+                            $("#selectedKey").attr({"disabled":true});
+                            $("#global").addClass("selected");
+                        }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
+                            that.items.areas.push({"sales_area_name":list[i],"sales_area_level":"2"})
+                            var arr = that.provincecity[list[i].trim()];
+                            if(arr.length>1){
+                                /*把省插入到第一的位置*/
+                                arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
 
 
-                            for(var j =0 ;j <arr.length;j++){
-                                if(j == 0){
-                                    /*赋值总数去掉省*/
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
-                                }else{
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
+                                for(var j =0 ;j <arr.length;j++){
+                                    if(j == 0){
+                                        /*赋值总数去掉省*/
+                                        that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
+                                    }else{
+                                        that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
+                                    }
                                 }
+                            }else{
+                                arr[i].selected = true;
+                                that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
                             }
+
                         }else{
-                            arr[i].selected = true;
-                            that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
-                        }
-
-                    }else{
-                        var that = this;
-                        that.items.areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
-                        $.map(that.provincecity,function (val,key) {
-                            for(var j = 0;j<val.length;j++){
-                                if(list[i].trim() == val[j].city){
-                                    val[j].selected = true;
-                                    that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
+                            that.items.areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
+                            $.map(that.provincecity,function (val,key) {
+                                for(var j = 0;j<val.length;j++){
+                                    if(list[i].trim() == val[j].city){
+                                        val[j].selected = true;
+                                        that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
                     }
-                }
 
-                this.mask_2= layer.open({
-                    type: 1,
-                    title: '活动详情修改',
-                    skin: 'layui-layer-rim', //加上边框
-                    area : ['750px' , '800px'],
-                    content: $(".activeinfo")
+                    that.mask_2= layer.open({
+                        type: 1,
+                        title: '活动详情修改',
+                        skin: 'layui-layer-rim', //加上边框
+                        area : ['750px' , '800px'],
+                        content: $(".activeinfo")
+                    });
+                }, function(){
                 });
+
             },
             del(obj,_index){
                 var that = this;
@@ -540,30 +560,42 @@
             },
             save(){
                 var items = this.items;
-                if(items.special_price == "" ||items.special_price>items.market){
+                if(items.special_price == "" ){
                     items.offer_ = true;
-                    items.offer_msg="低价不可高于市场价";
+                    items.offer_msg="特价不能为空";
+                    return;
+                }else if(items.special_price>items.market){
+                    items.offer_ = true;
+                    items.offer_msg="特价不可高于市场价";
+                    return;
                 }else{
                     items.offer_ = false;
+                }
+
+                if(items.start_date == "" || items.end_date == ""){
+                    items.timer_ = true;
+                    items.timer_msg="开始时间或结束时间不能为空";
+                    return;
+                }else if(items.start_date>items.end_date){
+                    items.timer_ = true;
+                    items.timer_msg="结束时间不可早于开始时间";
+                    return;
+                }else{
+                    items.timer_ = false;
                 }
 
                 if(items.number == "" || items.number<=0){
                     items.number_ = true;
                     items.number_msg = "数量不小于1";
+                    return;
                 }else{
                     items.number_ = false;
-                }
-
-                if(items.start_date == "" && items.end_date == ""){
-                    items.timer_ = true;
-                    items.timer_msg="结束时间不可早于开始时间";
-                }else{
-                    items.timer_ = false;
                 }
 
                 if($("#areas_ > li").length<=0){
                     items.selectarea_ = true;
                     items.selectarea_msg = "请选择区域";
+                    return;
                 }else{
                     items.selectarea_ = false;
                 }
@@ -571,13 +603,15 @@
 //                items.file_value=="" ||
                 if(items.file_img == "" && items.file_value==""){
                     items.file_=true;
-                    items.file_msg = "请上传头像";
+                    items.file_msg = "请上传图片";
+                    return;
                 }else{
                     items.file_=false;
                 }
 
                 var that = this;
-                var ii = layer.load();
+
+                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
 
                 if(that.items.file_img == ""){
 
@@ -612,7 +646,6 @@
                 var that = this;
 
                 var query={};
-                //query.user_id =  config.USERID;
                 query.id = that.items.id;
                 query.user_id = config.USERID();
                 query.interior_color_id = that.items.interior_color_id;
@@ -621,8 +654,8 @@
                 query.car_id = that.items.car_id;
                 query.price = that.items.price;
                 query.special_price = that.items.special_price;
-                query.start_date = that.items.start_date+" 00:00:01";
-                query.end_date = that.items.end_date+" 59:59:58";
+                query.start_date = dataFilter(that.items.start_date)+" 00:00:01";
+                query.end_date = dataFilter(that.items.end_date)+" 23:59:58";
                 query.number = that.items.number;
                 query.status = "";
                 query.remark = "";
@@ -631,7 +664,13 @@
                 query.areas = that.items.areas;
 
                 var params = {"query":query};
-
+                function dataFilter(time) {
+                    var date = new Date(time);
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var day = date.getDate();
+                    return year+"-"+month+"-"+day;
+                }
                 $.ajax({
                     url:config.API_BASE+"/4s/activity/updateCarActivity/",
                     method:"POST",
@@ -645,7 +684,27 @@
                         if(response.code == 0){
                             layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
                             layer.close(that.mask_2);
-                            window.history.go(0);
+//                            window.history.go(0);
+                            /*clear*/
+                            that.special_price="";
+                            that.offer_=false;
+                            that.offer_msg="";
+                            that.start_date="";
+                            that.end_date="";
+                            that.timer_=false;
+                            that.timer_msg="";
+                            that.number="";
+                            that.number_=false;
+                            that.number_msg="";
+                            that.areas=[];
+                            that.selectarea_=false;
+                            that.selectarea_msg="";
+                            that.file_src="";
+                            that.file_img="";
+                            that.file_value="";
+                            that.file_=false;
+                            that.file_msg="";
+                            that.desc="";
                         }
 //                    },
 //                    error:function (fail) {

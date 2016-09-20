@@ -223,6 +223,7 @@ export  default function (router) {
             router.app.isIndex = depath ? 0 : 1
         }
         next()//调用过度动画
+
     });
 
     router.afterEach(function ({to}) {

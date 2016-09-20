@@ -90,7 +90,7 @@
     }
     .top-bar .details .brands a,.top-bar .details .model .models{
         display:inline-block;
-        width:46px;
+        padding: 0 10px;
         height:24px;
         line-height:24px;
         color:#666;
@@ -99,6 +99,7 @@
         font-size:14px;
         text-align:center;
         text-decoration:none;
+        cursor: pointer;
     }
     .top-bar .details .brands a:hover{
         background:#fa8c35;
@@ -128,7 +129,8 @@
     }
     .top-bar .details .style .style-box{
         display:inline-block;
-        width:160px;
+        padding: 0 10px;
+        margin: 2px 0;
         height:24px;
         border:1px dashed  #ccc;
         background:#f5f5f5;
@@ -138,6 +140,7 @@
         border-radius:10px;
         margin-right:10px;
         vertical-align: -2px;
+        cursor: pointer;
     }
     .top-bar .details .style .style-box:hover{
         color:#fff;

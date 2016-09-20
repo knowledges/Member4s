@@ -32,11 +32,11 @@
                     </div>
                 </ul>
                 <ul class="U_info_c_ul u_info_order clearfix">
-                    <li>已付定金<em  class="orange">{{baseinfo.deposit}}</em> </li>
+                    <li>已付定金<em class="orange">&nbsp;&nbsp;{{baseinfo.deposit}}</em></li>
                     <li>|</li>
-                    <li>待提车 <em  class="orange">{{baseinfo.mentioncars}}</em> </li>
+                    <li>待提车<em class="orange">&nbsp;&nbsp;{{baseinfo.mentioncars}}</em></li>
                     <li>|</li>
-                    <li>出库中  <em  class="orange">{{baseinfo.library}}</em></li>
+                    <li>出库中<em class="orange">&nbsp;&nbsp;{{baseinfo.library}}</em></li>
                 </ul>
             </div>
         </div>
@@ -245,10 +245,10 @@
     import util from './../util/util'
     export default {
         route:{
-            data({to}){
+            data({to,next}){
                 this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
 
-                var ii = layer.load();
+//                var ii = layer.load();
                 var that = this;
                 var params = {"query":{"user_id":config.USERID()}};
                 $.ajax({
@@ -261,7 +261,7 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        layer.close(ii);
+//                        layer.close(ii);
                         if(response.code==0){
                             var data = response.data;
                             that.baseinfo = data.baseinfo;
@@ -273,14 +273,17 @@
 //                        that.arr_offer= data.newprice;
                             that.arr_area_offer = data.specialpricearea;
                         }
-                        /* },
-                         error:function (fail) {
-                         if(fail.status == "401"){
-                         layer.msg('登录失效，请重新登陆！');
-                         that.$route.router.go("/login");
-                         }*/
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
                     }
                 })
+
+                next();
             }
         },
         ready(){
@@ -344,11 +347,8 @@
         word-spacing: normal;
         vertical-align: top;
         font-size: 12px;
-        min-height: 600px;
+        /*min-height: 600px;*/
         padding-bottom: 20px;
-    }
-    .UC_main_r {
-        display: inline;
     }
     /*store*/
     .nav_title{
@@ -403,7 +403,7 @@
         background: #FFF;
     }
     .U_info_content .u_info_order li{
-        margin: 0 65px!important;
+        margin: 0 60px!important;
     }
     i.font-icon{
         display: inline-block;

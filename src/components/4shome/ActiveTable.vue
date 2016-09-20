@@ -59,7 +59,6 @@
                     </td>
                     <td>{{arr_active.number}}</td>
                     <td>
-                        <span v-if="arr_area_active.length>0">有数据</span>
                         <span v-if="arr_area_active.length<=0">暂无数据</span>
                         <span v-for="arr in arr_area_active">
                             {{arr.sales_area_name}}

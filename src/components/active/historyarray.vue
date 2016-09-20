@@ -67,7 +67,9 @@
             getHistoryList(cur){
                 var any = this.$route.params.any.split('/');
 
-                var ii = layer.load();
+                var ii = layer.load(1, {
+                    shade : [0.5,'#000'] //0.1透明度的白色背景
+                });
                 var that = this;
                 var query = {};
                 query.user_id = config.USERID();
