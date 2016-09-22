@@ -342,6 +342,7 @@
     }
 
     .UC_main_r {
+        width: 100%;
         display: inline-block;
         letter-spacing: normal;
         word-spacing: normal;

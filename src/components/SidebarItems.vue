@@ -5,7 +5,7 @@
                 class="ui_icon_18 icon-new-uc icon-new-uc-home"></i>4s店主页</a><em></em></li>
         <li class=""><a v-link="{path:'/u/order/all'}"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-order"></i>购车订单</a><em></em></li>
-        <li class=""><a v-link="{path:'/u/manage/myOffer'}"><i
+        <li class=""><a v-link="{path:'/u/manage/myOffer/find/0'}"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-eye"></i>报价管理</a><em></em></li>
         <li class=""><a v-link="{path:'/u/active/thisShop/find/0'}"><i
                 class="ui_icon_18 icon-new-uc icon-new-uc-cheku"></i>活动车款</a><em></em></li>

@@ -101,13 +101,13 @@
                 },500);
             },
             savePwd(){
-            	if(config.SESSIONID == ""){
-					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-					config.SESSIONID  = this.SESSIONID.session.sessionid;
-					config.USERID  = this.SESSIONID.id;
-					console.log(config.SESSIONID);
-					console.log(config.USERID);
-				}
+//          	if(config.SESSIONID == ""){
+//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
+//					config.SESSIONID  = this.SESSIONID.session.sessionid;
+//					config.USERID  = this.SESSIONID.id;
+//					console.log(config.SESSIONID);
+//					console.log(config.USERID);
+//				}
             	
                 if(this.password =="" ){
                     this.cur_match = true;
@@ -177,7 +177,7 @@
     				var that = this;
 	            	var url = config.API_BASE+"/4s/accountmanagement/resetpassword";
 	                var query = {};
-	                	query.id = config.USERID;
+	                	query.id = config.USERID();
 	                	query.password = that.password;
 	                	query.newpassword = that.newpassword;
 //						query.id = "186";
@@ -189,7 +189,7 @@
 	                    contentType: 'application/json; charset=utf-8',
 	                    data:JSON.stringify(param),
 	                    beforeSend:function (request) {
-		                    request.setRequestHeader("sessionid",config.SESSIONID);
+		                    request.setRequestHeader("sessionid",config.SESSIONID());
 		                },
 		                success:function(response){
 							if(response.code == 0){
@@ -202,11 +202,11 @@
 			                }
 						},
 						error:function(fail){
-							if(fail.status =="401"){
-								layer.msg("请您重新登录");
-							}else{
-								that.$route.router.go("/login");
-							}
+							if(fail.status == "401"){
+	                            sessionStorage.removeItem("SESSIONID");
+	                            layer.msg('登录失效，请重新登陆！');
+	                            that.$route.router.go("/login");
+	                        }
 						}
 	                });
                 }

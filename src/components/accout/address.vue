@@ -34,7 +34,7 @@
                         <p>{{item.telphone}}</p>
                         <p><span>{{item.receipt_province}}</span><span>{{item.receipt_city}}</span><span>{{item.receipt_quarter}}</span></p>
                         <p>{{item.receipt_address}}</p>
-                        <p>({{item.receiver}})</p>
+                        <!--<p>({{item.receiver}})</p>-->
                         <p class="setting">
                             <a class="orange" v-on:click="setting(item,_index)">设为默认</a>
                             <a class="orange" v-on:click="modify(item,_index)">修改</a>
@@ -58,15 +58,15 @@
             		<dt class="star"><em>*</em>地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址&nbsp;:</dt>
             		<dd>
             			<div>
-            				<select class="provice" v-model="proviceSelected" v-on:change="proviceOnChange">
+            				<select class="provice" v-model="proviceSelected" v-on:change="proviceOnChange" id="proviceSelected">
 	            				<option value="0" disabled="disabled" selected="selected">--选择省--</option>
 	            				<option v-for="provice in selectProvice" track-by="$index" v-bind:value="provice">{{provice}}</option>
 	            			</select>
-	            			<select class="city" v-model="citySelected" v-on:change="cityOnChange" v-if="citySelected">
+	            			<select class="city" v-model="citySelected" v-on:change="cityOnChange" v-show="citySelected" id="citySelected">
 	            				<option value="0" disabled="disabled">--选择市--</option>
 	            				<option v-for="city in selectCity" track-by="$index" v-bind:value="city">{{city}}</option>
 	            			</select>
-	            			<select class="area" v-model="areaSelected" v-if="areaSelected">
+	            			<select class="area" v-model="areaSelected" v-show="areaSelected" id="areaSelected">
 	            				<option value="0" disabled="disabled">--选择区--</option>
 	            				<option v-for="area in selectArea" track-by="$index" v-bind:value="area">{{area}}</option>
 	            			</select>
@@ -138,8 +138,12 @@
         },
         methods:{
             newAddress(){
-                this.address = ! this.address;
                 var that = this;
+                that.address = ! that.address;
+                var selectArea = [];
+                var selectCity = [];
+                that.citySelected = false;
+                that.areaSelected = false;
                 $.get("/data/area.json",function(response){
 					that.$set("selectAll",response);                	
                 	var province = [];
@@ -160,18 +164,15 @@
 				$.map(this.selectAll[this.proviceSelected],function(val,key){
 					selectCity.push(key);
 				});
-				
-				console.log("selectCity:"+JSON.stringify(selectCity));
+//				console.log("selectCity:"+JSON.stringify(selectCity));
             	this.$set("selectCity",selectCity);
             },
             //          请求市
             cityOnChange(){
-            	
 				var that = this;
             	that.areaSelected = true;
             	var selectArea = [];
             	/*省*/
-				console.log();            	
 				$.map(that.selectAll,function(val,key){
 					$.map(val,function(v,i){
 						if(that.citySelected == i){
@@ -185,7 +186,7 @@
             	var that = this;
                 that.address = true;
                 $.get("/data/area.json",function(response){
-					that.$set("selectArea",response);                	
+					that.$set("selectAll",response);                	
                 	var province = [];
                 	$.map(response,function(val,key){
                 		province.push(key);
@@ -193,12 +194,31 @@
                 	that.$set("selectProvice",province);
                 });
                 
+                if(item.status == 1){
+					$("#default").attr('checked',true);
+				}else{
+					$("#default").attr('checked',false);
+				};
+                
+                $("#user_").val(item.receiver);
+                $("#tel_").val(item.telphone);
+                $("#proviceSelected").val(item.receipt_province);
+                $("#citySelected").val(item.receipt_city);
+                $("#areaSelected").val(item.receipt_quarter);
+                $("#addr_").val(item.receipt_address);
+                console.log($("#user_").val());
+                console.log($("#tel_").val());
+                console.log($("#proviceSelected").val());
+                console.log($("#citySelected").val());
+                console.log($("#areaSelected").val());
+                console.log($("#addr_").val());
+                
             },
             setting(item,_index){
             	var that = this;
             	var url = config.API_BASE+"/4s/accountmanagement/setdefault";
                 var query = {};
-                	query.uid = config.USERID;
+                	query.uid = config.USERID();
 					query.id = item.id;
 					console.log(query.id);
 				var param = { query:query };
@@ -210,7 +230,7 @@
 	                    contentType: 'application/json; charset=utf-8',
 	                    data:JSON.stringify(param),
 	                    beforeSend:function (request) {
-		                    request.setRequestHeader("sessionid",config.SESSIONID);
+		                    request.setRequestHeader("sessionid",config.SESSIONID());
 		                },
 		                success:function(response){
 							if(response.code == 1){
@@ -219,12 +239,11 @@
 			                }
 						},
 						error:function(fail){
-							if(fail.status =="401"){
-								layer.msg("请您重新登录");
-								that.$route.router.go("/login");
-							}else{
-								that.$route.router.go("/login");
-							}
+							if(fail.status == "401"){
+	                            sessionStorage.removeItem("SESSIONID");
+	                            layer.msg('登录失效，请重新登陆！');
+	                            that.$route.router.go("/login");
+	                        }
 						}
 	               });
                 }
@@ -249,7 +268,7 @@
 	                    contentType: 'application/json; charset=utf-8',
 	                    data:JSON.stringify(param),
 	                    beforeSend:function (request) {
-		                    request.setRequestHeader("sessionid",config.SESSIONID);
+		                    request.setRequestHeader("sessionid",config.SESSIONID());
 		                },
 		                success:function(response){
 		                	that.addlist.$remove(item);
@@ -270,19 +289,19 @@
                 });
             },
 			showlist(){
-				if(config.SESSIONID == ""){
-					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-					config.SESSIONID  = this.SESSIONID.session.sessionid;
-					config.USERID  = this.SESSIONID.id;
-					console.log(config.SESSIONID);
-					console.log(config.USERID);
-				}
+//				if(config.SESSIONID == ""){
+//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
+//					config.SESSIONID  = this.SESSIONID.session.sessionid;
+//					config.USERID  = this.SESSIONID.id;
+//					console.log(config.SESSIONID);
+//					console.log(config.USERID);
+//				}
 				
 				var that = this;
-                var lay = layer.load(); 
+                var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/accountmanagement/addrlist";
                 var query = {};
-					query.uid = config.USERID;
+					query.uid = config.USERID();
 				var param = { query:query };
 				
                 $.ajax({
@@ -292,7 +311,7 @@
                     contentType: 'application/json; charset=utf-8',
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
-	                    request.setRequestHeader("sessionid",config.SESSIONID);
+	                    request.setRequestHeader("sessionid",config.SESSIONID());
 	                },
 	                success:function(response){
 						if(response.code == 0){
@@ -316,52 +335,62 @@
                
 			},
 			save(){
-				if(this.user ==""){
-					this.user_ = true;
-                    this.user_msg="收货人不能为空";
+				var that = this;
+				if(that.user ==""){
+					that.user_ = true;
+                    that.user_msg="收货人不能为空";
                     $("#user_").addClass('lost');
-                }else if(this.user.length>10){
-                	this.user_ = true;
-                    this.user_msg="收货人应该在1-10个字符之间";
+                }else if(that.user.length>10){
+                	that.user_ = true;
+                    that.user_msg="收货人应该在1-10个字符之间";
                     $("#user_").addClass('lost');
-                }else if(this.addr == ""){
-                	this.user_ = false;
-                	this.user_msg = "";
-                    this.addr_msg = "收货地址不能为空";
+                }else if(that.addr == ""){
+                	that.user_ = false;
+                	that.user_msg = "";
+                    that.addr_msg = "收货地址不能为空";
                     $("#user_").removeClass('lost');
                     $("#addr_").addClass('lost');
-                }else if(this.tel==""){
-                	this.user_msg="";
-                    this.user_ = false;
+                }else if(that.tel==""){
+                	that.user_msg="";
+                    that.user_ = false;
                     $("#addr_").removeClass('lost');
-                    this.tel_msg = "手机号不能为空";
-                    this.tel_ = true;
+                    that.tel_msg = "手机号不能为空";
+                    that.tel_ = true;
                     $("#tel_").addClass('lost');
-                }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(this.tel))){
-                    this.tel_msg = "手机号格式不正确";
-                    this.tel_ = true;
+                }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(that.tel))){
+                    that.tel_msg = "手机号格式不正确";
+                    that.tel_ = true;
                     $("#tel_").addClass('lost');
+                }else if(that.areaSelected == false ){
+                    layer.msg("请选择省市");
+                }else if(that.areaSelected == true){
+                    layer.msg("请选择地区");
                 }else{
                 	$("#user_").removeClass('lost');
                 	$("#addr_").removeClass('lost');
                 	$("#tel_").removeClass('lost');
-                	this.user_msg="";
-                    this.user_ = false;
-                    this.addr_msg="";
-                    this.addr_ = false;
-                    this.tel_msg="";
-                    this.tel_ = false;
-                    
+                	that.user_msg="";
+                    that.user_ = false;
+                    that.addr_msg="";
+                    that.addr_ = false;
+                    that.tel_msg="";
+                    that.tel_ = false;
 					//              收货地址保存
+					if($("#default").is(':checked')){
+						that.status = 1;
+					}else{
+						that.status = 0;
+					}
 					var url = config.API_BASE+"/4s/accountmanagement/addaddress";
 	                var query = {};
-	                	query.user_id = config.USERID;
-						query.receiver = $(".addre .receiver").val();
-						query.receipt_province = $(".addre .provice option").val();
-						query.receipt_city = $(".addre .city option").val();
-						query.receipt_quarter = $(".addre .area option").val();
-						query.receipt_address = $(".addre .provice option").val();
-						query.telphone = $(".addre .provice option").val();
+	                	query.user_id = config.USERID();
+						query.receiver = that.user;
+						query.receipt_province = that.proviceSelected;
+						query.receipt_city = that.citySelected;
+						query.receipt_quarter = that.areaSelected;
+						query.receipt_address = that.addr;
+						query.telphone = that.tel;
+						query.status = that.status;
 					var param = { query:query };
 					$.ajax({
 	                    url:url,
@@ -370,21 +399,22 @@
 	                    contentType: 'application/json; charset=utf-8',
 	                    data:JSON.stringify(param),
 	                    beforeSend:function(request) {
-		                    request.setRequestHeader("sessionid",config.SESSIONID);
+		                    request.setRequestHeader("sessionid",config.SESSIONID());
 		                },
 		                success:function(response){
-							if(response.code == -1){
-		                        layer.msg('设置成功',{icon:1});
-		                        setTimeout("window.history.go(0)",1500);
+							if(response.code == 0){
+		                        layer.msg('操作成功',{icon:1});
+//		                        setTimeout("window.history.go(0)",1500);
+			                }else{
+			                	layer.msg('操作失败',{icon:2});
 			                }
 						},
 						error:function(fail){
-							if(fail.status =="401"){
-								layer.msg("请您重新登录");
-								that.$route.router.go("/login");
-							}else{
-								that.$route.router.go("/login");
-							}
+							if(fail.status == "401"){
+	                            sessionStorage.removeItem("SESSIONID");
+	                            layer.msg('登录失效，请重新登陆！');
+	                            that.$route.router.go("/login");
+	                        }
 						}
 	               });
 					

@@ -254,7 +254,7 @@
     </div>
 </template>
 
-<script>
+<script scoped>
     import sub_zebra from './../../assets/js/sub_zebra.js'
     import Zebra_DatePicker from './../../assets/js/zebra_datepicker.src.js'
     import $ from 'jquery'
@@ -706,12 +706,13 @@
                             that.file_msg="";
                             that.desc="";
                         }
-//                    },
-//                    error:function (fail) {
-//                        if(fail.status == "401"){
-//                            layer.msg('登录失效，请重新登陆！');
-//                            that.$route.router.go("/login");
-//                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
                     }
                 })
             },

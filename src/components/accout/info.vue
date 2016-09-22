@@ -179,12 +179,11 @@
 		                    }
 						},
 						error:function(fail){
-							if(fail.status =="401"){
-								layer.msg("请您重新登录");
-								that.$route.router.go("/login");
-							}else{
-								that.$route.router.go("/login");
-							}
+							if(fail.status == "401"){
+	                            sessionStorage.removeItem("SESSIONID");
+	                            layer.msg('登录失效，请重新登陆！');
+	                            that.$route.router.go("/login");
+	                        }
 						}
 	                });
                 }
@@ -244,7 +243,7 @@
 //                  			保存信息
 				                var url = config.API_BASE+"/4s/accountmanagement/updateinformation";
 				                var query = {};
-									query.uid = config.USERID;
+									query.uid = config.USERID();
 									query.tel = that.phone;
 									query.contacts = that.user;
 									query.email = that.email;
@@ -257,7 +256,7 @@
 				                    contentType: 'application/json; charset=utf-8',
 				                    data:JSON.stringify(param),
 				                    beforeSend:function (request) {
-					                    request.setRequestHeader("sessionid",config.SESSIONID);
+					                    request.setRequestHeader("sessionid",config.SESSIONID());
 					                },
 					                success:function(response){
 										if(response.code == 1){
@@ -268,12 +267,11 @@
 					                    }
 									},
 									error:function(fail){
-										if(fail.status =="401"){
-											layer.msg("请您重新登录");
-											that.$route.router.go("/login");
-										}else{
-											that.$route.router.go("/login");
-										}
+										if(fail.status == "401"){
+				                            sessionStorage.removeItem("SESSIONID");
+				                            layer.msg('登录失效，请重新登陆！');
+				                            that.$route.router.go("/login");
+				                        }
 									}
 				                })
                     			
@@ -289,19 +287,19 @@
                 }
             },
             getinfo(){
-            	if(config.SESSIONID == ""){
-					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-					config.SESSIONID  = this.SESSIONID.session.sessionid;
-					config.USERID  = this.SESSIONID.id;
-					console.log(config.SESSIONID);
-					console.log(config.USERID);
-				}
+//          	if(config.SESSIONID == ""){
+//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
+//					config.SESSIONID  = this.SESSIONID.session.sessionid;
+//					config.USERID  = this.SESSIONID.id;
+//					console.log(config.SESSIONID);
+//					console.log(config.USERID);
+//				}
 				
 				var that = this;
-                var lay = layer.load(); 
+                var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']}); 
                 var url = config.API_BASE+"/4s/accountmanagement/information";
                 var query = {};
-					query.uid = config.USERID;
+					query.uid = config.USERID();
 				var param = { query:query };
 				
                 $.ajax({
@@ -311,7 +309,7 @@
                     contentType: 'application/json; charset=utf-8',
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
-	                    request.setRequestHeader("sessionid",config.SESSIONID);
+	                    request.setRequestHeader("sessionid",config.SESSIONID());
 	                },
 	                success:function(response){
 						if(response.code == 0){
@@ -324,12 +322,11 @@
 	                    }
 					},
 					error:function(fail){
-						if(fail.status =="401"){
-							layer.msg("请您重新登录");
-							that.$route.router.go("/login");
-						}else{
-							that.$route.router.go("/login");
-						}
+						if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
 					}
                 })
             }

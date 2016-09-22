@@ -2,7 +2,8 @@
     <div class="wrap">
         <div class="brand-list clearfix">
             <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
-            <p class="G_fl">副营品牌：<span v-for="list in brandlist">{{list.brand_name}}</span></p>
+            <p class="G_fl">副营品牌：<span v-for="list in brandlist" v-if="$index>0"> {{list.brand_name}} </span>
+            </p>
         </div>
         <div class="select-bar clearfix">
             <div class="select-box G_fl">

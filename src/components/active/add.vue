@@ -3,22 +3,12 @@
         <div class="top-bar">
             <div class="brand-list clearfix">
                 <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
-                <p class="G_fl">副营品牌：<span v-for="list in brandlist">{{list.brand_name}}</span></p>
+                <p class="G_fl">副营品牌：<span v-for="list in brandlist" v-if="$index>0">{{list.brand_name}}</span></p>
             </div>
             <div class="details">
                 <dl class="brands clearfix">
                     <dt class="G_fl">品牌：</dt>
-                    <dd v-for="brand in brands['5']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['9a0f9007392017a2987abc182eaf8d3c']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['14']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['23']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['52']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['61']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['63']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['65']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['66']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['6989']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
-                    <dd v-for="brand in brands['a96ef568e7641868bfbcda6880f40d43']"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
+                    <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
                 </dl>
 
                 <dl class="model clearfix">
@@ -50,6 +40,7 @@
             /*
             * 筛选条件
             * */
+
             $.ajax({
                 url:config.API_BASE+"/4s/activity/carActivity/"+config.USERID(),
                 method:'POST',
@@ -69,18 +60,8 @@
                         * */
                         that.$nextTick(function () {
                             $(".brands dd").eq(0).find('a').addClass("actived");
-                            var one = 0,two=0,tree=0;
-                            var brandsKey = 0,carsKey = 0,carModelsKey=0;
-
-                            $.map(that.brands,function (val,key) {
-                                if(one <1){
-                                    brandsKey = key;
-                                    ++one;
-                                }
-                            });
-                            that.brandClk({"brandId":that.brands[brandsKey][0].brandId,"brandName":that.brands[brandsKey][0].brandName},null);
+                            that.brandClk({"brandId":that.brands[0].brandId,"brandName":that.brands[0].brandName},null);
                         })
-
                     }
                 },
                 error:function (fail) {
@@ -91,7 +72,8 @@
                     }
                 }
 
-            })
+            });
+
             /*4S店*/
             $.ajax({
                 url:config.API_BASE+"/4s/accountmanagement/information",
@@ -118,7 +100,7 @@
         },
         data(){
             return {
-                brands:[],
+                brands: [],
                 cars:[],
                 screen_car:[],
                 carModels:[],
@@ -143,9 +125,6 @@
             /*分页*/
             getActivityList(cur,car_id){
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
-               /* var ii = layer.load(1, {
-                    shade : [0.5,'#000']
-                });*/
                 var that = this;
                 var query = {};
                     query.pagenum = this.pagesize;
@@ -197,11 +176,8 @@
                                             layer.msg('请输入正确的跳转页码');
                                         }
                                     })
-
                                 })
-
                             }
-
                         }
                         layer.close(ii);
                     },
@@ -213,8 +189,6 @@
                         }
                     }
                 })
-
-
             },
             brandClk(obj,e){
                 var brandId = obj.brandId;
@@ -270,7 +244,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
     .actived{
         background:#fa8c35!important;
         color:#fff!important;

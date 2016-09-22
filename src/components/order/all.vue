@@ -47,16 +47,16 @@
         methods:{
 //          列表数据展示
 			showdata(obj,page){
-				if(config.SESSIONID == ""){
-					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-					config.SESSIONID  = this.SESSIONID.session.sessionid;
-					config.USERID  = this.SESSIONID.id;
-					console.log(config.SESSIONID);
-					console.log(config.USERID);
-				}
+//				if(config.SESSIONID == ""){
+//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
+//					config.SESSIONID  = this.SESSIONID.session.sessionid;
+//					config.USERID  = this.SESSIONID.id;
+//					console.log(config.SESSIONID);
+//					console.log(config.USERID);
+//				}
 				
 				var that = this;
-                var lay = layer.load(); //加载层，默认风格
+                var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
 //					query.id_4s = config.SESSIONID;
@@ -77,7 +77,7 @@
 //                  data:JSON.stringify({"query":{"id_4s":id_4s,"status":[0,1,2],"pagenum":pagenum,"createtime":createtime,"keyword":keyword}}),
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
-	                    request.setRequestHeader("sessionid",config.SESSIONID);
+	                    request.setRequestHeader("sessionid",config.SESSIONID());
 	                },
 	                success:function(response){
 						if(response.code == 0){
@@ -132,11 +132,11 @@
 	                    that.ordertext  = "";
 					},
 					error:function(fail){
-						if(fail.status =="401"){
-							layer.msg("请您重新登录");
-						}else{
-							that.$route.router.go("/login");
-						}
+						if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
 					}
                 })
                

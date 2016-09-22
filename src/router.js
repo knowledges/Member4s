@@ -76,7 +76,7 @@ export  default function (router) {
                                 require(['./components/manage/myOffer'], resolve)
                             }
                         },
-                        '/myOffer':{
+                        '/myOffer/find/:findId':{
                             component (resolve) {
                                 require(['./components/manage/myOffer'], resolve)
                             }
