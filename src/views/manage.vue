@@ -1,7 +1,7 @@
 <template>
     <div>
         <bar class="nav nav-tabs clearfix">
-            <bar-item path="/u/manage/myOffer" label="我的报价"></bar-item>
+            <bar-item path="/u/manage/myOffer/find/0" label="我的报价"></bar-item>
             <bar-item path="/u/manage/add" label="新增报价"></bar-item>
         </bar>
         <router-view></router-view>

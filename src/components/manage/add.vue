@@ -1,42 +1,43 @@
 <template>
     <div class="top-bar">
         <div class="brand-list clearfix">
-            <p class="G_fl">主营品牌：<span>123</span><span>123</span><span>123</span></p>
-            <p class="G_fl">副营品牌：<span></span></p>
+            <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
+            <p class="G_fl">副营品牌：<span v-for="list in brandlist" v-if="$index>0">{{list.brand_name}}</span></p>
         </div>
         <div class="details">
             <dl class="brands clearfix">
                 <dt class="G_fl">品牌：</dt>
-                <dd ><a href="#" class="cur">奥迪</a></dd>
-                <dd><a href="#">奥迪</a></dd>
-                <dd><a href="#">奥迪</a></dd>
+                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)" brandId="{{brand.brandId}}">{{brand.brandName}}</a></dd>
             </dl>
 
             <dl class="model clearfix">
                 <dt class="G_fl">车型：</dt>
-                <dd><a href="#" class="models cur">A1</a></dd>
-                <dd><a href="#" class="models">A1</a></dd>
-                <dd><a href="#" class="models">A1</a></dd>
+                <dd v-for="model in screen_carModels"  v-if="screen_carModels.length>0">
+                    <a v-on:click="scrModelClk(model,$event)" carModelId="{{model.carModelId}}">{{model.carModelName}}</a>
+                </dd>
             </dl>
 
             <div class="style">
-                <dl class="clearfix">
+                <dl class="car clearfix">
                     <dt class="G_fl">车款：</dt>
-                    <dd><a href="#" class="style-box cur">额外服务费</a></dd>
+                    <dd v-for="car in screen_car" v-if="screen_car.length>0"><a v-on:click="scrCarClk(car,$event)" class="style-box">{{car.carName}}</a></dd>
                 </dl>
             </div>
         </div>
     </div>
+
     <div class="batch-change">
-        <a href="#"><i class="change"></i>批量添加</a>
-        <a href="#"><i class="delete"></i>批量删除</a>
-        <p class="G_fr">共：<span></span>条</p>
+        <a v-on:click="batchUpdate" style="cursor: pointer;"><i class="change"></i>批量添加</a>
+        <!--<a href="#"><i class="change"></i>批量添加</a>-->
+        <!--<a href="#"><i class="delete"></i>批量删除</a>-->
+        <p class="G_fr">共：<span>{{count}}</span>条</p>
     </div>
 
+    <p>checked:id {{checkedIndex | json}}</p>
     <div class="table-box">
         <table  border=1 cellspacing=0 cellpadding=0>
             <tr>
-                <th class="car-selected"><input type="checkbox"/></th>
+                <th class="car-selected"><input type="checkbox" id="all" v-on:click="allChecked"/></th>
                 <th class="car-model">车型</th>
                 <th class="car-style">车款</th>
                 <th class="car-out-color">外观颜色</th>
@@ -53,31 +54,803 @@
                 <th class="car-place">销售区域</th>
                 <th class="car-operation">操作</th>
             </tr>
-            <tr>
-                <td><input type="checkbox"/></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td class="car-operation">
-                    <a href="#">修改</a>
-                    <a href="#">历史</a>
-                    <a href="#">删除</a>
+            <tr v-for="item in arr_items">
+                <td><input type="checkbox" class="all" v-model="checkedIndex" :value="$index"/></td>
+                <!--<td><input type="checkbox" class="all" v-model="checkedIndex" :value="item.carId"/></td>-->
+                <td>{{item.carModelName}}</td>
+                <td>{{item.brandName}}</td>
+                <td>{{item.exteriorColorName}}</td>
+                <td>{{item.interiorColorName}}</td>
+                <td>{{item.price}}</td>
+                <td width="100">
+                    <!--<span class="show_{{$index}}">{{item.discount}}</span>-->
+                    <input type="text" class="update_{{$index}}" v-model="items.discount" value="{{item.discount}}" style="display: none;">
+                    <p v-if="items.discount_" class="error">
+                        <i></i>
+                        {{items.discount_msg}}
+                    </p>
+                </td>
+                <td width="100">
+                    <!--<span class="show_{{$index}}">{{item.lowPrice}}</span>-->
+                    <input type="text" class="update_{{$index}}" v-model="items.lowPrice" value="{{item.lowPrice}}" style="display: none;">
+                    <p v-if="items.lowPrice_" class="error">
+                        <i></i>
+                        {{items.lowPrice_msg}}
+                    </p>
+                </td>
+                <td  width="60">
+                    <!--<span class="show_{{$index}}">{{item.stock}}</span>-->
+                    <input type="text" class="update_{{$index}}" v-model="items.stock" value="{{item.stock}}" style="display: none;">
+                    <p v-if="items.stock_" class="error">
+                        <i></i>
+                        {{items.stock_msg}}
+                    </p>
+                </td>
+                <td width="60">
+                    <!--<span class="show_{{$index}}">{{item.onWay}}</span>-->
+                    <input type="text" class="update_{{$index}}" v-model="items.onWay" value="{{item.onWay}}" style="display: none;">
+                    <p v-if="items.onWay_" class="error">
+                        <i></i>
+                        {{items.onWay_msg}}
+                    </p>
+                </td>
+                <td>
+                    <p class="show_{{$index}}">{{item.saleArea}}</p>
+                    <p class="update_{{$index}}" style="display: none;">
+                        <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
+                    </p>
+                    <p class="update_{{$index}}" style="display: none;"><a class="selected" v-on:click="selectarea(item)">请选择</a></p>
+                </td>
+                <td>
+                    <div class="show_{{$index}}">
+                        <p><a v-on:click="update(item,$event,$index)" style="cursor: pointer;">添加</a></p>
+                        <p><a v-link=""  style="cursor: pointer;">历史</a></p>
+                    </div>
+                    <div class="update_{{$index}}" style="display: none;">
+                        <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
+                        <p><a class="cancle" v-on:click="cancle($index)">取消</a></p>
+                    </div>
+                </td>
+            </tr>
+            <tr  v-if="arr_items.length<=0">
+                <td colspan="12">
+                    <div class="order-nodata">
+                        <h4><i class="order-nobg"></i>暂无此款车的报价！</h4>
+                        <p>您可在 <a v-link="{ path:'/u/manage/add'}" style="display: inline-block">“新增报价”</a> 页面筛选此款车，手动添加报价</p>
+                    </div>
                 </td>
             </tr>
         </table>
+        <div id="page2"  style="margin:20px 0;text-align: center;"></div>
     </div>
 
+    <div class="activearea" style="display: none;">
+        <div class="layer_2">
+            <dl class="clearfix">
+                <dt>已选区域：</dt>
+                <dd style="display: inline-block;width: 500px;height: 100%;">
+                    <ul class="filter_li">
+                        <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
+                        <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['山西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['内蒙古自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['辽宁省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['吉林省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['黑龙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['上海市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['江苏省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['浙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['安徽省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['福建省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['江西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['山东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['河南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['湖北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['湖南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['广东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['广西壮族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['海南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['重庆市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['四川省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['贵州省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['云南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['西藏自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['陕西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['甘肃省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['青海省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['宁夏回族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['新疆维吾尔自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['香港特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['澳门特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                        <li class="selected" v-for="city in provincecity['台湾省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>可选区域：</dt>
+                <dd>
+                    <ul>
+                        <li v-on:click="selectAllClk" id="global">全国</li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt></dt>
+                <dd>
+                    <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
+                        <option value="0" selected>==请选择==</option>
+                        <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt></dt>
+                <dd style="width: 500px;height: 100%;" class="city_dd">
+                    <ul v-if="!global">
+                        <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
+                            class="city_li" :class="{'selected':city.selected==true}">
+                            {{city.city}}
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt></dt>
+                <dd>
+                    <button v-on:click="agree">确定</button>
+                    <button v-on:click="cancle1">取消</button>
+                </dd>
+            </dl>
+        </div>
+    </div>
 
+    <div class="batchAdd" style="display: none;">
+        <div class="add">
+            <dl class="clearfix">
+                <dt>品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
+                <dd v-text="temps.brandName"></dd>
+                <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
+                <dd v-text="temps.carModelName"></dd>
+                <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
+                <dd v-text="temps.carName"></dd>
+            </dl>
+            <table>
+                <thead>
+                <tr>
+                    <th>外观颜色</th>
+                    <th>内饰颜色</th>
+                    <th>库存/辆</th>
+                    <th>在途/辆</th>
+                    <th>官方价/元</th>
+                    <th>优惠价/元</th>
+                    <th>报价/元</th>
+                    <th>销售区域</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="temp in temp_arr" track-by="$index" v-if="$index==0">
+                    <td>{{temp.interiorColorName}}</td>
+                    <td>{{temp.exteriorColorName}}</td>
+                    <td>
+                        <input type="text" class="stock_{{$index}}" value="{{temp.stock}}">
+                    </td>
+                    <td>
+                        <input type="text" class="onWay_{{$index}}" value="{{temp.onWay}}">
+                    </td>
+                    <td rowspan="{{temp_arr.length}}">
+                        48560.00
+                    </td>
+                    <td rowspan="{{temp_arr.length}}">
+                        <input type="text"  v-model="temps.discount" value="{{temp.discount}}">
+                    </td>
+                    <td rowspan="{{temp_arr.length}}">
+                        <input type="text" v-model="temps.lowPrice" value="{{temp.lowPrice}}">
+                    </td>
+                    <td rowspan="{{temp_arr.length}}">
+                        <p>
+                            <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
+                        </p>
+                        <a href="javascript:;;" class="selected" v-on:click="selectarea(temp)">选择</a>
+                    </td>
+                </tr>
+                <tr v-for="temp in temp_arr"  track-by="$index" v-if="temp_arr.length>1 && $index>0 ">
+                    <td>{{temp.interiorColorName}}</td>
+                    <td>{{temp.exteriorColorName}}</td>
+                    <td>
+                        <input type="text" class="stock_{{$index}}" value="{{temp.stock}}">
+                    </td>
+                    <td>
+                        <input type="text" class="onWay_{{$index}}" value="{{temp.onWay}}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <dl class="clearfix" style="display: inline-block; margin-left: 20%;">
+                <dt></dt>
+                <dd >
+                    <button v-on:click="save2">保存</button>
+                    <button v-on:click="cancle2">取消</button>
+                </dd>
+            </dl>
+        </div>
+
+    </div>
 
 </template>
-<style>
+
+<script>
+    import $ from 'jquery'
+    import config from './../../config'
+    export default {
+        route: {
+            data({to}){
+                var that = this;
+                /*品牌*/
+                $.ajax({
+                    url: config.API_BASE + "/4s/prefer/preferBrandModelCar/" + config.USERID(),
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        if (response.code == 0) {
+                            var list = response.data;
+                            that.brands = list.brand;
+                            that.cars = list.car;
+                            that.carModels = list.carModel;
+                            /*
+                             * v-for 遍历完
+                             * */
+                            that.$nextTick(function () {
+                                $(".brands dd").eq(0).find('a').addClass("actived");
+
+                                that.brandClk({
+                                    "brandId": that.brands[0].brandId,
+                                    "brandName": that.brands[0].brandName
+                                }, null);
+                            })
+                        }
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+
+                });
+
+                /*主营、副营品牌*/
+                $.ajax({
+                    url: config.API_BASE + "/4s/accountmanagement/information",
+                    method: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify({"query": {"uid": config.USERID()}}),
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        var list = response.data;
+                        that.brand_name = list.brand_name;
+                        that.brandlist = list.brandlist;
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+                /*获取省市关系*/
+                $.ajax({
+                    url: config.API_BASE + "/nl/common/provincecity",
+                    method: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        var list = response.data;
+                        that.$set("provinces", list.provinces);
+                        that.$set("provincecity", list.provincecity);
+                        that.$set("clone_provincecity", list.provincecity);
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+            }
+        },
+        data(){
+            return{
+                brands: [],
+                cars:[],
+                screen_car:[],
+                carModels:[],
+                screen_carModels:[],
+                brand_name:"",
+                brandlist:[],
+                cur: 1,
+                count: 0,
+                pagesize:10,
+                arr_items:[],
+                provinces:"",
+                provincecity:"",
+                clone_provincecity:"",
+                mask_1:"",
+                mask_3:"",
+                selectedKey:"",
+                global:false,
+                city_items:[],
+                checkedIndex:[],
+                checked:"",
+                items:{
+                    areas:[],
+                    discount:"",
+                    discount_:false,
+                    discount_msg:"",
+                    lowPrice:"",
+                    lowPrice_:false,
+                    lowPrice_msg:"",
+                    stock:"",
+                    stock_:false,
+                    stock_msg:"",
+                    onWay:"",
+                    onWay_:false,
+                    onWay_msg:""
+                },
+                temp_items:{},
+                temp_arr:[],
+                temps:{
+                    interiorColorName:"",
+                    exteriorColorName:"",
+                    stock:"",
+                    onWay:"",
+                    discount:"",
+                    discount:"",
+                    brandName:"",
+                    carModelName:"",
+                    carName:""
+                },
+                findCarModelByBrand:[],
+                mask_eaitModelsBrand:"",
+                findCarByCarModel:[],
+                mask_eaitModels:"",
+
+            }
+        },
+        methods:{
+            allChecked(){
+                if(this.checked){
+                    this.checkedIndex = [];
+                    $(".all").removeAttr("checked");
+                }else{
+                    this.checkedIndex = [];
+                    $(".all").removeAttr("checked");
+                    for(var i = 0 ; i<this.arr_items.length;i++){
+                        $(".all").eq(i).attr("checked","true");
+                        this.checkedIndex.push(this.arr_items[i].carPriceId);
+                    }
+                }
+            },
+            brandClk(obj,e){
+                var brandId = obj.brandId;
+                this.screen_carModels = this.carModels[brandId];
+                var _index = 0;
+                this.$nextTick(function () {
+                    if(this.screen_carModels!=null) {
+                        this.scrModelClk({
+                            "carModelId": this.screen_carModels[0].carModelId,
+                            "carModelName": this.screen_carModels[0].carModelName
+                        }, null);
+                    }else {
+                        this.$set("screen_car",[]);
+                        this.$set("arr_items",[]);
+                    }
+                    if(e!=null){
+                        _index = $(e.target).parent().index()-1;
+                    }
+                    $(".brands dd").find('a').removeClass("actived");
+                    $(".brands dd").eq(_index).find('a').addClass("actived");
+                })
+
+            },
+            /*分页*/
+            getActivityList(cur,car_id){
+                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+                var that = this;
+                var query = {};
+                query.pagenum = this.pagesize;
+                query.page = cur;
+                query.carId = 2071;
+                    query.userId = 186;
+                /*query.carId = car_id;
+                 query.userId = config.USERID();*/
+                var params = {"query":query};
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/offer/findNewOfferlist",
+                    method:'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            that.count = response.data.count;
+                            that.$set("arr_items",response.data.rows);
+
+                            if(response.data.count>that.pagesize){
+
+                                laypage({
+                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+                                    pages: Math.ceil(that.count/that.pagesize), //总页数
+                                    curr:cur||1,
+                                    skip: true, //是否开启跳页
+                                    skin: '#ff9205;',
+                                    groups: 7, //连续显示分页数
+                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
+                                    last: Math.ceil(that.count/that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
+                                    jump: function(obj, first){
+                                        //回调
+                                        //得到了当前页，用于向服务端请求对应数据
+                                        var curr = obj.curr;
+                                        if(!first){
+                                            that.getActivityList(curr,car_id);
+                                        }
+                                    }
+                                });
+
+                                that.$nextTick(function () {
+
+                                    $(".laypage_btn").unbind("click").on('click',function(){
+                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                            that.getActivityList($(".laypage_skip").val(),car_id);
+                                        }else{
+                                            layer.msg('请输入正确的跳转页码');
+                                        }
+                                    })
+                                })
+                            }
+                        }
+                        layer.close(ii);
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                })
+            },
+            scrModelClk(obj,e){
+                var carModelId = obj.carModelId;
+                this.screen_car = this.cars[carModelId];
+                var _index = 0;
+                this.$nextTick(function () {
+                    if(this.screen_car!=undefined){
+                        this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
+                    }else{
+                        this.$set("screen_car",[]);
+                        this.$set("arr_items",[]);
+                    }
+                    if(e!=null){
+                        _index = $(e.target).parent().index()-1;
+                        ;                    }
+                    $(".model dd").find('a').removeClass("actived");
+                    $(".model dd").eq(_index).find('a').addClass("actived");
+                })
+
+            },
+            scrCarClk(obj,e){
+                var carId = obj.carId ,carName = obj.carName;
+                if(carId!=null){
+                    var _index = 0;
+                    this.$nextTick(function () {
+                        if(e!=null){
+                            _index = $(e.target).parent().index()-1;
+                        }
+                        $(".car dd").find('a').removeClass("actived");
+                        $(".car dd").eq(_index).find('a').addClass("actived");
+
+                        this.getActivityList(1,carId);
+                    });
+                }else{
+                    $("#page2").empty();
+                    this.$set("screen_car",[]);
+                    this.$set("arr_items",[]);
+                }
+            },
+            cityClk(obj,_index){
+//               /*点击下标是否第一个*/
+                if(_index == 0){
+//                    /*判断是直辖市*/
+                    if(this.city_items.length>1){
+
+                        for(var i =1 ;i < this.city_items.length;i++){
+                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                        }
+
+                    }
+                    obj.selected = true;
+                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
+                }else{
+
+                    if(obj.selected == undefined || obj.selected == "undefined"){
+                        this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
+                        this.city_items[0].total =this.city_items[0].total-1;
+                        if(this.city_items[0].total == 0){
+                            /*total 先不设置*/
+                            this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
+
+                            for(var i = 1; i<this.city_items.length;i++){
+                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                            }
+
+                        }
+                    }
+
+                }
+            },
+            selectarea(obj){
+                /*把选择对象放到零时变量中*/
+                this.mask_1 = layer.open({
+                    type: 1,
+                    title: '选择区域',
+                    skin: 'layui-layer-rim', //加上边框
+                    area : ['650px' , '600px'],
+                    content: $(".activearea")
+                });
+            },
+            selectedProvinces(){
+                this.city_items = this.provincecity[this.selectedKey];
+
+                if(this.city_items.length>1){
+
+                    var total = this.city_items.length;
+
+                    for(var i = 1; i<this.city_items.length;i++){
+                        /*剔除已选择过的*/
+                        if(this.city_items[i].selected == true){
+                            total =total-1;
+                        }
+                    }
+
+                    if(this.city_items[0].insert == undefined){
+                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
+
+                    }
+
+                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
+                }
+            },
+            selectAllClk(){
+                this.global = true;
+                $("#selectedKey").find("option[value=0]").attr({"selected":true});
+                $("#selectedKey").attr({"disabled":true});
+                $("#global").addClass("selected");
+            },
+            agree(){
+                layer.close(this.mask_1);
+                var list = $(".filter_li li");
+                this.items.areas = [];
+                for(var i = 0 ; i< list.length;i++){
+                    if(list.eq(i).text()=="全国"){
+                        this.items.areas[0] = {"salesAreaName":"全国","salesAreaLevel":"1"}
+                    }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
+                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"2"})
+                    }else{
+                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"3"})
+                    }
+                }
+            },
+            save(){
+                if(this.items.lowPrice ==""){
+                    this.items.lowPrice_=true;
+                    this.items.lowPrice_msg="报价不能为空";
+                    return;
+                }else if(this.items.lowPrice < this.items.discount){
+                    this.items.lowPrice_=true;
+                    this.items.lowPrice_msg="报价要高于优惠价哦！";
+                    return;
+                }else{
+                    this.items.lowPrice_=false;
+                    this.items.lowPrice_msg="";
+                }
+
+                if(this.items.areas.length<=0){
+                    layer.msg("请选择区域");
+                    return;
+                }
+
+                var query = {};
+
+                    query.carId = this.temp_items.carId;
+                    query.exteriorColorId = this.temp_items.exteriorColorId;
+                    query.interiorColorId = this.temp_items.exteriorColorId;
+                    query.price = this.temp_items.price;
+                    query.stock = this.items.stock != "" ? this.items.stock:0;
+                    query.onWay=this.items.onWay != "" ? this.items.onWay:0;
+                    query.discount = this.items.discount != "" ? this.items.discount:0;
+                    query.lowPrice = this.items.lowPrice;
+                    query.userId = config.USERID();
+                    query.areas = this.items.areas;
+
+                var arr = [];
+                    arr[0] = query;
+                var params = {"query":arr};
+                this.updateMethos(params);
+                this.arr_items.$remove(this.temp_items);
+            },
+            save2(){
+
+                var that = this;
+                if(that.items.areas.length<0){
+                    return;
+                }
+                var arr = [];
+                for (var i = 0;i<that.temp_arr.length; i++){
+                    var query = {};
+                    query.carId = that.temp_arr[i].carId;
+                    query.exteriorColorId = this.temp_arr[i].exteriorColorId;
+                    query.interiorColorId = this.temp_arr[i].exteriorColorId;
+                    query.price = this.temp_arr[i].price;
+                    query.stock = $(".stock_"+i).val();
+                    query.onWay= $(".onWay_"+i).val();
+                    query.discount = this.temps.discount;
+                    query.lowPrice = this.temps.lowPrice;
+                    query.userId = config.USERID();
+                    query.areas = this.items.areas;
+                    arr.push(query);
+                }
+
+                var params = {"query":arr};
+                this.updateMethos(params);
+
+                setTimeout(function () {
+                    window.history.go(0);
+                },500)
+            },
+            cancle(_index){
+                $(".update_"+_index).hide();
+                $(".show_"+_index).show();
+            },
+            cancle1(){
+                layer.close(this.mask_1);
+            },
+            cancle2(){
+                layer.close(this.mask_3);
+            },
+            update(obj,e,_index){
+                /*  var that = this;*/
+                this.temp_items = [];
+                this.temp_items = obj;
+
+                layer.confirm('您确定要添加吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(index){
+                    layer.close(index);
+                    $(".update_"+_index).show();
+                    $(".show_"+_index).hide();
+
+                }, function(){});
+            },
+            batchUpdate(){
+                var that = this;
+                layer.confirm('您确定要批量添加吗？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(index){
+                    layer.close(index);
+
+                    if(that.checkedIndex.length>0){
+                        that.mask_3 = layer.open({
+                            type: 1,
+                            title: '批量添加',
+                            skin: 'layui-layer-rim', //加上边框
+                            area : ['800px' , '400px'],
+                            content: $(".batchAdd")
+                        });
+
+                        that.temp_arr = [];
+                        /*筛选批量数据*/
+                        for(var i=0;i<that.checkedIndex.length;i++){
+                            for(var j = 0 ;j<that.arr_items.length;j++){
+                                if(that.checkedIndex[i] == j){
+                                    that.temp_arr.push(that.arr_items[j]);
+                                }
+                            }
+                        }
+
+                        that.temps.brandName = that.temp_arr[0].brandName;
+                        that.temps.carModelName = that.temp_arr[0].carModelName;
+                        that.temps.carName = that.temp_arr[0].carName;
+
+//                        console.log(JSON.stringify(that.temp_arr));
+
+                    }else{
+                        layer.msg("请选择批量修改内容");
+                    }
+                }, function(){});
+            },
+            /*修改或者批量修改我的报价*/
+            updateMethos(params){
+                var that = this;
+                $.ajax({
+                    url:config.API_BASE+"/4s/offer/batchAddCarPrice",
+                    method:'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            that.items.areas = [];
+                            layer.msg("添加成功");
+//                            window.history.go(0);
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+            },
+            removeAll(){
+                $("#selectedKey").removeAttr("disabled");
+                $("#global").removeClass("selected");
+                this.global = false;
+            }
+        },
+        watch:{
+            'checkedIndex':{
+                handler: function (val, oldVal) {
+                    if(this.checkedIndex.length == this.arr_items.length){
+                        this.checked = true;
+                    }else{
+                        this.checked = false;
+                    }
+                },
+                //监听数组不用添加
+                deep: true
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .error{
+        color: red;
+    }
+    .selected{
+        color: #fa8c35!important;
+        border: 2px solid #fa8c35!important;;
+    }
+    .actived{
+        background:#fa8c35!important;
+        color:#fff!important;
+    }
     .top-bar{
         font-size:14px;
         color:#666;
@@ -93,15 +866,16 @@
     }
     .top-bar .details .brands a,.top-bar .details .model a{
         display:inline-block;
-        width:46px;
+        padding: 0 10px;
         height:24px;
         line-height:24px;
+        color:#666;
         border-radius:6px;
         vertical-align: -2px;
-        color:#666;
         font-size:14px;
         text-align:center;
         text-decoration:none;
+        cursor: pointer;
     }
     .top-bar .details .brands a:hover, .top-bar .details .brands .cur, .top-bar .details .model .cur, .top-bar .details .style-box .cur{
         background:#fa8c35;
@@ -131,17 +905,18 @@
     }
     .top-bar .details .style .style-box{
         display:inline-block;
-        width:160px;
+        padding: 0 10px;
+        margin: 2px 0;
         height:24px;
-        font-size:14px;
-        color:#666;
         border:1px dashed  #ccc;
         background:#f5f5f5;
+        font-size:14px;
         text-align:center;
         line-height:24px;
         border-radius:10px;
         margin-right:10px;
-        vertical-align: -2px;;
+        vertical-align: -2px;
+        cursor: pointer;
     }
     .top-bar .details .style .style-box:hover{
         color:#fff;
@@ -261,5 +1036,124 @@
     }
     .table-box table .car-operation a:hover{
         color:#ff791f;
+    }
+
+    table input[type="text"],table input[type="number"]{
+        display: inline-block;
+        width: 80%;
+        text-align: center;
+    }
+
+    div dl {
+        margin: 10px 0;
+    }
+
+    div dl dt, div dl dd {
+        float: left;
+        height: 35px;
+        line-height: 35px;
+    }
+    div.add dl dt:nth-child(n+2){
+        margin-left: 60px;
+    }
+
+    div.layer_2  dl dt {
+        display: inline-block;
+        width: 80px;
+        text-align: right;
+    }
+
+    div dl dd {
+        margin-left: 2px;
+        text-align: left;
+    }
+
+    div dl dd i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url('/img/pwd-icons-new.png') no-repeat;
+        background-position: -102px -47px;
+        vertical-align: sub;
+    }
+    div dl dd em{
+        position: absolute;
+        right: 8px;
+        top: 0;
+        color: #999;
+    }
+    div dl dd span {
+        margin: 0 10px;
+    }
+    div dl dd ul li {
+        float: left;
+        margin: 0 10px;
+    }
+    div dl dd input[type="text"] ,div dl dd input[type="number"]{
+        padding: 0 5px;
+        border: 1px solid #CCCCCC;
+        height: 34px;
+    }
+    div dl dd input[type="file"]{
+        position: absolute;
+        left: 0;
+        width: 85px;
+        height: 35px;
+        z-index: 2;
+        opacity: 0;
+    }
+    div dl dd button {
+        padding: 5px 60px;
+        margin: 20px 15px;
+        font-size: 16px;
+        background: #fa8c35;
+        color: #FFF;
+        border: none;
+        cursor: pointer;
+    }
+    div dl dd button:hover{
+
+    }
+    div dl dd button:last-child{
+        background: #ccc;
+    }
+    div dl dd button:last-child:hover{
+        background: #666;
+    }
+    .layer_2 ul li {
+        margin:5px 10px!important;
+        position: relative;
+        border: 2px solid #ccc;
+        background:#FFF;
+        color: #ccc;
+        display: inline-block;
+        padding: 0 10px;
+        height: 30px;
+        font-size: 16px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .layer_2 ul li i{
+        position: absolute;
+        right: -10px;
+        top:-10px;
+        background: url('/img/close_1.png') no-repeat;
+        background-position: 0 0!important;
+    }
+    .add {
+        padding: 0px 20px;
+    }
+    .add table tr th,.add table tr td{
+        border: 1px solid #b3b3b3;
+        padding: 5px 10px;
+        text-align: center;
+    }
+    .add table thead th{
+        background: #CCCCCC;
+    }
+    .add table tr td input[type="text"]{
+        display: inline-block;
+        width: 80px;
     }
 </style>

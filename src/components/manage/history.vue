@@ -27,7 +27,7 @@
       }
    }
 </script>
-<style>
+<style scoped>
    .icon-new-uc-goback{
       background-position: 0 -320px;
       margin-right: 6px;

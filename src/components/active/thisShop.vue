@@ -197,7 +197,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     select{
         display: inline-block;
         height: 35px;

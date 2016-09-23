@@ -7,29 +7,96 @@
         <div class="details">
             <dl class="brands clearfix">
                 <dt class="G_fl">品牌：</dt>
-                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)">{{brand.brandName}}</a></dd>
+                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)" brandId="{{brand.brandId}}">{{brand.brandName}}</a></dd>
             </dl>
 
             <dl class="model clearfix">
                 <dt class="G_fl">车型：</dt>
-                <dd v-for="model in screen_carModels"  v-if="screen_carModels.length>0"><a v-on:click="scrModelClk(model,$event)">{{model.carModelName}}</a></dd>
+                <dd v-for="model in screen_carModels"  v-if="screen_carModels.length>0">
+                    <a v-on:click="scrModelClk(model,$event)" carModelId="{{model.carModelId}}">{{model.carModelName}}</a>
+                </dd>
+                <dd>
+                    <span v-on:click="eaitModels" class="eait"> <i></i> 编辑车型</span>
+                </dd>
             </dl>
 
             <div class="style">
                 <dl class="car clearfix">
                     <dt class="G_fl">车款：</dt>
                     <dd v-for="car in screen_car" v-if="screen_car.length>0"><a v-on:click="scrCarClk(car,$event)" class="style-box">{{car.carName}}</a></dd>
+                    <dd><span v-on:click="eaitCars" class="eait"> <i></i> 编辑车款</span></dd>
                 </dl>
             </div>
         </div>
     </div>
+
+    <div class="eaitCarsModelsByBrand" style="display: none;">
+        <div class="layer_2">
+            <dl class="clearfix">
+                <dt>已选车型：</dt>
+                <dd style="display: inline-block;width: 500px;height: 100%;">
+                    <ul class="filter_carModel">
+                        <li class="selected" v-for="item in findCarModelByBrand | filterBy 'true' in 'selected'" carModelId="{{item.carModelId}}" track-by="$index">{{item.carModelName}}<i v-on:click="removeCarModel(item)"></i></li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>全部车型：</dt>
+                <dd style="width: 500px;height: 100%;" class="city_dd">
+                    <ul>
+                        <li v-for="item in findCarModelByBrand" v-on:click="carModelClk(item,$index)" class="city_li" :class="{'selected':item.selected==true}">
+                            {{item.carModelName}}
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt></dt>
+                <dd>
+                    <button v-on:click="eaitCarModelAgree">确定</button>
+                    <button v-on:click="eaitCarModelCancle">取消</button>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="eaitCarsModels" style="display: none;">
+        <div class="layer_2">
+            <dl class="clearfix">
+                <dt>已选车型：</dt>
+                <dd style="display: inline-block;width: 500px;height: 100%;">
+                    <ul class="filter_car">
+                        <li class="selected" v-for="item in findCarByCarModel | filterBy 'true' in 'selected'" track-by="$index" carId="{{item.carId}}">{{item.carName}}<i v-on:click="removeCar(item)"></i></li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>全部车型：</dt>
+                <dd style="width: 500px;height: 100%;" class="city_dd">
+                    <ul>
+                        <li v-for="item in findCarByCarModel" v-on:click="carClk(item,$index)" class="city_li" :class="{'selected':item.selected==true}"  carId="{{item.carId}}">
+                            {{item.carName}}
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl class="clearfix">
+                <dt></dt>
+                <dd>
+                    <button v-on:click="eaitCarAgree">确定</button>
+                    <button v-on:click="eaitCarCancle">取消</button>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
     <div class="batch-change">
         <a v-on:click="batchUpdate" style="cursor: pointer;"><i class="change"></i>批量修改</a>
         <a v-on:click="batchDel" style="cursor: pointer;"><i class="delete"></i>批量删除</a>
         <p class="G_fr">共：<span>{{count}}</span>条</p>
     </div>
 
-    <p>checked:id {{checkedIndex | json}}</p>
+    <!--<p>checked:id {{checkedIndex | json}}</p>-->
     <div class="table-box">
         <table  border=1 cellspacing=0 cellpadding=0>
             <tr>
@@ -416,11 +483,202 @@
                     brandName:"",
                     carModelName:"",
                     carName:""
-                }
+                },
+                findCarModelByBrand:[],
+                mask_eaitModelsBrand:"",
+                findCarByCarModel:[],
+                mask_eaitModels:"",
 
             }
         },
         methods:{
+            eaitModels(){
+                var that = this;
+                var brandId = $(".brands dd a.actived").attr("brandId");
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/findCarModelByBrand/"+brandId,
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        that.$set("findCarModelByBrand",response.data)
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+                this.mask_eaitModelsBrand = layer.open({
+                    type: 1,
+                    title: '编辑车型',
+                    skin: 'layui-layer-rim', //加上边框
+                    area : ['650px' , '600px'],
+                    content: $(".eaitCarsModelsByBrand")
+                });
+
+            },
+            carModelClk(obj,idx){
+
+                if(obj.selected == undefined || obj.selected == "undefined"){
+                    obj.selected = true;
+                    this.findCarModelByBrand.$set(idx,{"carModelId":obj.carModelId,"carModelName":obj.carModelName,selected:true});
+                }
+            },
+            removeCarModel(obj){
+                obj.selected = "undefined";
+            },
+            eaitCars(){
+                var that = this;
+                var carModelId = $(".model dd a.actived").attr("carModelId");
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/findCarByCarModel/"+carModelId,
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        that.$set("findCarByCarModel",response.data)
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+                this.mask_eaitModels= layer.open({
+                    type: 1,
+                    title: '编辑车型',
+                    skin: 'layui-layer-rim', //加上边框
+                    area : ['650px' , '600px'],
+                    content: $(".eaitCarsModels")
+                });
+            },
+            carClk(obj,idx){
+                if(obj.selected == undefined || obj.selected == "undefined"){
+                    obj.selected = true;
+                    this.findCarByCarModel.$set(idx,{"carId":obj.carId,"carName":obj.carName,selected:true});
+                }
+            },
+            removeCar(obj){
+                obj.selected = "undefined";
+            },
+            eaitCarModelAgree(){
+                var list = $(".filter_carModel li");
+                var  carModels = [];
+                for(var i = 0 ; i< list.length;i++){
+                    var obj = {};
+                        obj.carModelId = list.eq(i).attr("carModelId");
+                        obj.carModelName = list.eq(i).text();
+                    carModels.push(obj);
+                }
+                console.log(carModels);
+
+                var that = this;
+                var brandId = $(".brands dd a.actived").attr("brandId");
+
+                var query = {};
+                    query.brandId = brandId;
+                    query.userId = config.USERID();
+                    query.carModels = carModels;
+                var params = {"query":query};
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/updateCarModelPrefer",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            layer.msg("编辑车型成功！");
+                            setTimeout(function () {
+                                window.history.go(0);
+                            },1000);
+
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+            },
+            eaitCarModelCancle(){
+                layer.close(this.mask_eaitModelsBrand);
+            },
+            eaitCarAgree(){
+                var list = $(".filter_car li");
+                var  cars = [];
+                for(var i = 0 ; i< list.length;i++){
+                    var obj = {};
+                    debugger;
+                    obj.carId = list.eq(i).attr("carId");
+                    obj.carName = list.eq(i).text();
+                    cars.push(obj);
+                }
+
+                var that = this;
+                var carModelId = $(".model dd a.actived").attr("carModelId");
+
+                var query = {};
+                query.carModelId = carModelId;
+                query.userId = config.USERID();
+                query.cars = cars;
+                var params = {"query":query};
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/updateCarPrefer",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            layer.msg("编辑车款成功！");
+                            setTimeout(function () {
+//                                window.location.hash;
+//                                that.$router.go("/u/manage/myOffer/find/0");
+                                window.history.go(0);
+                            },1000);
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+            },
+            eaitCarCancle(){
+                layer.close(this.mask_eaitModels);
+            },
             allChecked(){
                if(this.checked){
                    this.checkedIndex = [];
@@ -510,8 +768,12 @@
                 this.screen_carModels = this.carModels[brandId];
                 var _index = 0;
                 this.$nextTick(function () {
-                    this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
-
+                    if(this.screen_carModels!=null){
+                        this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
+                    }else{
+                        this.$set("screen_car",[]);
+                        this.$set("arr_items",[]);
+                    }
                     if(e!=null){
                         _index = $(e.target).parent().index()-1;
                     }
@@ -523,19 +785,21 @@
             scrModelClk(obj,e){
                 var carModelId = obj.carModelId;
                 this.screen_car = this.cars[carModelId];
-                if(this.screen_car!=undefined){
-                    var _index = 0;
-                    this.$nextTick(function () {
+                var _index = 0;
+                this.$nextTick(function () {
+                    if(this.screen_car!=undefined){
                         this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
-                        if(e!=null){
-                            _index = $(e.target).parent().index()-1;
-                        }
-                        $(".model dd").find('a').removeClass("actived");
-                        $(".model dd").eq(_index).find('a').addClass("actived");
-                    })
-                }else{
-                    this.$set("screen_car",[]);
-                }
+                    }else{
+                        this.$set("screen_car",[]);
+                        this.$set("arr_items",[]);
+                    }
+                    if(e!=null){
+                        _index = $(e.target).parent().index()-1;
+;                    }
+                    $(".model dd").find('a').removeClass("actived");
+                    $(".model dd").eq(_index).find('a').addClass("actived");
+                })
+
             },
             scrCarClk(obj,e){
                 var carId = obj.carId ,carName = obj.carName;
@@ -787,7 +1051,6 @@
                 for (var i = 0;i<that.temp_arr.length; i++){
                     var query = {};
                     query.carPriceId = that.temp_arr[i].carPriceId;
-                    debugger;
                     query.stock = $(".stock_"+i).val();
                     query.onWay= $(".onWay_"+i).val();
                     query.discount = this.temps.discount;
@@ -978,6 +1241,14 @@
         background:#fa8c35;
         color:#fff;
     }
+    .eait{
+        color: #fb8c33;
+        cursor: pointer;
+    }
+    .eait:hover{
+        color: #fe5a05;
+    }
+
     .top-bar .details .model{
         margin:20px auto;
         position:relative;
@@ -1285,7 +1556,7 @@
         background:#FFF;
         color: #ccc;
         display: inline-block;
-        width: 100px;
+        padding: 0 10px;
         height: 30px;
         font-size: 16px;
         line-height: 30px;

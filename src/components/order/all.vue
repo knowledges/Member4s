@@ -1,7 +1,7 @@
 <template>
 	<div id="orderSearch">
 		<input type="text" placeholder="请输入关键字" v-model="ordertext" />
-		<button class="G_f14" v-on:click="showdata">订单搜索</button>
+		<button class="G_f14" v-on:click="showdata(cur)">订单搜索</button>
 	</div>
     <div class="orderList">
     	<div class="orderListCon">
@@ -28,16 +28,17 @@
 	
 	export default {
         ready(){
-        	this.showdata();
+        	this.showdata(1);
         },
         data(){
             return {
-            	SESSIONID:{},
+            	cur:1,
             	datano: false,
             	datatab: false,
             	datapage: false,
             	ordertext:"",
-            	orderdata:{}
+            	count:0,
+            	orderdata:[]
             }
         },
         components:{
@@ -46,28 +47,20 @@
         },
         methods:{
 //          列表数据展示
-			showdata(obj,page){
-//				if(config.SESSIONID == ""){
-//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-//					config.SESSIONID  = this.SESSIONID.session.sessionid;
-//					config.USERID  = this.SESSIONID.id;
-//					console.log(config.SESSIONID);
-//					console.log(config.USERID);
-//				}
-				
+			showdata(cur){
+				console.log("cur是："+cur);
 				var that = this;
                 var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
-//					query.id_4s = config.SESSIONID;
+//					query.id_4s = config.SESSIONID();
 //					query.status = [1,6,7,8];
 					query.id_4s = "223";
 					query.status = [0,1,2];
 	                query.pagenum = 3;
-	                query.page = 1;
+	                query.page = cur;
 					query.keyword = that.ordertext;
 				var param = { query:query };
-				console.log(that.pagenum);
 				
                 $.ajax({
                     url:url,
@@ -82,9 +75,10 @@
 	                success:function(response){
 						if(response.code == 0){
 	                        layer.close(lay);
-	                        that.orderdata = response.data.rows;
-	                        var leg = response.data.count;
-	                        if( leg == 0){
+//	                        that.orderdata = response.data.rows;
+							that.$set("orderdata",response.data.rows);
+	                        that.count = response.data.count;
+	                        if( that.count == 0){
 	                        	$("#page").empty();
 	                        	that.datano = true;
 	                        }else{
@@ -93,28 +87,27 @@
 	                        	that.datapage = true;
 	                        	laypage({
 						            cont: document.getElementById('page'), //容器。值支持id名、原生dom对象，jquery对象,
-						            pages: Math.ceil(response.data.count/query.pagenum), //总页数
-						            curr: page||1,
+						            pages: Math.ceil(that.count/query.pagenum), //总页数
+						            curr: cur||1,
 						            skip: true, //是否开启跳页
 						            skin: '#ff9205;',
 						            groups: 5, //连续显示分页数
 						            first: 1, //将首页显示为数字1,。若不显示，设置false即可
-						            last: Math.ceil(response.data.count/query.pagenum), //将尾页显示为总页数。若不显示，设置false即可
+						            last: Math.ceil(that.count/query.pagenum), //将尾页显示为总页数。若不显示，设置false即可
 						            jump: function(obj, first){
 						                //回调
 						                //得到了当前页，用于向服务端请求对应数据
 						                var curr = obj.curr;
 						                if(!first){
-						                	that.showdata(that.selectedKey,curr);
+						                	that.showdata(curr);
 						                }
 						            }
 						        });
 						        
 						        that.$nextTick(function () {
-                                    console.log('xr');
                                     $(".laypage_btn").unbind("click").on('click',function(){
-                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(response.data.count/query.pagenum)){
-                                            that.getSpecialList(that.selectedKey,$(".laypage_skip").val());
+                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/query.pagenum)){
+                                            that.showdata($(".laypage_skip").val());
                                         }else{
                                             layer.msg('请输入正确的跳转页码');
                                         }

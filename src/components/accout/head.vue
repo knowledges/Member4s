@@ -39,10 +39,10 @@
                 <div class="cropped">
                     <img src="/img/default.png" class="large" alt="120*120">
                     <p>120*120像素</p>
-                    <img src="/img/default.png" class="medium" alt="80*80">
+                    <!--<img src="/img/default.png" class="medium" alt="80*80">
                     <p>80*80像素</p>
                     <img src="/img/default.png" class="small" alt="60*60">
-                    <p>60*60像素</p>
+                    <p>60*60像素</p>-->
                 </div>
             </div>
         </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+	import config from '../../config'
     import $ from 'jquery'
     import cropbox from './../../assets/js/cropbox'
     export default {
@@ -90,13 +91,41 @@
                 }
             },
             btnCrop(){
+            	var that = this;
+				var url = "http://test3.gouchehui.com:8082/index.php/api/uploadBase64";
+				var	base64 = 'Y3NzL2pjb3VudGRvd25fZmxpcF93aGl0ZS5wbmc=';
+				var	user_id = config.USERID();
+				var formd = new FormData();
+				formd.append("base64",base64);
+				formd.append("user_id",user_id);
                 var img = this.cropper.getDataURL();
-                $('.large,.medium,.small').attr("src","");
-                $('.large').attr("src",img);
-                $('.medium').attr("src",img);
-                $('.small').attr("src",img);
-                $(".productImg img").attr("src",img);
-                layer.msg('头像设置成功', {icon: 1});
+                
+                $.ajax({
+                    url:url,
+                    type:'POST',
+                    contentType: false,
+                    processData: false,
+                    data:formd,
+	                success:function(response){
+						if(response.code == 0){
+							$('.large,.medium,.small').attr("src","");
+			                $('.large').attr("src",img);
+			                $('.medium').attr("src",img);
+			                $('.small').attr("src",img);
+			                $(".productImg img").attr("src",img);
+			                layer.msg('头像设置成功', {icon: 1});
+	                    }else{
+	                        console.log(response.desc);
+	                    }
+					},
+					error:function(fail){
+						if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+					}
+                });
             },
             recommendBtn(imgSrc){
                 this.options.imgSrc =imgSrc;
