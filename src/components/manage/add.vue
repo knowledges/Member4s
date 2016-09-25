@@ -116,7 +116,7 @@
                 <td colspan="12">
                     <div class="order-nodata">
                         <h4><i class="order-nobg"></i>暂无此款车的报价！</h4>
-                        <p>您可在 <a v-link="{ path:'/u/manage/add'}" style="display: inline-block">“新增报价”</a> 页面筛选此款车，手动添加报价</p>
+                        <!--<p>您可在 <a v-link="{ path:'/u/manage/add'}" style="display: inline-block">“新增报价”</a> 页面筛选此款车，手动添加报价</p>-->
                     </div>
                 </td>
             </tr>
@@ -544,19 +544,26 @@
                 var carModelId = obj.carModelId;
                 this.screen_car = this.cars[carModelId];
                 var _index = 0;
-                this.$nextTick(function () {
-                    if(this.screen_car!=undefined){
-                        this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
-                    }else{
-                        this.$set("screen_car",[]);
-                        this.$set("arr_items",[]);
-                    }
-                    if(e!=null){
-                        _index = $(e.target).parent().index()-1;
-                        ;                    }
-                    $(".model dd").find('a').removeClass("actived");
-                    $(".model dd").eq(_index).find('a').addClass("actived");
-                })
+                if(carModelId != null){
+                    this.$nextTick(function () {
+                        if(this.screen_car!=undefined){
+                            this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
+                        }else{
+                            $("#page2").empty();
+                            this.$set("screen_car",[]);
+                            this.$set("arr_items",[]);
+                        }
+                        if(e!=null){
+                            _index = $(e.target).parent().index()-1;
+                        }
+                        $(".model dd").find('a').removeClass("actived");
+                        $(".model dd").eq(_index).find('a').addClass("actived");
+                    })
+                }else{
+                    $("#page2").empty();
+                    this.$set("screen_car",[]);
+                    this.$set("arr_items",[]);
+                }
 
             },
             scrCarClk(obj,e){
@@ -1155,5 +1162,26 @@
     .add table tr td input[type="text"]{
         display: inline-block;
         width: 80px;
+    }
+
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/assets/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>
