@@ -304,12 +304,6 @@
         },
         data(){
             return {
-                checkedIndex:"",
-                checked:""
-            }
-        },
-        data(){
-            return {
                 selectedKey:"",
                 global:false,
                 city_items:[],
@@ -343,6 +337,8 @@
                  },
                 mask_1:"",
                 mask_3:"",
+                checked:"",
+                checkedIndex:"",
             }
         },
         methods:{
@@ -406,6 +402,7 @@
             },
             /*全选*/
             allChecked(){
+                debugger;
                 if(this.checked){
                     this.checkedIndex = [];
                     $(".all").removeAttr("checked");
@@ -495,7 +492,7 @@
 
             },
             /*修改或者批量修改我的报价*/
-            updateMethos(params){
+            updateMethos(params,num){
                 var that = this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchUpdateCarPrice",
@@ -522,7 +519,12 @@
                             that.items.onWay_=false;
                             that.items.onWay_msg="";
                             layer.msg("修改成功");
-//                            window.history.go(0);
+                            if(num==2){
+                                setTimeout(function(){
+                                    window.history.go(0);
+                                },1000);
+
+                            }
                         }
                     },
                     error:function (fail) {
@@ -623,7 +625,7 @@
                 var arr = [];
                 arr[0] = query;
                 var params = {"query":arr};
-                this.updateMethos(params);
+                this.updateMethos(params,1);
 
                 var areas = [];
                 for(var i = 0 ; i< this.items.areas.length;i++) {
@@ -784,8 +786,7 @@
                 }
 
                 var params = {"query":arr};
-                this.updateMethos(params);
-                window.history.go(0);
+                this.updateMethos(params,2);
             },
             cancle2(){
                 layer.close(this.mask_3);
@@ -1089,5 +1090,21 @@
         top:-10px;
         background: url('/img/close_1.png') no-repeat;
         background-position: 0 0!important;
+    }
+
+    .add {
+        padding: 0px 20px;
+    }
+    .add table tr th,.add table tr td{
+        border: 1px solid #b3b3b3;
+        padding: 5px 10px;
+        text-align: center;
+    }
+    .add table thead th{
+        background: #CCCCCC;
+    }
+    .add table tr td input[type="text"]{
+        display: inline-block;
+        width: 80px;
     }
 </style>
