@@ -48,9 +48,8 @@
         methods:{
 //          列表数据展示
 			showdata(cur){
-				console.log("cur是："+cur);
 				var that = this;
-                var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+//              var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
 //					query.id_4s = config.SESSIONID();
@@ -74,7 +73,7 @@
 	                },
 	                success:function(response){
 						if(response.code == 0){
-	                        layer.close(lay);
+//	                        layer.close(lay);
 //	                        that.orderdata = response.data.rows;
 							that.$set("orderdata",response.data.rows);
 	                        that.count = response.data.count;
@@ -101,27 +100,22 @@
 						                if(!first){
 						                	that.showdata(curr);
 						                }
+						                
+						                $(".laypage_btn").unbind("click").on('click',function(){
+	                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/query.pagenum)){
+	                                            that.showdata($(".laypage_skip").val());
+	                                        }else{
+	                                            layer.msg('请输入正确的跳转页码');
+	                                        }
+	                                    })
 						            }
 						        });
-						        
-						        that.$nextTick(function () {
-
-                                    $(".laypage_btn").unbind("click").on('click',function(){
-                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/query.pagenum)){
-                                            that.showdata($(".laypage_skip").val());
-                                        }else{
-                                            layer.msg('请输入正确的跳转页码');
-                                        }
-                                    })
-                                })
-
-						        
 	                        }
 					        
 	                    }else{
-	                        layer.close(lay);
+//	                        layer.close(lay);
 	                        that.datano = true;
-	                        console.log(response.desc);
+	                        layer.msg(response.desc);
 	                    }
 	                    that.ordertext  = "";
 					},

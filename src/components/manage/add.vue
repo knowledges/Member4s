@@ -33,7 +33,7 @@
         <p class="G_fr">共：<span>{{count}}</span>条</p>
     </div>
 
-    <p>checked:id {{checkedIndex | json}}</p>
+    <!--<p>checked:id {{checkedIndex | json}}</p>-->
     <div class="table-box">
         <table  border=1 cellspacing=0 cellpadding=0>
             <tr>
@@ -64,7 +64,7 @@
                 <td>{{item.price}}</td>
                 <td width="100">
                     <!--<span class="show_{{$index}}">{{item.discount}}</span>-->
-                    <input type="text" class="update_{{$index}}" v-model="items.discount" value="{{item.discount}}" style="display: none;">
+                    <input type="text" class="update_{{$index}} discount_{{$index}}" value="{{item.discount}}" style="display: none;">
                     <p v-if="items.discount_" class="error">
                         <i></i>
                         {{items.discount_msg}}
@@ -72,7 +72,7 @@
                 </td>
                 <td width="100">
                     <!--<span class="show_{{$index}}">{{item.lowPrice}}</span>-->
-                    <input type="text" class="update_{{$index}}" v-model="items.lowPrice" value="{{item.lowPrice}}" style="display: none;">
+                    <input type="text" class="update_{{$index}}  lowPrice_{{$index}}" value="{{item.lowPrice}}" style="display: none;">
                     <p v-if="items.lowPrice_" class="error">
                         <i></i>
                         {{items.lowPrice_msg}}
@@ -80,7 +80,7 @@
                 </td>
                 <td  width="60">
                     <!--<span class="show_{{$index}}">{{item.stock}}</span>-->
-                    <input type="text" class="update_{{$index}}" v-model="items.stock" value="{{item.stock}}" style="display: none;">
+                    <input type="text" class="update_{{$index}}  stock_{{$index}}" value="{{item.stock}}" style="display: none;">
                     <p v-if="items.stock_" class="error">
                         <i></i>
                         {{items.stock_msg}}
@@ -88,7 +88,7 @@
                 </td>
                 <td width="60">
                     <!--<span class="show_{{$index}}">{{item.onWay}}</span>-->
-                    <input type="text" class="update_{{$index}}" v-model="items.onWay" value="{{item.onWay}}" style="display: none;">
+                    <input type="text" class="update_{{$index}} onWay_{{$index}}" value="{{item.onWay}}" style="display: none;">
                     <p v-if="items.onWay_" class="error">
                         <i></i>
                         {{items.onWay_msg}}
@@ -103,8 +103,8 @@
                 </td>
                 <td>
                     <div class="show_{{$index}}">
-                        <p><a v-on:click="update(item,$event,$index)" style="cursor: pointer;">添加</a></p>
-                        <p><a v-link=""  style="cursor: pointer;">历史</a></p>
+                        <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">添加</button>
+                        <p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>
                     </div>
                     <div class="update_{{$index}}" style="display: none;">
                         <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
@@ -443,7 +443,7 @@
                     $(".all").removeAttr("checked");
                     for(var i = 0 ; i<this.arr_items.length;i++){
                         $(".all").eq(i).attr("checked","true");
-                        this.checkedIndex.push(this.arr_items[i].carPriceId);
+                        this.checkedIndex.push(i);
                     }
                 }
             },
@@ -514,19 +514,17 @@
                                         if(!first){
                                             that.getActivityList(curr,car_id);
                                         }
+
+                                        $(".laypage_btn").unbind("click").on('click',function(){
+                                            if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                                that.getActivityList($(".laypage_skip").val(),car_id);
+                                            }else{
+                                                layer.msg('请输入正确的跳转页码');
+                                            }
+                                        })
                                     }
                                 });
 
-                                that.$nextTick(function () {
-
-                                    $(".laypage_btn").unbind("click").on('click',function(){
-                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
-                                            that.getActivityList($(".laypage_skip").val(),car_id);
-                                        }else{
-                                            layer.msg('请输入正确的跳转页码');
-                                        }
-                                    })
-                                })
                             }
                         }
                         layer.close(ii);
@@ -654,6 +652,29 @@
                 $("#selectedKey").attr({"disabled":true});
                 $("#global").addClass("selected");
             },
+            removeCity(obj){
+                /*判断是否是直辖市*/
+                if(obj.city == obj.province){
+
+                    if(this.provincecity[obj.city].length>1){
+                        /*total*/
+                        obj.total = this.provincecity[obj.city].length -1;
+                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
+                            if(i==0){
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
+                            }else{
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
+                            }
+
+                        }
+                    }else{
+                        obj.selected = 'undefined';
+                    }
+
+                }else{
+                    obj.selected = 'undefined';
+                }
+            },
             agree(){
                 layer.close(this.mask_1);
                 var list = $(".filter_li li");
@@ -668,18 +689,20 @@
                     }
                 }
             },
-            save(){
-                if(this.items.lowPrice ==""){
-                    this.items.lowPrice_=true;
-                    this.items.lowPrice_msg="报价不能为空";
+            save(obj,e,index){
+                if($(".lowPrice_"+index).val()==""){
+                    /*this.items.lowPrice_=true;
+                    this.items.lowPrice_msg="报价不能为空";*/
+                    layer.msg("报价不能为空",{icon:2});
                     return;
-                }else if(this.items.lowPrice < this.items.discount){
-                    this.items.lowPrice_=true;
-                    this.items.lowPrice_msg="报价要高于优惠价哦！";
+                }else if(parseInt($(".lowPrice_"+index).val()) < parseInt(obj.discount)){
+                    /*this.items.lowPrice_=true;
+                    this.items.lowPrice_msg="报价要高于优惠价哦！";*/
+                    layer.msg("报价要高于优惠价哦！",{icon:2})
                     return;
                 }else{
-                    this.items.lowPrice_=false;
-                    this.items.lowPrice_msg="";
+                   /* this.items.lowPrice_=false;
+                    this.items.lowPrice_msg="";*/
                 }
 
                 if(this.items.areas.length<=0){
@@ -691,23 +714,22 @@
 
                     query.carId = this.temp_items.carId;
                     query.exteriorColorId = this.temp_items.exteriorColorId;
-                    query.interiorColorId = this.temp_items.exteriorColorId;
+                    query.interiorColorId = this.temp_items.interiorColorId;
                     query.price = this.temp_items.price;
-                    query.stock = this.items.stock != "" ? this.items.stock:0;
-                    query.onWay=this.items.onWay != "" ? this.items.onWay:0;
-                    query.discount = this.items.discount != "" ? this.items.discount:0;
-                    query.lowPrice = this.items.lowPrice;
+                    query.stock =$(".stock_"+index).val()!=""?$(".stock_"+index).val():0;
+                    query.onWay=$(".onWay_"+index).val()!=""?$(".onWay_"+index).val():0;
+                    query.discount =$(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
+                    query.lowPrice =$(".lowPrice_"+index).val()!=""?$(".lowPrice_"+index).val():0;
                     query.userId = config.USERID();
                     query.areas = this.items.areas;
 
                 var arr = [];
                     arr[0] = query;
                 var params = {"query":arr};
-                this.updateMethos(params);
-                this.arr_items.$remove(this.temp_items);
+                this.updateMethos(params,1,this.temp_items);
+//                this.arr_items.$remove(this.temp_items);
             },
             save2(){
-
                 var that = this;
                 if(that.items.areas.length<0){
                     return;
@@ -717,7 +739,7 @@
                     var query = {};
                     query.carId = that.temp_arr[i].carId;
                     query.exteriorColorId = this.temp_arr[i].exteriorColorId;
-                    query.interiorColorId = this.temp_arr[i].exteriorColorId;
+                    query.interiorColorId = this.temp_arr[i].interiorColorId;
                     query.price = this.temp_arr[i].price;
                     query.stock = $(".stock_"+i).val();
                     query.onWay= $(".onWay_"+i).val();
@@ -729,15 +751,12 @@
                 }
 
                 var params = {"query":arr};
-                this.updateMethos(params);
-
-                setTimeout(function () {
-                    window.history.go(0);
-                },500)
+                this.updateMethos(params,2,null);
             },
             cancle(_index){
                 $(".update_"+_index).hide();
                 $(".show_"+_index).show();
+                $(".update,input[type='checkbox']").removeAttr("disabled");
             },
             cancle1(){
                 layer.close(this.mask_1);
@@ -746,6 +765,9 @@
                 layer.close(this.mask_3);
             },
             update(obj,e,_index){
+                $(".update").attr("disabled",true);
+                $(e.target).removeAttr("disabled");
+
                 /*  var that = this;*/
                 this.temp_items = [];
                 this.temp_items = obj;
@@ -756,7 +778,9 @@
                     layer.close(index);
                     $(".update_"+_index).show();
                     $(".show_"+_index).hide();
-
+                    $("input[type='checkbox']").attr("disabled","true");
+                    $(".update").attr("disabled",true);
+                    $(e.target).removeAttr("disabled");
                 }, function(){});
             },
             batchUpdate(){
@@ -797,7 +821,7 @@
                 }, function(){});
             },
             /*修改或者批量修改我的报价*/
-            updateMethos(params){
+            updateMethos(params,num,obj){
                 var that = this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchAddCarPrice",
@@ -812,7 +836,13 @@
                         if(response.code == 0){
                             that.items.areas = [];
                             layer.msg("添加成功");
-//                            window.history.go(0);
+                            if(num == 1){
+                                that.arr_items.$remove(obj);
+                                that.count--;
+                                $(".update,input[type='checkbox']").removeAttr("disabled");
+                            }else{
+                                window.history.go(0);
+                            }
                         }
                     },
                     error:function (fail) {
@@ -1049,6 +1079,42 @@
         display: inline-block;
         width: 80%;
         text-align: center;
+    }
+
+    table a.selected{
+        display: inline-block;
+        padding: 2px 8px;
+        color: #FFF;
+        broder:1px solid #fe791e;
+        color: #fe791e;
+        background: #ffe4d2;
+        cursor: pointer;
+    }
+
+    table a.save{
+        display: inline-block;
+        padding: 2px 8px;
+        color: #FFF;
+        border: none;
+        background: #f98c37;
+        cursor: pointer;
+    }
+    table a.save:hover{
+        border: none;
+        background: #f26108;
+    }
+    table a.cancle{
+        margin-top: 5px;
+        display: inline-block;
+        padding: 2px 8px;
+        color: #FFF;
+        border: none;
+        background: #cccccc;
+        cursor: pointer;
+    }
+    table a.cancle:hover{
+        border: none;
+        background: #999999;
     }
 
     div dl {

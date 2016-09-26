@@ -16,11 +16,14 @@
                 </div>
             </div>
         </div>
-        <div class="footerWrap"></div>
+        <div class="footerWrap">
+            <nav-footd></nav-footd>
+        </div>
     </div>
 </template>
 <script>
     import NavHead from './components/NavHead.vue'
+    import NavFootd from './components/NavFootd.vue'
     import SidebarHead from './components/SidebarHead.vue'
     import SidebarItems from './components/SidebarItems.vue'
     import config from './config'
@@ -46,7 +49,8 @@
         components: {
             NavHead,
             SidebarHead,
-            SidebarItems
+            SidebarItems,
+            NavFootd
         }
     }
 </script>

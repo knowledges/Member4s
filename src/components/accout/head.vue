@@ -91,21 +91,17 @@
                 }
             },
             btnCrop(){
-            	var that = this;
+                var that = this;
+                var img = that.cropper.getDataURL();
 				var url = "http://test3.gouchehui.com:8082/index.php/api/uploadBase64";
-				var	base64 = 'Y3NzL2pjb3VudGRvd25fZmxpcF93aGl0ZS5wbmc=';
-				var	user_id = config.USERID();
-				var formd = new FormData();
-				formd.append("base64",base64);
-				formd.append("user_id",user_id);
-                var img = this.cropper.getDataURL();
+				var base64 = img;
+				var user_id = config.USERID();
                 
                 $.ajax({
                     url:url,
                     type:'POST',
-                    contentType: false,
-                    processData: false,
-                    data:formd,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					data:{base64:base64,user_id:user_id},
 	                success:function(response){
 						if(response.code == 0){
 							$('.large,.medium,.small').attr("src","");
@@ -126,6 +122,24 @@
                         }
 					}
                 });
+                
+//              $.post(
+//              	url, 
+//              	{ base64:base64,user_id:user_id }, 
+//              	function(response){
+//						if(response.code == 0){
+//							$('.large,.medium,.small').attr("src","");
+//			                $('.large').attr("src",img);
+//			                $('.medium').attr("src",img);
+//			                $('.small').attr("src",img);
+//			                $(".productImg img").attr("src",img);
+//			                layer.msg('头像设置成功', {icon: 1});
+//	                    }else{
+//	                        console.log(response.desc);
+//	                    }
+//					}
+//              );
+
             },
             recommendBtn(imgSrc){
                 this.options.imgSrc =imgSrc;

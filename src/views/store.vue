@@ -24,10 +24,10 @@
                     <div class="U_info_c_setting">
                         <a href="javascript:;;">常用信息设置 <i role="三角形" class="arrow-down"></i></a>
                         <ul class="U_info_c_ul_setting">
-                            <li><a v-link="{path:'/u/accout',activeClass:'active'}">基本资料</a> </li>
-                            <li><a v-link="{path:'/u/accout/address',activeClass:'active'}">地址管理</a></li>
-                            <li><a v-link="{path:'/u/accout/head',activeClass:'active'}">头像管理</a></li>
-                            <li><a v-link="{path:'/u/accout/modify',activeClass:'active'}">修改密码</a></li>
+                            <li><a v-link="{path:'/u/accout/info'}">基本资料</a> </li>
+                            <li><a v-link="{path:'/u/accout/address'}">地址管理</a></li>
+                            <li><a v-link="{path:'/u/accout/head'}">头像管理</a></li>
+                            <li><a v-link="{path:'/u/accout/modify'}">修改密码</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -288,7 +288,7 @@
         },
         ready(){
             this.c_width= $(".carousel_div").width();
-            $(".UC_nav").find('a').removeClass("active").find("i").removeClass("i_active_1 i_active_2 i_active_3 i_active_4 i_active_5 i_active_0")
+            $(".UC_nav").find('a').removeClass("active").find("i").removeClass("i_active_1 i_active_2 i_active_3 i_active_4 i_active_5 i_active_6 i_active_0");
             $(".UC_nav").find('li').eq(0).find('a').addClass("active").find("i").addClass("i_active_0");
         },
         data(){

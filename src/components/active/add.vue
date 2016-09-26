@@ -164,19 +164,17 @@
                                         if(!first){
                                             that.getActivityList(curr,car_id);
                                         }
+
+                                        $(".laypage_btn").unbind("click").on('click',function(){
+                                            debugger;
+                                            if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
+                                                that.getActivityList($(".laypage_skip").val(),car_id);
+                                            }else{
+                                                layer.msg('请输入正确的跳转页码');
+                                            }
+                                        })
                                     }
                                 });
-
-                                that.$nextTick(function () {
-
-                                    $(".laypage_btn").unbind("click").on('click',function(){
-                                        if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
-                                            that.getActivityList($(".laypage_skip").val(),car_id);
-                                        }else{
-                                            layer.msg('请输入正确的跳转页码');
-                                        }
-                                    })
-                                })
                             }
                         }
                         layer.close(ii);

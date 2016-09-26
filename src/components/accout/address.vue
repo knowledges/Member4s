@@ -159,10 +159,10 @@
                 	
 	                var selectArea = [];
 	                var selectCity = [];
-	                that.citySelected = false;
-	                that.areaSelected = false;
+	               /* that.citySelected = false;
+	                that.areaSelected = false;*/
 	                $.get("/data/area.json",function(response){
-						that.$set("selectAll",response);                	
+						that.$set("selectAll",response);
 	                	var province = [];
 	                	$.map(response,function(val,key){
 	                		province.push(key);
@@ -181,11 +181,12 @@
 //          请求省
             proviceOnChange(proviceSelected){
 				console.log(this.proviceSelected);
+				debugger;
 				var that = this;
 				var selectCity = [];
 				var selectArea = "";
-				that.citySelected = true;
-                that.areaSelected = false;
+				/*that.citySelected = true;
+                that.areaSelected = false;*/
 				$.map(that.selectAll[that.proviceSelected],function(val,key){
 					selectCity.push(key);
 				});
@@ -196,12 +197,13 @@
             cityOnChange(citySelected){
             	console.log(this.citySelected);
 				var that = this;
-            	that.areaSelected = true;
+//            	that.areaSelected = true;
             	var selectArea = [];
             	/*省*/
 				$.map(that.selectAll,function(val,key){
 					$.map(val,function(v,i){
 						if(that.citySelected == i){
+							debugger;
 							selectArea.push(v);
 						}
 					})
@@ -209,6 +211,7 @@
 				that.$set("selectArea",selectArea.join().split(","));
             },
             modify(item,_index){
+            	debugger;
             	var that = this;
             	that.user_ = false;
             	that.addr_ = false;
@@ -224,16 +227,20 @@
                 that.address = true;
                 that.savedata = false;
             	that.modsavedata = true;
-            	that.citySelected = true;
-                that.areaSelected = true;
-                $.get("/data/area.json",function(response){
-					that.$set("selectAll",response);                	
-                	var province = [];
-                	$.map(response,function(val,key){
-                		province.push(key);
-                	})
-                	that.$set("selectProvice",province);
-                });
+            /*	that.citySelected = true;
+                that.areaSelected = true;*/
+				$.get("/data/area.json",function(response){
+					that.$set("selectAll",response);
+					var province = [];
+					$.map(response,function(val,key){
+						province.push(key);
+					})
+					that.$set("selectProvice",province);
+
+					that.proviceOnChange(that.proviceSelected);
+					that.cityOnChange(that.citySelected);
+//				console.log("区域："+that.areaSelected);
+				});
                 
                 if(item.status == 1){
                 	that.check = true;
@@ -244,6 +251,8 @@
                 that.user = item.receiver;
                 that.addr = item.receipt_address;
                 that.tel = item.telphone;
+
+
             },
             setting(item,_index){
             	var that = this;
@@ -266,7 +275,7 @@
 		                success:function(response){
 							if(response.code == 1){
 		                        layer.msg('设置成功',{icon:1});
-//		                        setTimeout("window.history.go(0)",1500);
+		                        setTimeout("window.history.go(0)",1500);
 			                }
 						},
 						error:function(fail){

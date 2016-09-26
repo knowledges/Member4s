@@ -88,6 +88,23 @@ export  default function (router) {
                         },
                     }
                 },
+                '/manage/myOffer/find/:findId/*any':{
+                    component (resolve) {
+                        require(['./components/manage/history'], resolve)
+                    },
+                    subRoutes:{
+                        '/':{
+                            component (resolve) {
+                                require(['./components/manage/historyarray'], resolve)
+                            }
+                        },
+                        '/info':{
+                            component (resolve) {
+                                require(['./components/manage/historyarray'], resolve)
+                            }
+                        }
+                    }
+                },
                 '/active':{
                     component (resolve) {
                         require(['./views/active'], resolve)
@@ -110,7 +127,7 @@ export  default function (router) {
                         },
                     }
                 },
-                '/active/thisShop/find/:find/*any':{
+                '/active/thisShop/find/:findId/*any':{
                     component (resolve) {
                         require(['./components/active/history'], resolve)
                     },

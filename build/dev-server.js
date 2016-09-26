@@ -7,12 +7,12 @@ var favicon = require('express-favicon')
 var app = express()
 var compiler = webpack(config)
 // 设置资源目录
-app.use('/static', express.static(path.join(__dirname, '../src')))
-app.use('/data', express.static(path.join(__dirname, '../src/data')))
-app.use('/img', express.static(path.join(__dirname, '../src/assets/img')))
-app.use('/js', express.static(path.join(__dirname, '../src/assets/js')))
-app.use('/css', express.static(path.join(__dirname, '../src/assets/css')))
-app.use('/assets', express.static(path.join(__dirname, '../src/assets')))
+app.use('/static', express.static(path.join(__dirname, '../src')));
+app.use('/data', express.static(path.join(__dirname, '../src/data')));
+app.use('/img', express.static(path.join(__dirname, '../src/assets/img')));
+app.use('/js', express.static(path.join(__dirname, '../src/assets/js')));
+app.use('/css', express.static(path.join(__dirname, '../src/assets/css')));
+app.use('/assets', express.static(path.join(__dirname, '../src/assets')));
 
 // app.use(favicon(path.join(__dirname, '../favicon.ico')))
 // handle fallback for HTML5 history API
