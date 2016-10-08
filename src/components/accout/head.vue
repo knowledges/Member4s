@@ -11,23 +11,23 @@
                 </div>
                 <div class="imageBox">
                     <div class="thumbBox"></div>
-                    <div class="spinner" style="display: none;">Loading...</div>
+                    <div class="spinner" style="display: none;"></div>
                 </div>
                 <div class="recommend">
                     <h3 class="recommend-title">推荐头像</h3>
                     <ul class="recommend-ul clearfix">
-                        <li><a v-on:click="recommendBtn('/img/default.png')"><img src="/img/default.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_1.png')"><img src="/img/head_1.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_2.png')"><img src="/img/head_2.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_3.png')"><img src="/img/head_3.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_4.png')"><img src="/img/head_4.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_5.png')"><img src="/img/head_5.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_6.png')"><img src="/img/head_6.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_7.png')"><img src="/img/head_7.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_8.png')"><img src="/img/head_8.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_9.png')"><img src="/img/head_9.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_10.png')"><img src="/img/head_10.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/img/head_11.png')"><img src="/img/head_11.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/default.png')"><img src="/assets/img/default.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_1.png')"><img src="/assets/img/head_1.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_2.png')"><img src="/assets/img/head_2.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_3.png')"><img src="/assets/img/head_3.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_4.png')"><img src="/assets/img/head_4.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_5.png')"><img src="/assets/img/head_5.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_6.png')"><img src="/assets/img/head_6.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_7.png')"><img src="/assets/img/head_7.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_8.png')"><img src="/assets/img/head_8.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_9.png')"><img src="/assets/img/head_9.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_10.png')"><img src="/assets/img/head_10.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('/assets/img/head_11.png')"><img src="/assets/img/head_11.png" alt=""></a></li>
                     </ul>
                     <button class="save" id="btnCrop" v-on:click="btnCrop">保存</button>
                     <button class="cancle">取消</button>
@@ -35,13 +35,13 @@
             </div>
             <div class="upload_div_right">
                 <h4>预览效果</h4>
-                <h5>您可以在此娱乐最终生成的头像效果</h5>
+                <!--<h5>您可以在此娱乐最终生成的头像效果</h5>-->
                 <div class="cropped">
-                    <img src="/img/default.png" class="large" alt="120*120">
+                    <img src="/assets/img/default.png" class="large" alt="120*120">
                     <p>120*120像素</p>
-                    <!--<img src="/img/default.png" class="medium" alt="80*80">
+                    <!--<img src="../../assets/img/default.png" class="medium" alt="80*80">
                     <p>80*80像素</p>
-                    <img src="/img/default.png" class="small" alt="60*60">
+                    <img src="../../assets/img/default.png" class="small" alt="60*60">
                     <p>60*60像素</p>-->
                 </div>
             </div>
@@ -53,6 +53,7 @@
 	import config from '../../config'
     import $ from 'jquery'
     import cropbox from './../../assets/js/cropbox'
+    import util from './../../util/util'
     export default {
         ready(){
             this.cropper = $('.imageBox').cropbox(this.options);
@@ -62,7 +63,7 @@
                 options :{
                     thumbBox: '.thumbBox',
                     spinner: '.spinner',
-                    imgSrc: '/img/default.png'
+                    imgSrc: '/assets/img/default.png'
                 },
                 cropper :""
             }
@@ -78,12 +79,13 @@
                 var that = e.target;
                 var filesType = that.files[0].type;
                 if(filesType == "image/jpeg" || filesType == "image/jpg" || filesType == "image/png" || filesType == "image/gif" ){
-                    if(that.files[0].size/1024>=3){
+                	console.log("图片的大小："+that.files[0].size);
+                    if(that.files[0].size/(1024*1024)>=3){
                         layer.msg('上传图片过大', {icon: 7});
-                        that.files = {};
+//                      that.files = {};
                     }else {
                         reader.readAsDataURL(that.files[0]);
-                        that.files = {};
+//                      that.files = {};
                     }
                 }else{
                     layer.msg('暂不支持该格式', {icon: 7});
@@ -118,7 +120,7 @@
 						if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
 					}
                 });
@@ -169,7 +171,7 @@
         display: inline-block;
         width: 21px;
         height: 21px;
-        background-image: url('/img/icon-upload.png');
+        background-image: url('/assets/img/icon-upload.png');
         background-size: 100% 100%;
         vertical-align: middle;
     }
@@ -210,8 +212,8 @@
         margin-top: -60px;
         margin-left: -60px;
         box-sizing: border-box;
-        /*border: 1px solid rgb(102, 102, 102);*/
-        box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgb(102, 102, 102);
+	    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6);
         background: none repeat scroll 0% 0% transparent;
     }
     .imageBox .spinner {
@@ -222,7 +224,7 @@
         right: 0;
         text-align: center;
         line-height: 400px;
-        background: rgba(0,0,0,0.7);
+        /*background: rgba(0,0,0,0.7);*/
     }
     .recommend-title{
         margin-left: 10px;
@@ -268,7 +270,8 @@
         border-left: 1px dashed #f0f0f0;
     }
     .upload_div_right h4{
-        margin-left: 20px;
+        /*margin-left: 20px;*/
+        text-align: center;
         margin-top:30px;
         font-size: 16px;
         color: #333;

@@ -20,50 +20,51 @@
                         <div class="prompt-mes">如您对官方有疑问，请致电 400-138-0808</div>
                     </a>
                 </th>
-                <th class="car-off-pri">
-                    特价/元
-                </th>
-                <th class="car-place">
-                    活动时间
-                </th>
-                <th class="car-stock">
-                    库存/辆
-                </th>
-                <th class="car-way">
-                    销售区域
-                </th>
-                <th width="50">
-                    状态
-                </th>
+                <!--<th class="car-off-pri">-->
+                    <!--特价/元-->
+                <!--</th>-->
+                <!--<th class="car-place">-->
+                    <!--活动时间-->
+                <!--</th>-->
+                <!--<th class="car-stock">-->
+                    <!--库存/辆-->
+                <!--</th>-->
+                <!--<th class="car-way">-->
+                    <!--销售区域-->
+                <!--</th>-->
+                <!--<th width="50">-->
+                    <!--状态-->
+                <!--</th>-->
                 <th class="car-operation">操作</th>
             </tr>
             </thead>
             <tbody>
+                <tr  v-if="arr_items.length<=0">
+                    <td colspan="11">
+                        <div class="order-nodata">
+                            <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                            <!--<p>您可进入 <a v-link="{ path:'/u/manage'}" style="display: inline-block">报价管理</a> 页面更新底价信息</p>-->
+                        </div>
+                    </td>
+                </tr>
+            <template v-else>
                 <tr v-for="item in arr_items">
                     <td>{{item.carModelName}}</td>
                     <td>{{item.carName}}</td>
                     <td>{{item.exteriorColorName}}</td>
                     <td>{{item.interiorColorName}}</td>
                     <td>{{item.price}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <!--<td></td>-->
+                    <!--<td></td>-->
+                    <!--<td></td>-->
+                    <!--<td></td>-->
+                    <!--<td></td>-->
                     <td v-if="stats>0">
-                        <a v-on:click="update(item)">添加</a>
-                        <a v-link="{path:'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}">历史</a>
-                        <!--<a v-bind:href="'/u/active/thisShop/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId">历史</a>-->
+                        <a href="#" @click.prevent="update(item)" class="G_btn_a">添加</a>
+                        <a href="#" @click.prevent="getHistoryList(item)">历史</a>
                     </td>
                 </tr>
-                <tr  v-if="arr_items.length<=0">
-                    <td colspan="11">
-                        <div class="order-nodata">
-                            <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
-                            <p>您可进入 <a v-link="{ path:'/u/manage'}" style="display: inline-block">报价管理</a> 页面更新底价信息</p>
-                        </div>
-                    </td>
-                </tr>
+            </template>
             </tbody>
         </table>
     </div>
@@ -90,7 +91,7 @@
             <dl class="clearfix">
                 <dt>特&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：</dt>
                 <dd style="position: relative">
-                    <input type="text" name="special_price" v-model="items.special_price"><em>元</em>
+                    <input type="text" name="special_price" maxlength="11" v-model="items.special_price | changeToNull" placeholder="请填写该车的特价"><em>元</em>
                 </dd>
                 <dd v-if="items.offer_" class="error"> <i></i>{{items.offer_msg}}</dd>
             </dl>
@@ -105,7 +106,7 @@
             </dl>
             <dl class="clearfix">
                 <dt>活动数量：</dt>
-                <dd style="position: relative"><input type="number" name="number" v-model="items.number"> <em>辆</em></dd>
+                <dd style="position: relative"><input type="text" maxlength="11" v-model="items.number | changeToNumber"> <em>辆</em></dd>
                 <dd v-if="items.number_" class="error"><i></i>{{items.number_msg}}</dd>
             </dl>
             <dl class="clearfix">
@@ -113,7 +114,7 @@
                 <dd style="display: inline-block;height: 100%;width: 550px;">
                     <ul id="areas_" class="clearfix">
                         <li v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</li>
-                        <a href="javascript:;;" v-on:click="selectarea" class="a_style">选择区域</a>
+                        <a href="javascript:;" @click="selectarea" class="a_style">选择区域</a>
                     </ul>
                 </dd>
                 <dd v-if="items.selectarea_"  class="error">
@@ -125,25 +126,30 @@
                 <dt>活动图片：</dt>
                 <dd>
                     <form enctype="multipart/form-data">
-                    <a class="upload-img a_style"  href="javascript:;;">
-                        <label for="upload-file">上传文件</label>
-                    </a>
-                    <input type="file"  name="upload-file" id="upload-file" v-on:change="uploadfile($event)">
-                    <span class="file_value">{{items.file_value}}</span>
+                        <div>
+                            <a class="upload-img a_style"  href="javascript:;">
+                            <label for="upload-file" style="cursor: pointer;">上传文件</label>
+                        </a>
+                            （图片尺寸不小于800*360px）
+                        </div>
+
+                        <div class="fileInner">
+                            <input type="file"  name="upload-file" id="upload-file" v-on:change="uploadfile($event)">
+                            <div class="imgbox"></div>
+                        </div>
+
+                    <p class="file_value">{{items.file_value}}</p>
 
                     </form>
                 </dd>
                 <dd v-if="items.file_"  class="error">
                     <i></i>{{items.file_msg}}
                 </dd>
-                <dd>
-                    （图片尺寸不小于800*360px）
-                </dd>
             </dl>
             <dl class="clearfix">
                 <dt>活动说明：</dt>
                 <dd style="display: inline-block;width: 576px;height: 210px;">
-                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~" style="padding: 5px;text-indent: 2em;"></textarea>
+                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~"></textarea>
                 </dd>
             </dl>
             <dl class="clearfix">
@@ -159,7 +165,7 @@
         <div class="layer_2">
             <dl class="clearfix">
                 <dt>已选区域：</dt>
-                <dd style="display: inline-block;width: 500px;height: 100%;">
+                <dd style="display: inline-block;width: 490px;height: 100%;min-height: 45px;border-bottom: 1px solid #ccc;">
                     <ul class="filter_li">
                         <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -236,13 +242,18 @@
             </dl>
         </div>
     </div>
+
+    <history-tpl :history="history"></history-tpl>
+
 </template>
 
 <script>
     import sub_zebra from './../../assets/js/sub_zebra.js'
     import Zebra_DatePicker from './../../assets/js/zebra_datepicker.src.js'
     import $ from 'jquery'
+    import historyTpl from './../historyTpl.vue'
     import config from './../../config'
+    import util from './../../util/util'
     export default {
         props: {
             stats: Number,
@@ -256,39 +267,9 @@
             }
         },
         ready(){
-            var that = this;
-
-            /*获取省市关系*/
-            $.ajax({
-                url:config.API_BASE+"/nl/common/provincecity",
-                method:"POST",
-                contentType:"application/json; charset=utf-8",
-                datatype:"json",
-                beforeSend:function (request) {
-                    request.setRequestHeader("sessionid",config.SESSIONID());
-                },
-                success:function (response) {
-                    var list = response.data;
-                    that.$set("provinces",list.provinces);
-                    that.$set("provincecity",list.provincecity);
-                    that.$set("clone_provincecity",list.provincecity);
-//                },
-//                error:function (fail) {
-//                    if(fail.status == "401"){
-//                        layer.msg('登录失效，请重新登陆！');
-//                        that.$route.router.go("/login");
-//                    }
-                }
-            });
-
-//            $.get("/data/newcity.json",function (response) {
-//                var list = response.data;
-//                _this.provinces = list.provinces;
-//                _this.provincecity = list.provincecity;
-//            });
 
             $('#start-date').Zebra_DatePicker({
-                direction: [false,new Date()],
+                direction: true,
                 pair: $('#end-date'),
                 format: 'Y-m-d',
                 onSelect:function(){
@@ -297,9 +278,12 @@
             });
 
             $('#end-date').Zebra_DatePicker({
-                direction: [true, new Date()],
+                direction: 1
             });
         },
+    components:{
+        historyTpl
+    },
         data(){
             return {
                 items:{
@@ -316,7 +300,7 @@
                     end_date:"",
                     timer_:false,
                     timer_msg:"",
-                    number:"",
+                    number: 1,
                     number_:false,
                     number_msg:"",
                     areas:[],
@@ -334,6 +318,16 @@
                 provinces:"",
                 provincecity:"",
                 clone_provincecity:"",
+                history: {
+                    index:0,
+                    brandName: '',
+                    carModelName: '',
+                    carName: '',
+                    exColorName: '',
+                    inColorName: '',
+                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
+                    list:[]
+                },
                 city_items:[],
                 global:false,
                 mask_1:"",
@@ -342,7 +336,100 @@
             }
         },
         methods:{
+            getHistoryList(item){
+                var self = this,
+                        query = {},
+                        params = {};
+                console.log(item);
+                query.user_id = config.USERID();
+                query.interior_color_id = item.interiorColorId;
+                query.exterior_color_id= item.exteriorColorId;
+                query.pagenum = 100;
+                query.page = 1;
+                query.car_id = item.carId;
+                params = {"query":query};
+
+                self.history.brandName = item.brandName;
+                self.history.carModelName = item.carModelName;
+                self.history.carName = item.carName;
+                self.history.exColorName = item.exteriorColorName;
+                self.history.inColorName = item.interiorColorName;
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/activityTrend/list/",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        console.log(response);
+                        if(response.code === 0){
+                            self.history.list = response.data.rows;
+                            self.history.index = layer.open({
+                                type: 1,
+                                title: '历史记录',
+                                skin: 'layui-layer-rim', //加上边框
+                                area : ['750px' , '800px'],
+                                content: $("#J_HistoryPop")
+                            });
+                        }else{
+                            layer.msg(request.desc);
+                        }
+                    },
+                    error:function(fail){
+                        if(fail.status == "401"){
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+            },
+            judge(event){
+                var $this = $(event.target);
+                if(isNaN(parseInt(this.items.special_price))){
+                    $this.addClass('err');
+                    this.items.special_price = '';
+                }else{
+                    $this.removeClass('err');
+                }
+            },
+            getRelationship(){
+                var that = this;
+
+                /*获取省市关系*/
+                $.ajax({
+                    url:config.API_BASE+"/nl/common/provincecity",
+                    method:"POST",
+                    contentType:"application/json; charset=utf-8",
+                    datatype:"json",
+                    cache:true,
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        var list = response.data;
+                        that.$set("provinces",list.provinces);
+                        that.$set("provincecity",list.provincecity);
+                        that.$set("clone_provincecity",list.provincecity);
+
+                        that.selectedKey="江苏省";
+                        that.selectedProvinces();
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            util.login();
+                        }
+                    }
+                });
+            },
             update(obj){
+                this.getRelationship();
                 this.rem_item = obj;
                 this.items.brandName = obj.brandName;
                 this.items.carModelName = obj.carModelName;
@@ -353,12 +440,20 @@
                 this.items.interiorColorName = obj.interiorColorName;
                 this.items.exterior_color_id = obj.exteriorColorId;
                 this.items.exteriorColorName = obj.exteriorColorName;
+                var that = this;
                 this.mask_2= layer.open({
                     type: 1,
                     title: '活动详情添加',
                     skin: 'layui-layer-rim', //加上边框
                     area : ['750px' , '800px'],
-                    content: $(".activeinfo")
+                    content: $(".activeinfo"),
+                    cancel:function () {
+                        /*修改弹框初始化*/
+                        that.removeAll();
+                        that.selectedKey = "0";
+                        that.city_items = [];
+                        /*   that.items.areas = [];*/
+                    }
                 });
             },
             selectarea(){
@@ -366,42 +461,81 @@
                     type: 1,
                     title: '选择区域',
                     skin: 'layui-layer-rim', //加上边框
-                    area : ['650px' , '600px'],
+                    area : ['600px' , '420px'],
                     content: $(".activearea")
                 });
             },
             uploadfile(e){
                 var _this = this;
                 var reader = new FileReader();
-                reader.onload = function(e) {
-                    _this.items.file_img = e.target.result;
-                };
                 var that = e.target;
                 var filesType = that.files[0].type;
+
                 if(filesType == "image/jpeg" || filesType == "image/jpg" || filesType == "image/png" || filesType == "image/gif" ){
-                    if(that.files[0].size/1024>=10){
-                        layer.msg('上传图片过大', {icon: 7});
+                    if(that.files[0].size/1024/1024>=10){
+                        layer.msg('上传图片过大');
                         that.files = {};
                     }else {
+                        var MAXWIDTH  = 580;
+                        var MAXHEIGHT = 230;
+                        var img, imgBox = $(that).closest('.fileInner').find('.imgbox');
+
+                        imgBox.html('<img class="imghead">');
+                        img = imgBox.find('.imghead').get(0);
+
+                        img.onload = function(){
+                            console.log(img.offsetWidth);
+                            var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                            img.width  =  rect.width;
+                            img.height =  rect.height;
+                            img.style.marginTop = rect.top+'px';
+                        }
+
                         this.items.file_value = that.files[0].name;
+                        reader.onload = function(evt){
+                            img.src = evt.target.result;
+                            _this.items.file_img = evt.target.result;
+                        }
                         reader.readAsDataURL(that.files[0]);
-                        that.files = {};
+                        that.files = null;
                     }
                 }else{
-                    layer.msg('暂不支持该格式', {icon: 7});
-                    that.files = {};
+                    layer.msg('暂不支持该格式');
+                    that.files = null;
                 }
+            },
+            clacImgZoomParam( maxWidth, maxHeight, width, height ){
+                var param = {top:0, left:0, width:width, height:height};
+                if( width>maxWidth || height>maxHeight )
+                {
+                    var rateWidth = width / maxWidth;
+                    var rateHeight = height / maxHeight;
+
+                    if( rateWidth > rateHeight )
+                    {
+                        param.width =  maxWidth;
+                        param.height = Math.round(height / rateWidth);
+                    }else
+                    {
+                        param.width = Math.round(width / rateHeight);
+                        param.height = maxHeight;
+                    }
+                }
+
+                param.left = Math.round((maxWidth - param.width) / 2);
+                param.top = Math.round((maxHeight - param.height) / 2);
+                return param;
             },
             save(){
                 var items = this.items;
                 if(items.special_price == "" ){
                     items.offer_ = true;
                     items.offer_msg="特价不能为空";
-                    return;
-                }else if(items.special_price>items.market){
+                    return false;
+                }else if(parseInt(items.special_price, 10) > parseInt(items.price, 10)){
                     items.offer_ = true;
                     items.offer_msg="特价不可高于市场价";
-                    return;
+                    return false;
                 }else{
                     items.offer_ = false;
                 }
@@ -497,7 +631,7 @@
                                 },
                                 success:function (response) {
                                     if(response.code == 0){
-                                        layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1,title:'完成修改'});
+                                        layer.alert('已提交，正在审核中...<br/> 您可在本店活动查看审核状态', {icon: 1,title:'完成修改'});
                                         that.arr_items.$remove(that.rem_item);
                                         layer.close(that.mask_2);
                                         /*clear*/
@@ -520,12 +654,18 @@
                                         that.file_=false;
                                         that.file_msg="";
                                         that.desc="";
+
+                                        /*修改弹框初始化*/
+                                        that.removeAll();
+                                        that.selectedKey = "0";
+                                        that.city_items = [];
                                     }
                                 },
                                 error:function (fail) {
                                     if(fail.status == "401"){
+                                        sessionStorage.removeItem("SESSIONID");
                                         layer.msg('登录失效，请重新登陆！');
-                                        that.$route.router.go("/login");
+                                        util.login();
                                     }
                                 }
                             })
@@ -541,6 +681,11 @@
             },
             cancle(){
                 layer.close(this.mask_2);
+                /*修改弹框初始化*/
+                this.removeAll();
+                this.selectedKey = "0";
+                this.city_items = [];
+                /*   that.items.areas = [];*/
             },
             cityClk(obj,_index){
 //               /*点击下标是否第一个*/
@@ -560,7 +705,7 @@
                     if(obj.selected == undefined || obj.selected == "undefined"){
                         this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
                         this.city_items[0].total =this.city_items[0].total-1;
-                        if(this.city_items[0].total == 0){
+                        if(this.city_items[0].total == 1){
                             /*total 先不设置*/
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
 
@@ -578,6 +723,10 @@
 
                 if(this.city_items.length>1){
 
+                    if(this.city_items[0].insert == undefined){
+                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
+
+                    }
                     var total = this.city_items.length;
 
                     for(var i = 1; i<this.city_items.length;i++){
@@ -585,11 +734,6 @@
                         if(this.city_items[i].selected == true){
                             total =total-1;
                         }
-                    }
-
-                    if(this.city_items[0].insert == undefined){
-                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
-
                     }
 
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
@@ -601,7 +745,7 @@
 
                     if(this.provincecity[obj.city].length>1){
                         /*total*/
-                        obj.total = this.provincecity[obj.city].length -1;
+                        obj.total = this.provincecity[obj.city].length;
                         for(var i = 0; i<this.provincecity[obj.city].length;i++){
                             if(i==0){
                                 this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
@@ -636,6 +780,7 @@
                 layer.close(this.mask_1);
             },
             selectAllClk(){
+                this.getRelationship();
                 this.global = true;
                 $("#selectedKey").find("option[value=0]").attr({"selected":true});
                 $("#selectedKey").attr({"disabled":true});
@@ -646,18 +791,95 @@
                 $("#global").removeClass("selected");
                 this.global = false;
             }
+        },
+    filters:{
+        /*
+        * 自定义过滤器
+        *
+        * */
+        changeToNull: {
+            // model -> view
+            // 在更新 `<input>` 元素之前格式化值
+            read(val) {
+                return val
+            },
+            // view -> model
+            // 在写回数据之前格式化值
+            write(val, oldVal) {
+                var number = val.replace(/[^\d.]/g, '');
+                return number === '' ? '' : isNaN(number) ? '' : parseInt(number, 10)
+            }
+        },
+        changeToNumber: {
+            // model -> view
+            // 在更新 `<input>` 元素之前格式化值
+            read(val) {
+                return parseInt(val, 10)
+            },
+            // view -> model
+            // 在写回数据之前格式化值
+            write(val, oldVal) {
+                var number = +val.replace(/[^\d.]/g, '')
+                return number === '' ? 1 : parseInt(number, 10) === 0 ? 1 : isNaN(number) ? 1 : parseInt(number, 10)
+            }
         }
+    }
+
 
     }
 </script>
 
 <style scoped>
     @import "./../../assets/css/datepicker.css";
+    /* Button group */
+    .G_btn_a,.G_btn_b,.G_btn_c,.G_btn_d,.G_btn_e{padding:0 10px 0 10px;white-space:nowrap;display:inline-block; border-radius:2px; height:26px;line-height:26px; *line-height:26px; text-decoration:none; font-size:14px; min-width:40px; text-align:center; outline:none; border: none;cursor:pointer;}
+    .G_btn_a:hover,.G_btn_b:hover,.G_btn_c:hover,.G_btn_d:hover,.G_btn_e:hover{text-decoration:none;}
+    .G_btn_a{background:#ff8140; color:#fff;}
+    .G_btn_a:hover{background:#f7671d;}
+    .G_btn_b{background:#2194ff;color:#fff;}
+    .G_btn_c{background:#ccc;color:#fff;box-shadow: 0px 1px 2px rgba(0,0,0,0.25);}
+    .G_btn_c:hover{background:#bbb;}
+    .G_btn_d{background:#fff; color:#000; border: 1px solid #B1B1B1;/*box-shadow: 0px 1px 2px rgba(0,0,0,0.25);*/}
+    .G_btn_d:hover{background:#ddd;}
+    .G_btn_e{background:#FF4242; color:#fff; border:1px solid #F00;/*box-shadow: 0px 1px 2px rgba(0,0,0,0.25);*/}
+    .G_btn_e:hover{background:#F00;}
+    .G_btn_a_disable, .G_btn_a_disable:hover{
+        background: #ffc09f;
+        color: #fff;
+        border: 1px solid #fbbd9e;
+        box-shadow: none;
+        cursor: default;
+    }
+    .G_btn_disabled, .G_btn_disabled:hover{
+        color: #FFF;
+        background: #aaa;
+        cursor: default;
+    }
+    .btn_22px{display:inline-block;height:20px;line-height:21px; *line-height:20px; min-width:28px;}
+    .btn_24px{display:inline-block;height:22px;line-height:23px; *line-height:20px; min-width:28px;}
+    .btn_26px{display:inline-block;height:24px;line-height:25px; *line-height:20px; min-width:28px;}
+    .btn_28px{display:inline-block;height:26px;line-height:27px; *line-height:20px; min-width:28px;}
+    .btn_30px{display:inline-block;height:28px;line-height:29px; *line-height:28px; width:60px; font-size:14px;}
+    .btn_32px{display:inline-block;height:32px;line-height:33px; *line-height:32px;font-size:14px;}
+    .btn_34px{display:inline-block;height:34px;line-height:35px; padding:0 15px; font-size:14px;}
+    .btn_42px{display:inline-block;height:42px;line-height:43px; font-size:14px;}
+    .btn_54px{display:inline-block;height:54px;line-height:55px; padding:0 15px; font-size:26px;}
+    .btn_100P{display:inline-block;height:42px;line-height:43px; width:100%; font-size:20px;}
+    .btn_100P u{text-decoration: none!important;}
+
+    .err{
+        background: #FED9D9!important;
+        border: 1px solid #FD8080!important;
+        color: #8C8C8C!important;
+    }
     select{
         display: inline-block;
-        height: 35px;
-        line-height: 35px;
+        height: 28px;
+        line-height: 28px;
         font-size: 14px;
+        padding: 0 10px;
+        margin-left: 10px;
+        outline: none;
     }
 
     table thead tr th{
@@ -672,14 +894,17 @@
     }
     table tbody tr td a {
         display: block;
+        margin-bottom: 5px;
     }
+
     .table-box{
-        width:870px;
+        width: 100%;
         margin:0 auto;
     }
     .table-box table{
-        border:1px solid #e5e5e5;
-        margin-top:10px;
+        width: 100%;
+        border: 1px solid #e5e5e5;
+        margin-top: 20px;
     }
     .table-box table th{
         height:36px;
@@ -687,7 +912,7 @@
         color:#333;
     }
     .table-box table td{
-        height:70px;
+        padding: 15px 5px;
         text-align:center;
     }
     .table-box table tr:hover{
@@ -757,14 +982,30 @@
     .table-box table .car-operation a:hover{
         color:#ff791f;
     }
-    div.activeinfo {
+    .activeinfo {
         display: inline-block;
         padding: 20px;
-        font-size: 16px;
+        font-size: 14px;
     }
-
+    .activeinfo input{
+        padding-left: 10px;
+        font-size: 12px;
+        height: 26px;
+        line-height: 26px;
+    }
+    .activeinfo  textarea{
+        padding: 10px;
+    }
+    .activeinfo .imgbox{
+        margin-top: 10px;
+        border: 1px dotted #bfbfbf;
+    }
+    .activeinfo .file_value{
+        margin: 10px 0;
+    }
     .error{
         color: red;
+        margin-left: 15px;
     }
     .selected{
         color: #fa8c35!important;
@@ -773,8 +1014,17 @@
     div dl {
         margin: 10px 0;
     }
-
+    div.layer_2{
+        margin-top: 5px;
+    }
+    div.layer_2 dl{
+        margin: 0 0!important;
+    }
     div dl dt, div dl dd {
+        float: left;
+        margin-bottom: 10px;
+    }
+    div.layer_2 dl dt, div.layer_2 dl dd {
         float: left;
         height: 35px;
         line-height: 35px;
@@ -783,7 +1033,7 @@
         margin-left: 60px;
     }
 
-    div dl dt {
+    div.layer_2  dl dt {
         display: inline-block;
         width: 80px;
         text-align: right;
@@ -798,15 +1048,17 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url(/img/pwd-icons-new.png) no-repeat;
         background-position: -102px -47px;
-        vertical-align: sub;
+        vertical-align: -5px;
+        margin-right: 5px;
     }
     div dl dd em{
         position: absolute;
         right: 8px;
-        top: 0;
+        top: 50%;
         color: #999;
+        margin-top: -11px;
     }
     div dl dd span {
         margin: 0 10px;
@@ -815,11 +1067,7 @@
         float: left;
         margin: 0 10px;
     }
-    div dl dd input[type="text"] ,div dl dd input[type="number"]{
-        padding: 0 5px;
-        border: 1px solid #CCCCCC;
-        height: 34px;
-    }
+
     div dl dd input[type="file"]{
         position: absolute;
         left: 0;
@@ -847,13 +1095,19 @@
         background: #666;
     }
     .a_style{
+        display: inline-block;
         border: 1px solid #ff791f;
         color: #ff791f;
         background: #ffe5d3;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 0 8px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 2px;
+        font-size: 12px;
     }
-
+    .a_style:hover{
+        text-decoration: none;
+    }
     .layer_2 ul li {
         margin:5px 10px!important;
         position: relative;
@@ -861,7 +1115,7 @@
         background:#FFF;
         color: #ccc;
         display: inline-block;
-        width: 100px;
+        padding: 0 10px;
         height: 30px;
         font-size: 16px;
         line-height: 30px;
@@ -872,7 +1126,7 @@
         position: absolute;
         right: -10px;
         top:-10px;
-        background: url('/img/close_1.png') no-repeat;
+        background: url('/assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
     .city_dd li{

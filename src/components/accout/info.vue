@@ -15,7 +15,7 @@
             </dl>
             <dl class="clearfix">
                 <dt>副营品牌：</dt>
-                <dd v-for="subitem in infolist.brandlist"><span>{{subitem.brand_name}}</span></dd>
+                <dd v-for="subitem in infolist.brandlist" v-if="subitem.brand_name != infolist.brand_name"><span>{{subitem.brand_name}}</span></dd>
             </dl>
             <dl class="clearfix" v-if="infolist.my_num">
                 <dt>邀请码：</dt>
@@ -180,9 +180,9 @@
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
 	                        }
 						}
 	                });
@@ -268,9 +268,9 @@
 									},
 									error:function(fail){
 										if(fail.status == "401"){
-				                            sessionStorage.removeItem("SESSIONID");
-				                            layer.msg('登录失效，请重新登陆！');
-				                            that.$route.router.go("/login");
+                                            sessionStorage.removeItem("SESSIONID");
+                                            layer.msg('登录失效，请重新登陆！');
+                                            util.login();
 				                        }
 									}
 				                })
@@ -325,7 +325,7 @@
 						if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
 					}
                 })
@@ -366,7 +366,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url(../../assets/img/pwd-icons-new.png) no-repeat;
         background-position: -102px -47px;
         vertical-align: sub;
     }

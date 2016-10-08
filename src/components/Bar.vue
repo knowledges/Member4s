@@ -7,7 +7,7 @@
 <style scoped>
 
     .bar{
-        padding: 29px 10px 6px 10px;
         border-bottom: 1px solid #ccc;
+        margin-left: 25px;
     }
 </style>

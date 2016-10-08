@@ -181,6 +181,16 @@ export  default function (router) {
                                 require(['./components/exchange/cashing'], resolve)
                             }
                         },
+                        '/cashing/order/:goodsId':{
+                            component (resolve) {
+                                require(['./components/exchange/cashingOrder'], resolve)
+                            }
+                        },
+                        '/cashing/order/succ':{
+                            component (resolve) {
+                                require(['./components/exchange/cashingOrderSucc'], resolve)
+                            }
+                        },
                         '/rule':{
                             component (resolve) {
                                 require(['./components/exchange/rule'], resolve)

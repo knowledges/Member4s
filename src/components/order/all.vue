@@ -1,7 +1,7 @@
-<template>
+<template style="position: relative">
 	<div id="orderSearch">
 		<input type="text" placeholder="请输入关键字" v-model="ordertext" />
-		<button class="G_f14" v-on:click="showdata(cur)">订单搜索</button>
+		<button class="G_f14" v-on:click="searlist">订单搜索</button>
 	</div>
     <div class="orderList">
     	<div class="orderListCon">
@@ -13,14 +13,19 @@
 	    	</div>
 	    	<div class="order-nodata" v-if="datano">
 	    		<h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
-	    		<p>您可进入 <a v-link="{ path:'/u/manage'}">报价管理</a> 页面更新底价信息</p>
+	    		<p>您可进入 <a v-link="{ path:'/u/manage/myOffer/find/0'}">报价管理</a> 页面更新底价信息</p>
+	    	</div>
+	    	<div class="order-nodata" v-if="datasearch">
+	    		<h4><i class="order-nobg"></i>抱歉，暂无搜索结果！</h4>
+	    		<!--<p>您可再次输入关键词搜索 或 返回"<a v-link="{ path:'/u/order/all'}">所有订单</a>" 列表页手动查找</p>-->
+	    		<p>您可再次输入关键词搜索 或 返回"<a v-on:click="alink">所有订单</a>" 列表页手动查找</p>
 	    	</div>
     	</div>
     	<div id="page" style="text-align: center;"  v-else="datapage"></div>
     </div>
 </template>
 <script>
-    import {loader} from '../../util/util'
+    import util from '../../util/util'
 	import ListTab from '../order/ListTab.vue'
 	import ListTop from '../order/ListTop.vue'
     import config from '../../config'
@@ -34,6 +39,7 @@
             return {
             	cur:1,
             	datano: false,
+            	datasearch: false,
             	datatab: false,
             	datapage: false,
             	ordertext:"",
@@ -46,16 +52,27 @@
             ListTop
         },
         methods:{
+        	alink(){
+        		this.showdata(1);
+        		this.datasearch = false;
+        	},
+        	searlist(){
+        		if(this.ordertext == ''){
+        			layer.msg("请输入你想搜索的关键字");
+        		}else{
+        			this.showdata(1);
+        		}
+        	},
 //          列表数据展示
 			showdata(cur){
 				var that = this;
 //              var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
-//					query.id_4s = config.SESSIONID();
-//					query.status = [1,6,7,8];
-					query.id_4s = "223";
-					query.status = [0,1,2];
+					query.id_4s = config.USERID();
+					query.status = [1,6,7,8];
+//					query.id_4s = "223";
+//					query.status = [0,1,2];
 	                query.pagenum = 3;
 	                query.page = cur;
 					query.keyword = that.ordertext;
@@ -78,8 +95,15 @@
 							that.$set("orderdata",response.data.rows);
 	                        that.count = response.data.count;
 	                        if( that.count == 0){
-	                        	$("#page").empty();
-	                        	that.datano = true;
+	                        	if( query.keyword != ''){
+	                        		$("#page").empty();
+	                        		that.datano = false;
+	                        		that.datasearch = true;
+	                        	}else{
+	                        		$("#page").empty();
+	                        		that.datasearch = false;
+	                        		that.datano = true;
+	                        	}
 	                        }else{
 	                        	that.datano = false;
 	                        	that.datatab = true;
@@ -117,33 +141,23 @@
 	                        that.datano = true;
 	                        layer.msg(response.desc);
 	                    }
-	                    that.ordertext  = "";
+//	                    that.ordertext  = "";
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
+							sessionStorage.removeItem("SESSIONID");
+							layer.msg('登录失效，请重新登陆！');
+							util.login();
+						}
 					}
                 })
-               
 			}
-//			列表数据展示
         }
     }
 </script>
-<style>
-.uc_main{
+<style scoped>
+.uc_main {
 	position: relative;
-}
-.tab-item:first-child{
-	margin-left: 35px;
-}
-.tab-item{
-	font-size: 16px;
-	padding: 6px 20px;
-	margin: 20px 15px;
 }
 .orderList{
 	padding: 15px 20px 20px;
@@ -158,7 +172,7 @@
 	border: 1px solid #cccccc;
 	position: absolute;
 	right: 20px;
-	top: 25px;
+	top: 12px;
 }
 #orderSearch input[type=text]{
 	width: 125px;
@@ -188,7 +202,6 @@
 .order-nodata{
 	text-align: center;
 	border: 1px solid #e5e5e5;
-	margin-top: 10px;
 	padding: 85px 0;
 	font-size: 16px;
 	color: #666666;
@@ -201,6 +214,7 @@
 }
 .order-nodata p a{
 	color: #2194fe;
+	cursor: pointer;
 }
 .order-nodata .order-nobg{
 	width: 30px;
@@ -209,7 +223,7 @@
 	vertical-align: top;
 	margin-top: 8px;
 	margin-right: 8px;
-	background-image: url(/img/ico_warn.png);
+	background-image: url(../../assets/img/ico_warn.png);
 	background-repeat: no-repeat;
 	background-position: -82px 4px;
 	background-size: 300px 150px;

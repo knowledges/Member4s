@@ -69,7 +69,7 @@
         background-position: 0 -168px;
     }
     .i_active_4{
-        background-position: -32px -168px!important;
+        background-position: -32px -211px!important;
     }
     a:hover .icon-new-uc-news {
         background-position: -60px -168px;

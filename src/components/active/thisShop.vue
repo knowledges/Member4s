@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="brand-list clearfix">
             <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
-            <p class="G_fl">副营品牌：<span v-for="list in brandlist" v-if="$index>0"> {{list.brand_name}} </span>
+            <p class="G_fl" v-if="brandlist.length>1">副营品牌：<span v-for="list in brandlist" v-show="list.brand_name != brand_name">{{list.brand_name}}</span></p>
             </p>
         </div>
         <div class="select-bar clearfix">
@@ -34,8 +34,8 @@
     export default {
         route:{
             data(){
-                this.find = this.$route.params.findId;
-                console.log("findId:"+this.find);
+                this.find = this.$route.params.findId != undefined ? this.$route.params.findId : 0;
+
                 this.getSpecialList(this.find ,1);
 
                 var that = this;
@@ -52,11 +52,11 @@
                         that.$set("arr_items",response.data.data);
                     },
                     error:function (fail) {
-                        if(fail.status == "401"){
+                        /*if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
                             that.$route.router.go("/login");
-                        }
+                        }*/
                     }
                 });
 
@@ -78,7 +78,7 @@
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
@@ -109,14 +109,14 @@
             ShopTable
         },
         methods:{
-            getSpecialList(status,cur){
+            getSpecialList(status, cur){
                 var arr = [];
                 if(status == 0){
                     arr = [1,2,3,4,5,6];
                 }else{
                     arr[0]=parseInt(status);
                 }
-                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+                var ii = layer.msg('加载中 ...', {icon: 16,shade : [0.5,'#000']});
                 /*var ii = layer.load(1, {
                     shade : [0.5,'#000'] //0.1透明度的白色背景
                 });*/
@@ -175,14 +175,14 @@
 
                                     }
                                 });
-                            }
+                            }else{$("#page2").empty();}
                         }
                         layer.close(ii);
                     },error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
@@ -197,10 +197,13 @@
 <style scoped>
     select{
         display: inline-block;
-        height: 35px;
-        line-height: 35px;
+        height: 28px;
+        line-height: 28px;
         font-size: 14px;
+        padding: 0 10px;
+        outline: none;
     }
+
     .wrap{
         width:890px;
         margin:0 auto;

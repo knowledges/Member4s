@@ -2,29 +2,63 @@
     <div class="top-bar">
         <div class="brand-list clearfix">
             <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
-            <p class="G_fl">副营品牌：<span v-for="list in brandlist" v-if="$index>0">{{list.brand_name}}</span></p>
+            <p class="G_fl" v-if="brandlist.length>1">副营品牌：<span v-for="list in brandlist" v-show="list.brand_name != brand_name">{{list.brand_name}}</span></p>
         </div>
         <div class="details">
             <dl class="brands clearfix">
                 <dt class="G_fl">品牌：</dt>
-                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)" brandId="{{brand.brandId}}">{{brand.brandName}}</a></dd>
+                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)" brandId="{{brand.brandId}}" class="style-box">{{brand.brandName}}<b></b></a></dd>
             </dl>
 
             <dl class="model clearfix">
                 <dt class="G_fl">车型：</dt>
-                <dd v-for="model in screen_carModels" v-if="screen_carModels.length>0">
-                    <a v-on:click="scrModelClk(model,$event)" carModelId="{{model.carModelId}}">{{model.carModelName}}</a>
+                <dd class="selectall"><a v-on:click="selectModelAll" class="style-box acton">全部<b></b></a></dd>
+                <dd v-for="model in screen_carModels" v-if="BrandAll">
+                    <a v-on:click="scrModelClk(model,$event)" carModelId="{{model.carModelId}}" class="style-box">{{model.carModelName}}<b></b></a>
                 </dd>
                 <dd>
                     <span v-on:click="eaitModels" class="eait"> <i></i> 编辑车型</span>
                 </dd>
             </dl>
 
-            <div class="style">
+            <div class="style clearfix">
                 <dl class="car clearfix">
                     <dt class="G_fl">车款：</dt>
-                    <dd v-for="car in screen_car" v-if="screen_car.length>0"><a v-on:click="scrCarClk(car,$event)" class="style-box">{{car.carName}}</a></dd>
+                    <dd class="selectall"><a v-on:click="selectStyleAll" class="style-box acton">全部<b></b></a></dd>
+                    <dd v-for="car in screen_car" v-if="ModelAll"><a v-on:click="scrCarClk(car,$event)" class="style-box" carId="{{car.carId}}">{{car.carName}}<b></b></a></dd>
                     <dd><span v-on:click="eaitCars" class="eait"> <i></i> 编辑车款</span></dd>
+                </dl>
+            </div>
+            
+            <div class="outColor clearfix">
+                <dl class="car clearfix">
+                    <dt class="G_fl">外观颜色：</dt>
+                    <dd class="selectall"><a v-on:click="selectOutColAll" class="style-box acton">全部<b></b></a></dd>
+                    <dd v-for="outColor in outColors" v-if="CarAll">
+                    	<a v-on:click="scrOutColClk(outColor,$event)" class="style-box" outColorId="{{outColor.id}}">
+                    		<div class="carColor" v-bind:style="{'background':outColor.colorValue.split(' ')[0]}">
+                    			<span v-if="outColor.colorValue.split(' ').length>1" v-bind:style="{'background':outColor.colorValue.split(' ')[1]}"></span>
+                    		</div>
+                    		{{outColor.colorName}}
+                    		<b></b>
+                    	</a>
+                    </dd>
+                </dl>
+            </div>
+            
+            <div class="inColor clearfix">
+                <dl class="car clearfix">
+                    <dt class="G_fl">内饰颜色：</dt>
+                    <dd class="selectall"><a v-on:click="selectInColAll" class="style-box acton">全部<b></b></a></dd>
+                    <dd v-for="inColor in inColors" v-if="CarAll">
+                    	<a v-on:click="scrInColClk(inColor,$event)" class="style-box" inColorId="{{inColor.id}}">
+                    		<div class="carColor" v-bind:style="{'background':inColor.colorValue.split(' ')[0]}">
+                    			<span v-if="inColor.colorValue.split(' ').length>1" v-bind:style="{'background':inColor.colorValue.split(' ')[1]}"></span>
+                    		</div>
+                    		{{inColor.colorName}}
+                    		<b></b>
+                    	</a>
+                    </dd>
                 </dl>
             </div>
         </div>
@@ -90,13 +124,14 @@
         </div>
     </div>
 
-    <offer-table :provinces="provinces" :provincecity="provincecity" :clone_provincecity="clone_provincecity" :arr_items="arr_items" :count="count"></offer-table>
+    <offer-table :provinces="provinces" :arr_items="arr_items" :count="count"></offer-table>
     <div id="page2" style="margin:20px 0;text-align: center;"></div>
 
 </template>
 <script>
     import $ from 'jquery'
     import config from './../../config'
+    import util from './../../util/util'
     import OfferTable from './OfferTable.vue'
     export default {
         route:{
@@ -104,10 +139,11 @@
                 var that = this;
                 /*品牌*/
                 $.ajax({
-                    url:config.API_BASE+"/4s/prefer/preferBrandModelCar/"+config.USERID(),
+                    url:config.API_BASE+"/4s/prefer/preferBrandModelCar",
                     method:'POST',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
+                    data:JSON.stringify({"query":{"userId":config.USERID()}}),
                     beforeSend:function (request) {
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
@@ -117,26 +153,25 @@
                             that.brands = list.brand;
                             that.cars = list.car;
                             that.carModels = list.carModel;
+//                          debugger;
                             /*
                              * v-for 遍历完
                              * */
+                            
                             that.$nextTick(function () {
-                                $(".brands dd").eq(0).find('a').addClass("actived");
-
-                                that.brandClk({"brandId":that.brands[0].brandId,"brandName":that.brands[0].brandName},null);
+                                that.brandLoad({"brandId":that.brands[0].brandId,"brandName":that.brands[0].brandName},null);
                             })
+                            
                         }
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
-
                 });
-
                 /*主营、副营品牌*/
                 $.ajax({
                     url:config.API_BASE+"/4s/accountmanagement/information",
@@ -153,14 +188,13 @@
                         that.brandlist = list.brandlist;
                     },
                     error:function (fail) {
-                        if(fail.status == "401"){
+                        /*if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
                             that.$route.router.go("/login");
-                        }
+                        }*/
                     }
                 });
-
             }
         },
         data(){
@@ -179,11 +213,15 @@
                 mask_eaitModelsBrand:"",
                 findCarByCarModel:[],
                 mask_eaitModels:"",
-                provinces:[],
+               /* provinces:[],
                 provincecity:[],
-                clone_provincecity:[],
-                arr_items:[]
-
+                clone_provincecity:[],*/
+                arr_items:[],
+                outColors:[],
+                inColors:[],
+                BrandAll:false,
+                ModelAll:false,
+                CarAll:false
             }
         },
         components:{
@@ -192,28 +230,41 @@
         methods:{
             eaitModels(){
                 var that = this;
-                var brandId = $(".brands dd a.actived").attr("brandId");
-
+                var brandId = $(".brands dd a.acton").attr("brandId");
+                if(brandId == undefined || brandId == null || brandId == ""){
+                    layer.msg('请选择一款品牌！');
+                    return ;
+                }
                 $.ajax({
-                    url:config.API_BASE+"/4s/prefer/findCarModelByBrand/"+brandId,
+                    url:config.API_BASE+"/4s/prefer/findCarModelByBrand/",
                     method:"POST",
                     contentType: 'application/json; charset=utf-8',
                     dataType:"json",
-                    beforeSend:function (request) {
+                    data:JSON.stringify({"query":{"brandId":brandId}}),
+                    beforeSend:function (request) {					
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        that.$set("findCarModelByBrand",response.data)
+                        var list = response.data;
+                        if(that.screen_carModels!=undefined){
+                            for(var i =0 ;i<that.screen_carModels.length;i++){
+                                for(var j = 0; j<list.length;j++){
+                                    if(that.screen_carModels[i].carModelName == list[j].carModelName ){
+                                        list[j].selected = true;
+                                    }
+                                }
+                            }
+                        }
+                        that.$set("findCarModelByBrand",list)
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
-
                 this.mask_eaitModelsBrand = layer.open({
                     type: 1,
                     title: '编辑车型',
@@ -221,10 +272,8 @@
                     area : ['650px' , '600px'],
                     content: $(".eaitCarsModelsByBrand")
                 });
-
             },
             carModelClk(obj,idx){
-
                 if(obj.selected == undefined || obj.selected == "undefined"){
                     obj.selected = true;
                     this.findCarModelByBrand.$set(idx,{"carModelId":obj.carModelId,"carModelName":obj.carModelName,selected:true});
@@ -235,28 +284,41 @@
             },
             eaitCars(){
                 var that = this;
-                var carModelId = $(".model dd a.actived").attr("carModelId");
-
+                var carModelId = $(".model dd a.acton").attr("carModelId");
+                if(carModelId == undefined || carModelId == null || carModelId == ""){
+                    layer.msg('请选择一款车型');
+                    return;
+                }
                 $.ajax({
-                    url:config.API_BASE+"/4s/prefer/findCarByCarModel/"+carModelId,
+                    url:config.API_BASE+"/4s/prefer/findCarByCarModel/",
                     method:"POST",
                     contentType: 'application/json; charset=utf-8',
                     dataType:"json",
+                    data:JSON.stringify({"query":{"carModelId":carModelId}}),
                     beforeSend:function (request) {
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
+                        var list = response.data;
+                        if(that.screen_car!=undefined){
+                            for(var i =0 ;i<that.screen_car.length;i++){
+                                for(var j = 0; j<list.length;j++){
+                                    if(that.screen_car[i].carName == list[j].carName){
+                                        list[j].selected = true;
+                                    }
+                                }
+                            }
+                        }
                         that.$set("findCarByCarModel",response.data)
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
-
                 this.mask_eaitModels= layer.open({
                     type: 1,
                     title: '编辑车型',
@@ -279,21 +341,18 @@
                 var  carModels = [];
                 for(var i = 0 ; i< list.length;i++){
                     var obj = {};
-                        obj.carModelId = list.eq(i).attr("carModelId");
-                        obj.carModelName = list.eq(i).text();
+                    obj.carModelId = list.eq(i).attr("carModelId");
+                    obj.carModelName = list.eq(i).text();
                     carModels.push(obj);
                 }
                 console.log(carModels);
-
                 var that = this;
-                var brandId = $(".brands dd a.actived").attr("brandId");
-
+                var brandId = $(".brands dd a.acton").attr("brandId");
                 var query = {};
-                    query.brandId = brandId;
-                    query.userId = config.USERID();
-                    query.carModels = carModels;
+                query.brandId = brandId;
+                query.userId = config.USERID();
+                query.carModels = carModels;
                 var params = {"query":query};
-
                 $.ajax({
                     url:config.API_BASE+"/4s/prefer/updateCarModelPrefer",
                     method:"POST",
@@ -309,18 +368,16 @@
                             setTimeout(function () {
                                 window.history.go(0);
                             },1000);
-
                         }
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
-
             },
             eaitCarModelCancle(){
                 layer.close(this.mask_eaitModelsBrand);
@@ -330,21 +387,18 @@
                 var  cars = [];
                 for(var i = 0 ; i< list.length;i++){
                     var obj = {};
-                    debugger;
+//                  debugger;
                     obj.carId = list.eq(i).attr("carId");
                     obj.carName = list.eq(i).text();
                     cars.push(obj);
                 }
-
                 var that = this;
-                var carModelId = $(".model dd a.actived").attr("carModelId");
-
+                var carModelId = $(".model dd a.acton").attr("carModelId");
                 var query = {};
                 query.carModelId = carModelId;
                 query.userId = config.USERID();
                 query.cars = cars;
                 var params = {"query":query};
-
                 $.ajax({
                     url:config.API_BASE+"/4s/prefer/updateCarPrefer",
                     method:"POST",
@@ -368,28 +422,150 @@
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 });
-
             },
             eaitCarCancle(){
                 layer.close(this.mask_eaitModels);
             },
+//          点击车型的全部
+            selectModelAll(){
+            	var that = this;
+            	that.ModelAll = false;
+				that.CarAll = false;
+				var brandId = $(".brands dd a.acton").attr("brandid");
+                console.log("点击车型的全部brandId："+brandId);
+                that.getActivityList(1,{"brandId":brandId});
+				$(".model dd.selectall a").addClass("acton");
+            	$(".model dd.selectall").siblings("dd").find("a").removeClass("acton");
+                $(".style .selectall").find("a").addClass("acton");
+                $(".style .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                
+            },
+//          点击车款的全部
+			selectStyleAll(){
+				var that = this;
+            	that.ModelAll = true;
+				that.CarAll = false;
+				var brandId = $(".brands dd a.acton").attr("brandid");
+				var carModelId = $(".model dd a.acton").attr("carmodelid");
+                console.log("点击车款的全部brandId："+brandId);
+                console.log("点击车款的全部carModelId："+carModelId);
+                that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId});
+                $(".style .selectall").find("a").addClass("acton");
+                $(".style .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+			},
+//			点击外观颜色的全部
+			selectOutColAll(){
+				var that = this;
+				that.CarAll = true;
+				var brandId = $(".brands dd a.acton").attr("brandid");
+				var carModelId = $(".model dd a.acton").attr("carmodelid");
+				var carId = $(".style dd a.acton").attr("carid");
+                console.log("点击外观颜色的全部brandId："+brandId);
+                console.log("点击外观颜色的全部carModelId："+carModelId);
+                console.log("点击外观颜色的全部carId："+carId);
+                that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId});
+                
+				$(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+			},
+//			点击内饰颜色的全部
+			selectInColAll(){
+				var that = this;
+				that.CarAll = true;
+				var brandId = $(".brands dd a.acton").attr("brandid");
+				var carModelId = $(".model dd a.acton").attr("carmodelid");
+				var carId = $(".style dd a.acton").attr("carid");
+				var exteriorColorId = $(".outColor dd a.acton").attr("outcolorid");
+                console.log("点击外观颜色的全部brandId："+brandId);
+                console.log("点击外观颜色的全部carModelId："+carModelId);
+                console.log("点击外观颜色的全部carId："+carId);
+                console.log("点击外观颜色的全部exteriorColorId："+exteriorColorId);
+                that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId,"exteriorColorId":exteriorColorId});
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+			},
+//          获取颜色
+            getColor(carId){
+            	console.log("获取颜色的："+carId);
+            	var that = this;
+            	var query = {};
+            	query.userId = config.USERID();
+                query.carId = carId;
+                var params = {"query":query};
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/findCarColorByCarId",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:"json",
+                    data:JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            that.outColors = response.data.exteriorColorList;
+                            that.inColors = response.data.interiorColorList;
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+            },
             /*分页*/
-            getActivityList(cur,car_id){
+            getActivityList(cur,newobj){
+            	console.log("分页的数据：");
+            	console.log("分页的brandId是："+newobj.brandId);
+            	console.log("分页的carModelId是："+newobj.carModelId);
+            	console.log("分页的carId是："+newobj.carId);
+            	console.log("分页的exteriorColorId是："+newobj.exteriorColorId);
+            	console.log("分页的interiorColorId是："+newobj.interiorColorId);
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var that = this;
                 var query = {};
                 query.pagenum = this.pagesize;
                 query.page = cur;
-//                query.carId = 2956;
-//                query.userId = 186;
-                query.carId = car_id;
                 query.userId = config.USERID();
+                query.brandId = newobj.brandId;      //品牌id
+                if(newobj.carModelId == undefined){
+                	query.carModelId = "";  //车型id
+                }else{
+                	query.carModelId = newobj.carModelId;  //车型id
+                }
+                if(newobj.carModelId == undefined){
+                	query.carId = "";      //车款id
+                }else{
+                	query.carId = newobj.carId;      //车款id
+                }
+                if(newobj.exteriorColorId == undefined){
+                	query.exteriorColorId = "";  //外观颜色
+                }else{
+                	query.exteriorColorId = newobj.exteriorColorId;  //外观颜色
+                }
+				if(newobj.interiorColorId == undefined){
+					query.interiorColorId = "";  //内饰颜色
+				}else{
+					query.interiorColorId = newobj.interiorColorId;  //内饰颜色
+				}
                 var params = {"query":query};
-
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/findMyOfferlist",
                     method:'POST',
@@ -403,9 +579,7 @@
                         if(response.code == 0){
                             that.count = response.data.count;
                             that.$set("arr_items",response.data.rows);
-
                             if(response.data.count>that.pagesize){
-
                                 laypage({
                                     cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
                                     pages: Math.ceil(that.count/that.pagesize), //总页数
@@ -420,20 +594,18 @@
                                         //得到了当前页，用于向服务端请求对应数据
                                         var curr = obj.curr;
                                         if(!first){
-                                            that.getActivityList(curr,car_id);
+                                            that.getActivityList(curr,newobj);
                                         }
-
                                         $(".laypage_btn").unbind("click").on('click',function(){
                                             if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
-                                                that.getActivityList($(".laypage_skip").val(),car_id);
+                                                that.getActivityList($(".laypage_skip").val(),newobj);
                                             }else{
                                                 layer.msg('请输入正确的跳转页码');
                                             }
                                         })
                                     }
                                 });
-
-                            }
+                            }else{$("#page2").empty();}
                         }
                         layer.close(ii);
                     },
@@ -441,38 +613,92 @@
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 })
             },
-            brandClk(obj,e){
+            brandLoad(obj,e){
                 var brandId = obj.brandId;
+                this.BrandAll = true;
+                console.log("brandLoad是："+brandId);
+                this.screen_carModels = this.carModels[brandId];
+                $(".brands dd").find('a').removeClass("acton");
+        		$(".brands dd").eq(0).find('a').addClass("acton");
+        		if(brandId!=null){
+                    var _index = 0;
+                    this.$nextTick(function () {
+                        if(e!=null){
+                            _index = $(e.target).parent().index()-1;
+                        }
+                        this.getActivityList(1,{"brandId":brandId});
+                        console.log("load里的brandId是："+brandId);
+                    });
+                }else{
+                    $("#page2").empty();
+                    this.$set("screen_car",[]);
+                    this.$set("arr_items",[]);
+                }
+            },
+//          点击品牌
+            brandClk(obj,e){
+//              debugger;
+				this.BrandAll = true;
+				this.ModelAll = false;
+				this.CarAll = false;
+                var brandId = obj.brandId;
+                console.log("点击品牌的时候："+brandId);
+                $(".model dd.selectall a").addClass("acton");
+            	$(".model dd.selectall").siblings("dd").find("a").removeClass("acton");
+                $(".style .selectall").find("a").addClass("acton");
+                $(".style .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
                 this.screen_carModels = this.carModels[brandId];
                 var _index = 0;
                 this.$nextTick(function () {
                     if(this.screen_carModels!=null){
-                        this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
+//                  	点击品牌时，默认车型是全部，所以需要把品牌的id传给它
+						this.getActivityList(1,{"brandId":brandId});
+//                      this.scrModelClk({"carModelId":this.screen_carModels[0].carModelId,"carModelName":this.screen_carModels[0].carModelName},null);
                     }else{
+                        $("#page2").empty();
                         this.$set("screen_car",[]);
                         this.$set("arr_items",[]);
                     }
                     if(e!=null){
                         _index = $(e.target).parent().index()-1;
                     }
-                    $(".brands dd").find('a').removeClass("actived");
-                    $(".brands dd").eq(_index).find('a').addClass("actived");
+                    $(".brands dd").find('a').removeClass("acton");
+                    $(".brands dd").eq(_index).find('a').addClass("acton");
                 })
-
             },
+//          点击车型
             scrModelClk(obj,e){
+//          	debugger;
+				var brandId = $(".brands dd a.acton").attr("brandid");
+                console.log("点击车型的时候brandId："+brandId);
                 var carModelId = obj.carModelId;
+                console.log("点击车型的时候carModelId："+carModelId);
+                
                 this.screen_car = this.cars[carModelId];
+                this.ModelAll =  true;
+                $(".style .selectall").find("a").addClass("acton");
+                $(".style .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
                 var _index = 0;
+//              debugger;
                 if(carModelId != null){
                     this.$nextTick(function () {
                         if(this.screen_car!=undefined){
-                            this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
+//                  	点击车型时，默认车型=款是全部，所以需要把车型的id传给它
+						this.getActivityList(1,{"brandId":brandId,"carModelId":carModelId});
+//                          this.scrCarClk({"carId":this.screen_car[0].carId,"carName":this.screen_car[0].carName},null);
                         }else{
                             $("#page2").empty();
                             this.$set("screen_car",[]);
@@ -481,8 +707,10 @@
                         if(e!=null){
                             _index = $(e.target).parent().index()-1;
                         }
-                        $(".model dd").find('a').removeClass("actived");
-                        $(".model dd").eq(_index).find('a').addClass("actived");
+                        this.CarAll = false;
+                        $(".model dd").find('a').removeClass("acton");
+                        $(".model dd").eq(_index).find('a').addClass("acton");
+                        console.log("点击车型的_index："+_index);
                     })
                 }else{
                     $("#page2").empty();
@@ -490,18 +718,27 @@
                     this.$set("arr_items",[]);
                 }
             },
+//          点击车款
             scrCarClk(obj,e){
-                var carId = obj.carId ,carName = obj.carName;
+//          	debugger;
+				$(".outColor .selectall").find("a").addClass("acton");
+                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
+                $(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                var brandId = $(".brands dd a.acton").attr("brandid");
+                var carModelId = $(".model dd a.acton").attr("carmodelid");
+                var carId = obj.carId;
                 if(carId!=null){
                     var _index = 0;
                     this.$nextTick(function () {
+                    	this.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId});
                         if(e!=null){
                             _index = $(e.target).parent().index()-1;
                         }
-                        $(".car dd").find('a').removeClass("actived");
-                        $(".car dd").eq(_index).find('a').addClass("actived");
-
-                        this.getActivityList(1,carId);
+                        $(".style dd").find('a').removeClass("acton");
+                        $(".style dd").eq(_index).find('a').addClass("acton");
+                        this.CarAll = true;
+                        this.getColor(carId);
                     });
                 }else{
                     $("#page2").empty();
@@ -509,6 +746,45 @@
                     this.$set("arr_items",[]);
                 }
             },
+//          点击外观颜色
+			scrOutColClk(obj,e){
+				var brandId = $(".brands dd a.acton").attr("brandid");
+                var carModelId = $(".model dd a.acton").attr("carmodelid");
+                var carId = $(".style dd a.acton").attr("carid");
+                var exteriorColorId = obj.id;
+                var _index = 0;
+                this.$nextTick(function () {
+                	this.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId,"exteriorColorId":exteriorColorId});
+                	
+                    if(e!=null){
+                        _index = $(e.target).parent().index()-1;
+                    }
+                    $(".outColor dd").find('a').removeClass("acton");
+                    $(".outColor dd").eq(_index).find('a').addClass("acton");
+//                  this.getActivityList(1,carId);
+                });
+                
+			},
+//          点击内饰颜色
+			scrInColClk(obj,e){
+				var brandId = $(".brands dd a.acton").attr("brandid");
+                var carModelId = $(".model dd a.acton").attr("carmodelid");
+                var carId = $(".style dd a.acton").attr("carid");
+                var exteriorColorId = $(".outColor dd a.acton").attr("outcolorid");
+                var interiorColorId = obj.id;
+				var _index = 0;
+                this.$nextTick(function () {
+                	this.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId,"exteriorColorId":exteriorColorId,"interiorColorId":interiorColorId});
+                	
+                    if(e!=null){
+                        _index = $(e.target).parent().index()-1;
+                    }
+                    $(".inColor dd").find('a').removeClass("acton");
+                    $(".inColor dd").eq(_index).find('a').addClass("acton");
+//                  this.getActivityList(1,carId);
+                });
+                
+			},
             selectarea(obj){
                 /*把选择对象放到零时变量中*/
                 this.mask_1 = layer.open({
@@ -518,10 +794,8 @@
                     area : ['650px' , '600px'],
                     content: $(".activearea")
                 });
-
 //                this.getSaleAreaByArray(obj);
             },
-
             cancle1(){
                 layer.close(this.mask_1);
             },
@@ -556,7 +830,7 @@
     }
     .top-bar .brand-list p{
         font-weight:bold;
-        margin:30px 30px 25px 0;
+        margin:30px 30px 15px 0px;
     }
     .top-bar .brand-list p span{
         margin-right:20px;
@@ -564,10 +838,10 @@
     .details .brands a, .details .model a{
         display:inline-block;
         padding: 0 10px;
-        height:24px;
-        line-height:24px;
+        height:26px;
+        line-height:26px;
         color:#666;
-        border-radius:6px;
+        border-radius:4px;
         vertical-align: -2px;
         font-size:14px;
         text-align:center;
@@ -582,6 +856,9 @@
         background:#fa8c35;
         color:#fff;
     }
+    .top-bar .details a.style-box:hover{
+        text-decoration: none;
+    }
     .eait{
         color: #fb8c33;
         cursor: pointer;
@@ -589,9 +866,8 @@
     .eait:hover{
         color: #fe5a05;
     }
-
     .top-bar .details .model{
-        margin:20px auto;
+        margin:12px auto;
         position:relative;
     }
     .top-bar .details .model i{
@@ -604,28 +880,46 @@
     dl dd{
         display:inline-block;
     }
-    .top-bar .details .style{
-        margin-bottom:30px;
+    .top-bar .details .style,.top-bar .details .outColor,.top-bar .details .inColor{
+        margin-bottom:12px;
         position:relative;
     }
-    .top-bar .details .style .style-box{
+    .top-bar .details .style-box{
         display:inline-block;
         padding: 0 10px;
         margin: 2px 0;
-        height:24px;
+        height:26px;
         border:1px dashed  #ccc;
-        background:#f5f5f5;
+        /*background:#f5f5f5;*/
         font-size:14px;
         text-align:center;
-        line-height:24px;
-        border-radius:10px;
+        line-height:26px;
+        border-radius:3px;
         margin-right:10px;
         vertical-align: -2px;
         cursor: pointer;
+        position: relative;
     }
-    .top-bar .details .style .style-box:hover{
+    .top-bar .details .style .style-box:hover,.top-bar .details .outColor .style-box:hover,.top-bar .details .inColor .style-box:hover{
         color:#fff;
         background:#fa8c35;
+    }
+    .top-bar .details .acton{
+        border: 1px solid #ff9205;
+        background: #fff;
+    }
+    .top-bar .details .style-box b{
+    	width: 18px;
+    	height: 18px;
+    	background: url(../../assets/img/ico_warn.png) no-repeat;
+        background-position: -86px -58px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        display: none;
+    }
+    .top-bar .details .acton b{
+    	display: block;
     }
     .top-bar .details .style i{
         display:inline-block;
@@ -634,7 +928,6 @@
         margin-right:3px;
         background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxOWMwNWE1NS0zZGVkLTBjNDYtOTMyOS0xNGQ4ZTQ4ZWY3NDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUM2QTMxNzk3MzEyMTFFNjgxRUFGMzNBOEU4MzU2NzIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUM2QTMxNzg3MzEyMTFFNjgxRUFGMzNBOEU4MzU2NzIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6OGEwM2FjYWYtYWUxNy02NTRhLWE5M2EtYzY1NTRhMTA5N2JiIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjE5YzA1YTU1LTNkZWQtMGM0Ni05MzI5LTE0ZDhlNDhlZjc0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsOHs3AAAAC1SURBVHjaYvz//z8DIcCES+Lf1S2/pzr/u3sYpyKg3P9HZxh+fP67uQLIZsS0DmjG350tjBJajAIy/67vYOASQlcEUcHw/x+QzSipwygoxyhnwoRLBRD8f3GNUc2ZSduHBaHiyua/u1rhKhgYmZjda5mUbREOx65C2xsRBP/vH8WjAqzoz0+gFxhlDHGpACkChse/6zsZOXgZZY2xqgAp+vfwBMhNtw8w8oiyBPVjqgACgAADABfIYX8VdYt8AAAAAElFTkSuQmCC) no-repeat;
     }
-
     table input[type="text"],table input[type="number"]{
         display: inline-block;
         width: 80%;
@@ -649,7 +942,6 @@
         background: #ffe4d2;
         cursor: pointer;
     }
-
     table a.save{
         display: inline-block;
         padding: 2px 8px;
@@ -675,7 +967,6 @@
         border: none;
         background: #999999;
     }
-
     table p i {
         display: inline-block;
         width: 20px;
@@ -684,7 +975,6 @@
         background-position: -102px -47px;
         vertical-align: sub;
     }
-
     .order-nodata h4{
         color: #4c4c4c;
         font-size: 18px;
@@ -705,11 +995,9 @@
         background-position: -82px 4px;
         background-size: 300px 150px;
     }
-
     div dl {
         margin: 10px 0;
     }
-
     div dl dt, div dl dd {
         float: left;
         height: 35px;
@@ -718,18 +1006,16 @@
     div.add dl dt:nth-child(n+2){
         margin-left: 60px;
     }
-
     div.layer_2  dl dt {
         display: inline-block;
         width: 80px;
         text-align: right;
     }
-
     div dl dd {
         margin-left: 2px;
         text-align: left;
+        margin-bottom: 3px;
     }
-
     div dl dd i {
         display: inline-block;
         width: 20px;
@@ -774,7 +1060,6 @@
         cursor: pointer;
     }
     div dl dd button:hover{
-
     }
     div dl dd button:last-child{
         background: #ccc;
@@ -800,7 +1085,7 @@
         position: absolute;
         right: -10px;
         top:-10px;
-        background: url('/img/close_1.png') no-repeat;
+        background: url('/assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
     .city_dd li{
@@ -808,5 +1093,23 @@
     }
     option{
         text-align: center;
+    }
+    .carColor{
+    	width: 14px;
+    	height: 14px;
+    	border: 1px solid #ccc;
+    	border-radius: 50%;
+    	display: inline-block;
+    	vertical-align: top;
+    	margin-right: 2px;
+    	margin-top: 5px;
+    	overflow: hidden;
+    }
+    .carColor span{
+    	height: 7px;
+    	width: 100%;
+    	display: block;
+    	margin: 0;
+    	padding: 0;
     }
 </style>

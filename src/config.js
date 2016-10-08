@@ -2,6 +2,10 @@
  * Created by qbl on 2016/8/25.
  */
 export default {
+    /**
+     * 登录超时 引入util.js
+     * 调用 util.login
+     */
 
     /**
      *  引入了 Layer Ui 里，
@@ -33,11 +37,9 @@ export default {
      all:总数
      */
 
-    // API_BASE:"https://www.woodche.com/YchLrestServer/api",
-
-    API_BASE:"https://www.woodche.com/YchLrestServer_test/api",
-    // API_BASE:"http://192.168.13.111/YchLrestServer/api",
-    // API_BASE:"http://192.168.13.105:3000/api",
+    // API_BASE:"https://www.woodche.com/YchLrestServer_test/api",
+    API_BASE:"http://192.168.13.111/YchLrestServer/api",
+    // API_BASE:"http://192.168.13.250:3000/api",
     FILE_IMG:"http://test3.gouchehui.com:8082",
     // FILE_IMG:"http://www.gouchehui.com",
     SESSIONID:function () {

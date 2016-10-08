@@ -35,7 +35,7 @@
                 <dt></dt>
                 <dd>
                     <button v-on:click="savePwd">保存</button>
-                    <button>取消</button>
+                    <!--<button>取消</button>-->
                 </dd>
             </dl>
         </div>
@@ -203,9 +203,9 @@
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
 	                        }
 						}
 	                });
@@ -256,7 +256,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url(../../assets/img/pwd-icons-new.png) no-repeat;
         background-position: -102px -47px;
         vertical-align: sub;
     }
@@ -284,9 +284,9 @@
         border: none;
         cursor: pointer;
     }
-    .UC_main_r div dl dd button:last-child{
+   /* .UC_main_r div dl dd button:last-child{
         background: #ccc;
-    }
+    }*/
     .fill_in_info  dl:last-child{
         padding: 20px 0 40px 0;
     }

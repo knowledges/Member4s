@@ -94,22 +94,23 @@
   position: relative;
 }
 .login-title{
-  height: 18px;
-  line-height: 18px;
+  height: 36px;
+  line-height: 35px;
   font-size: 16px;
   color: #333333;
-  margin-top: 2px;
-  margin-bottom: 28px;
+  margin: 5px 0;
+  border-bottom: 1px solid #666;
   a{
-    float: right;
-    color: #ff791f;
+    margin: 0 25px;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    font-weight: 700;
   }
 }
 #J_Message{
-  width: 296px;
-  position: absolute;
-  top: 0;
-  left: 0;
+  margin: 5px 1px;
+  display: none;
 }
 .login-msg {
   line-height: 34px;
@@ -184,6 +185,13 @@
       img{
         vertical-align: top;
         margin-right: 5px;
+      }
+    }
+    li.register{
+      float:right;
+      margin:0;
+      a{
+        color:#ff791f
       }
     }
   }
@@ -578,3 +586,8 @@
 }
 .G_f14 { font-size:14px }
 .G_f18 { font-size:18px }
+
+.active{
+  color: #ff791f;
+  border-bottom: 2px solid #ff791f;
+}

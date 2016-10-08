@@ -51,6 +51,7 @@
 <script>
     import $ from 'jquery'
     import config from './../../config'
+    import util from './../../util/util'
     export default{
         ready(){
             this.getHistoryList(1);
@@ -129,8 +130,9 @@
                     },
                     error:function(fail){
                         if(fail.status == "401"){
+                            sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
                 })

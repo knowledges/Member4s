@@ -6,7 +6,7 @@
                     <li><i class="icon-new-uc icon-return"></i><a href="http://www.gouchehui.com/">返回购车惠首页</a></li>
                 </ul>
                 <ul class="RL_header_nav_ul">
-                    <li><a href="http://www.gouchehui.com/index.php/guide/process" target="_brank">购车流程</a></li>
+                    <!--<li><a href="http://www.gouchehui.com/index.php/guide/process" target="_brank">购车流程</a></li>-->
                     <!--<li class="RL_header_nav_ul_li"></li>-->
                     <!--<li>-->
                         <!--<a href="">手机客户端</a>-->
@@ -18,8 +18,8 @@
                             <!--<img src="http://www.gouchehui.com/Public/Home/images/wechat_servse.png"/>-->
                         <!--</div>-->
                     <!--</li>-->
-                    <li class="RL_header_nav_ul_li"></li>
-                    <li><a href="http://www.gouchehui.com/member.php/member_general/n_uc_myorder.html">我的订单</a></li>
+                    <!--<li class="RL_header_nav_ul_li"></li>-->
+                    <!--<li><a href="http://www.gouchehui.com/member.php/member_general/n_uc_myorder.html">我的订单</a></li>-->
 
                     <li class="RL_header_nav_ul_li"></li>
                     <li><a v-if="!isLogin" v-on:click="registered">注册</a></li>
@@ -39,7 +39,7 @@
                 4S店会员
             </h2>
             <!--调用Php接口 搜索有多少车-->
-            <form action="http:\\/\\/www.gouchehui.com/index.php/car/product_search" class="gchSearch_form" method="GET">
+            <form action="http:\\/\\/www.gouchehui.com/index.php/car/product_search" class="gchSearch_form" method="GET" target="_brank">
                 <div class="RL_search G_fr">
                     <div class="RL_search_div clear">
                         <div class="RL_search_input">
@@ -81,59 +81,9 @@
             },
             logout(){
                 var that  = this;
-                $.ajax({
-                    url:config.API_BASE+"/login/auth/4s/logOut",
-                    method:"POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:"json",
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        if(response.code == 0){
-                            sessionStorage.removeItem("SESSIONID");
-                            that.$route.router.go("/login");
-                        }
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
-                    }
-                });
+                sessionStorage.removeItem("SESSIONID");
+                this.$route.router.go("/login");
             }
-//            ,
-//            searchBtn(){
-//                var that  = this;
-//                $.ajax({
-//                    url:"http://www.gouchehui.com/index.php/car/product_search?select=q5",
-//                    method:"get",
-//                    contentType: 'application/json; charset=utf-8',
-//                    dataType:"json",
-//                    beforeSend:function (request) {
-//                        request.setRequestHeader("sessionid",config.SESSIONID());
-//                    },
-//                    success:function (response) {
-//                        alert("success");
-////                        if(response.code == 0){
-////                            sessionStorage.removeItem("SESSIONID");
-////                            that.$route.router.go("/login");
-////                        }
-//                    },
-//                    error:function (fail) {
-//                        alert("error");
-//                        console.log(fail);
-////                        if(fail.status == "401"){
-////                            sessionStorage.removeItem("SESSIONID");
-////                            layer.msg('登录失效，请重新登陆！');
-////                            that.$route.router.go("/login");
-////                        }
-//                    }
-//                });
-//
-//            }
         }
     }
 </script>

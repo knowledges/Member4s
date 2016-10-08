@@ -24,9 +24,10 @@
                         <p>{{item.receipt_address}}</p>
                         <!--<p>({{item.receiver}})</p>-->
                         <p class="setting">
-                            <a class="orange" v-on:click="modify(item,_index)">修改</a>
+                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
                             <a class="orange" v-on:click="del(item,_index)">删除</a>
                         </p>
+						<p style="position: absolute;top: 0;right: 0;background: #ff791f;color: #FFF;padding: 0 5px;">默认地址</p>
                         <i class="selected" role="选中"></i>
                     </div>
                     <div v-else="item.status == 0">
@@ -37,13 +38,14 @@
                         <!--<p>({{item.receiver}})</p>-->
                         <p class="setting">
                             <a class="orange" v-on:click="setting(item,_index)">设为默认</a>
-                            <a class="orange" v-on:click="modify(item,_index)">修改</a>
+                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
                             <a class="orange" v-on:click="del(item,_index)">删除</a>
                         </p>
+                        <i class="selected" role="选中"></i>
                     </div>
                 </li>
             </ul>
-            <div class="add_new addre" v-if="address" v-bind:data-id="modid">
+            <div class="add_new addre" v-if="address" v-bind:data-id="modid" v-bind:data-inx="modinx">
             	<div class="titbox G_f16">
             		<h2 class="tit"><b>{{tit_msg}}</b><span>( <em>*</em>星号为必填项 )</span></h2>
             	</div>
@@ -62,12 +64,12 @@
 	            				<option value="0" disabled="disabled" v-bind:selected="seltop">--选择省份--</option>
 	            				<option v-for="provice in selectProvice" track-by="$index" v-bind:value="provice">{{provice}}</option>
 	            			</select>
-	            			<select class="city" v-model="citySelected" v-on:change="cityOnChange(citySelected)" v-show="citySelected" id="citySelected">
-	            				<option value="0" disabled="disabled">--选择市--</option>
+	            			<select class="city" v-model="citySelected" v-on:change="cityOnChange(citySelected)" id="citySelected">
+	            				<option value="0" disabled="disabled" v-bind:selected="seltop">--选择市--</option>
 	            				<option v-for="city in selectCity" track-by="$index" v-bind:value="city">{{city}}</option>
 	            			</select>
-	            			<select class="area" v-model="areaSelected" v-show="areaSelected" id="areaSelected">
-	            				<option value="0" disabled="disabled">--选择区--</option>
+	            			<select class="area" v-model="areaSelected" id="areaSelected">
+	            				<option value="0" disabled="disabled" v-bind:selected="seltop">--选择区--</option>
 	            				<option v-for="area in selectArea" track-by="$index" v-bind:value="area">{{area}}</option>
 	            			</select>
             			</div>
@@ -85,7 +87,7 @@
             	<dl>
             		<dt></dt>
             		<dd>
-            			<input type="checkbox" class="default" id="default" v-bind:checked="check">
+            			<input type="checkbox" class="default" id="default" v-bind:checked="check" v-model="stau">
             			<label for="default" class="default_txt">设为默认地址</label>
             		</dd>
             	</dl>
@@ -93,7 +95,7 @@
             		<dt></dt>
             		<dd>
             			<input type="submit" class="submit G_btn_a" value="保存" v-on:click="save" v-if="savedata">
-            			<input type="submit" class="submit G_btn_a" value="修改" v-on:click="modsave" v-if="modsavedata">
+            			<input type="submit" class="submit G_btn_a" value="修改" v-on:click="modsave(item)" v-if="modsavedata">
             			<input type="submit" class="cancel G_btn_c" value="取消" v-on:click="qxAddress">
             		</dd>
             	</dl>
@@ -104,7 +106,8 @@
 <script>
 	import config from '../../config'
 	import $ from 'jquery'
-	
+	import util from './../../util/util'
+
     export default{
     	ready(){
         	this.showlist();
@@ -132,15 +135,17 @@
                 selectCity:[],
                 selectAll:[],
                 selectArea:'',
-                proviceSelected:true,
-                citySelected: false,
-                areaSelected:false,
+                proviceSelected:'',
+                citySelected:'',
+                areaSelected:'',
                 check:true,
                 selected1:true,
                 selected2:false,
                 savedata:true,
                 modsavedata:false,
-                modid:''
+                modid:'',
+                modinx:'',
+                stau:1
             }
         },
         methods:{
@@ -157,18 +162,37 @@
                 	that.check = true;
                 	that.tit_msg = "新增地址";
                 	
-	                var selectArea = [];
-	                var selectCity = [];
-	               /* that.citySelected = false;
-	                that.areaSelected = false;*/
-	                $.get("/data/area.json",function(response){
-						that.$set("selectAll",response);
-	                	var province = [];
-	                	$.map(response,function(val,key){
-	                		province.push(key);
-	                	})
-	                	that.$set("selectProvice",province);
-	                });
+	                that.selectArea = [];
+	                that.selectCity = [];
+					
+					var url = config.API_BASE+'/static/areas.json';
+					$.ajax({
+	                    url:url,
+	                    type:'GET',
+	                    dataType: 'JSON',
+	                    contentType: 'application/json; charset=utf-8',
+	                    beforeSend:function (request) {
+		                    request.setRequestHeader("sessionid",config.SESSIONID());
+		                },
+		                success:function(response){
+							that.$set("selectAll",response);
+							var province = [];
+							$.map(response,function(val,key){
+								province.push(key);
+							})
+							that.$set("selectProvice",province);
+							that.proviceOnChange(that.proviceSelected);
+							that.cityOnChange(that.citySelected);
+						},
+						error:function(fail){
+							if(fail.status == "401"){
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
+	                        }
+						}
+	               });
+
                 }else{
                 	layer.msg('您最多只能设置8个常用地址');
                 	that.address = false;
@@ -180,39 +204,31 @@
             },
 //          请求省
             proviceOnChange(proviceSelected){
-				console.log(this.proviceSelected);
-				debugger;
 				var that = this;
-				var selectCity = [];
+                var selectCity = [];
 				var selectArea = "";
-				/*that.citySelected = true;
-                that.areaSelected = false;*/
 				$.map(that.selectAll[that.proviceSelected],function(val,key){
 					selectCity.push(key);
 				});
-//				console.log("selectCity:"+JSON.stringify(selectCity));
             	that.$set("selectCity",selectCity);
             },
             //          请求市
             cityOnChange(citySelected){
-            	console.log(this.citySelected);
 				var that = this;
-//            	that.areaSelected = true;
             	var selectArea = [];
             	/*省*/
 				$.map(that.selectAll,function(val,key){
 					$.map(val,function(v,i){
 						if(that.citySelected == i){
-							debugger;
 							selectArea.push(v);
 						}
 					})
 				})
 				that.$set("selectArea",selectArea.join().split(","));
             },
-            modify(item,_index){
-            	debugger;
+            modify(item,$index){
             	var that = this;
+            	that.address = false;
             	that.user_ = false;
             	that.addr_ = false;
             	that.tel_ = false;
@@ -220,29 +236,48 @@
             	$("#addr_").removeClass('lost');
             	$("#tel_").removeClass('lost');
             	that.modid = item.id;
+            	that.modinx = $index;
             	that.proviceSelected = item.receipt_province;
             	that.citySelected = item.receipt_city;
             	that.areaSelected = item.receipt_quarter;
+            	that.selectProvince = [];
+            	that.selectCity = [];
+            	that.selectArea = [];
             	that.tit_msg = "修改地址";
                 that.address = true;
                 that.savedata = false;
             	that.modsavedata = true;
-            /*	that.citySelected = true;
-                that.areaSelected = true;*/
-				$.get("/data/area.json",function(response){
-					that.$set("selectAll",response);
-					var province = [];
-					$.map(response,function(val,key){
-						province.push(key);
-					})
-					that.$set("selectProvice",province);
 
-					that.proviceOnChange(that.proviceSelected);
-					that.cityOnChange(that.citySelected);
-//				console.log("区域："+that.areaSelected);
-				});
-                
+				var url = config.API_BASE+'/static/areas.json';
+				$.ajax({
+                    url:url,
+                    type:'GET',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    beforeSend:function (request) {
+	                    request.setRequestHeader("sessionid",config.SESSIONID());
+	                },
+	                success:function(response){
+						that.$set("selectAll",response);
+						var province = [];
+						$.map(response,function(val,key){
+							province.push(key);
+						})
+						that.$set("selectProvice",province);
+						that.proviceOnChange(that.proviceSelected);
+						that.cityOnChange(that.citySelected);
+					},
+					error:function(fail){
+						if(fail.status == "401"){
+							sessionStorage.removeItem("SESSIONID");
+							layer.msg('登录失效，请重新登陆！');
+							util.login();
+                        }
+					}
+                });
+                that.stau = 0;
                 if(item.status == 1){
+                	that.stau = 1;
                 	that.check = true;
 				}else{
                 	that.check = false;
@@ -252,15 +287,14 @@
                 that.addr = item.receipt_address;
                 that.tel = item.telphone;
 
-
             },
             setting(item,_index){
             	var that = this;
+            	that.address = false;
             	var url = config.API_BASE+"/4s/accountmanagement/setdefault";
                 var query = {};
                 	query.uid = config.USERID();
 					query.id = item.id;
-					console.log(query.id);
 				var param = { query:query };
 				if(item.status==0){
 					$.ajax({
@@ -275,14 +309,19 @@
 		                success:function(response){
 							if(response.code == 1){
 		                        layer.msg('设置成功',{icon:1});
-		                        setTimeout("window.history.go(0)",1500);
+//		                                                            遍历addlist里的数据，将其数据中的状态改为0,并将当前的状态设置为1
+								for(var i=0; i<that.addlist.length; i++){
+									that.addlist[i].status = 0;
+								}
+		                        item.status = 1;
+//		                        setTimeout("window.history.go(0)",1500);
 			                }
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
 	                        }
 						}
 	               });
@@ -291,6 +330,7 @@
             },
             del(item,_index){
             	var that = this;
+            	that.address = false;
                 layer.confirm('确认删除该地址吗？', {
                     title:'删除地址',
                     btn: ['确定','取消'] //按钮
@@ -298,7 +338,6 @@
 	                var url = config.API_BASE+"/4s/accountmanagement/deladdress";
 	                var query = {};
 						query.id = item.id;
-						console.log(query.id);
 					var param = { query:query };
 					
 	                $.ajax({
@@ -318,9 +357,9 @@
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
 	                        }
 						}
 	                })
@@ -357,9 +396,9 @@
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+							sessionStorage.removeItem("SESSIONID");
+							layer.msg('登录失效，请重新登陆！');
+							util.login();
                         }
 					}
                 })
@@ -434,17 +473,32 @@
 		                },
 		                success:function(response){
 							if(response.code == 0){
+		                        if( query.status == 1){
+		                        	for(var i=0; i<that.addlist.length; i++){
+										that.addlist[i].status = 0;
+									}
+		                        }
+		                        that.addlist.push({
+		                        	receiver : that.user,
+		                        	receipt_province : that.proviceSelected,
+		                        	receipt_city : that.citySelected,
+		                        	receipt_quarter : that.areaSelected,
+		                        	receipt_address : that.addr,
+		                        	telphone : that.tel,
+		                        	status : that.stau
+		                        });
+		                        that.address = false;
 		                        layer.msg('添加成功',{icon:1});
-		                        setTimeout("window.history.go(0)",1500);
+//		                        setTimeout("window.history.go(0)",1500);
 			                }else{
 			                	layer.msg('添加失败',{icon:2});
 			                }
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
 	                        }
 						}
 	               });
@@ -452,7 +506,7 @@
                 }
 				
 			},
-			modsave(){
+			modsave(item){
 				var that = this;
 				if(that.user ==""){
 					that.user_ = true;
@@ -510,7 +564,6 @@
 						query.telphone = that.tel;
 						query.status = that.status;
 					var param = { query:query };
-//					console.log("query.id是："+query.id);
 					$.ajax({
 	                    url:url,
 	                    type:'POST',
@@ -522,20 +575,37 @@
 		                },
 		                success:function(response){
 							if(response.code == 0){
+								console.log("保存的that.modinx："+that.modinx);
+		                        that.addlist.splice(that.modinx,1);
+		                        if( query.status == 1){
+		                        	for(var i=0; i<that.addlist.length; i++){
+										that.addlist[i].status = 0;
+									}
+		                        }
+		                        that.addlist.push({
+		                        	receiver : that.user,
+		                        	receipt_province : that.proviceSelected,
+		                        	receipt_city : that.citySelected,
+		                        	receipt_quarter : that.areaSelected,
+		                        	receipt_address : that.addr,
+		                        	telphone : that.tel,
+		                        	status : that.stau
+		                        });
+		                        that.address = false;
 		                        layer.msg('修改成功',{icon:1});
-		                        setTimeout("window.history.go(0)",1500);
+//		                        setTimeout("window.history.go(0)",1500);
 			                }else{
-			                	layer.msg('修改失败',{icon:2});
+			                	layer.msg('修改失败,请刷新尝试',{icon:2});
 			                }
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-	                            sessionStorage.removeItem("SESSIONID");
-	                            layer.msg('登录失效，请重新登陆！');
-	                            that.$route.router.go("/login");
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
 	                        }
 						}
-	               });
+	                });
 					
                 }
 				
@@ -565,7 +635,7 @@
         margin-left: 20px;
         padding: 10px;
         display: inline-block;
-        width: 50%;
+        /*width: 50%;*/
     }
     .nav_title .nav_title_left li {
         float: left;
@@ -612,7 +682,7 @@
         display: inline-block;
         width: 60px;
         height: 60px;
-        background: url('/img/add.png') no-repeat;
+        background: url(../../assets/img/add.png) no-repeat;
         background-size: 100% 100%;
     }
     .address_listbox li:nth-child(n+2) div{
@@ -634,6 +704,7 @@
         font-size: 18px;
         color: #000000;
         text-align: left;
+		border-bottom: 1px solid #ccc;
     }
     .address_listbox li:nth-child(n+2) div p{
         margin-left: 20px;
@@ -658,10 +729,10 @@
         position: absolute;
         bottom: 0;
         right: 0;
-        display: block;
+        display: none;
         width: 18px;
         height: 18px;
-        background: url('/img/ico_warn.png') no-repeat;
+        background: url(../../assets/img/ico_warn.png) no-repeat;
         background-position: -86px -58px;
     }
     .address_listbox li:nth-child(n+2) div p.hover i.selected{
@@ -670,12 +741,15 @@
     .address_listbox li:nth-child(n+2) div:hover,.address_listbox li div.hover{
         border: 1px solid #ff791f;
     }
+    .address_listbox li:nth-child(n+2) div:hover,.address_listbox li div.hover i{
+        display: block;
+    }
     .address_listbox li:nth-child(n+2) div:hover p.setting{
         display: block;
     }
-    .address_listbox li:nth-child(n+2) div:hover i.selected{
+    /*.address_listbox li:nth-child(n+2) div:hover i.selected{
         display: block;
-    }
+    }*/
 
     
    .address_magment .titbox {
@@ -795,7 +869,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url(../../assets/img/pwd-icons-new.png) no-repeat;
         background-position: -102px -47px;
         vertical-align: top;
         margin-top: 5px;

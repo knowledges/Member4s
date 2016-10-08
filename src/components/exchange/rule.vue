@@ -34,7 +34,7 @@
     </div>
     <div class="introduce clearfix">
         <p class="orange-icon G_fl"></p>
-        <p class="introduce-tit">什么是积分</p>
+        <p class="introduce-tit">积分获取规则</p>
         <p class="introduce-bd">1）报价数量超过该品牌车款（包括外观颜色和内饰颜色）总数量50%，获得积分2000，积分可兑换礼品</p>
         <p class="introduce-bd"> 2）每个月有10个不同的车款的报价被判定为底价且需要超过24小时不上调价格，获得积分500，30款奖励800分</p>
         <p class="introduce-bd">3）以季度为单位（1-3月，4-6月，7-9月，10-12月），车款报价成为底价次数少于200次，扣除积分500</p>

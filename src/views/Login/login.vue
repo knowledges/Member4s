@@ -2,63 +2,47 @@
        <!--login header-->
        <div class="header">
            <h1 class="RL_logo G_fl">
-               <a href="/index.php/Index/index.html" title="购车惠"><img src="http://www.gouchehui.com/Public/Home/images/logo_145X75.png" alt="购车惠"></a>
+               <a href="http://www.gouchehui.com/index.php/Index/index.html" title="购车惠"><img src="http://www.gouchehui.com/Public/Home/images/logo_145X75.png" alt="购车惠"></a>
            </h1>
            <div class="RL_returnHome G_fr">
-               <a href="/index.php/Index/index.html" title="返回购车惠首页" class="G_f14">返回购车惠首页</a>
+               <a href="http://www.gouchehui.com/index.php/Index/index.html" title="返回购车惠首页" class="G_f14">返回购车惠首页</a>
            </div>
        </div>
 
        <!--login content-->
        <div class="content">
-           <div class="login-newbg" style="background-image: url(http://www.gouchehui.com/Public/Home/images/login_bg.png);"></div>
+           <div v-if="!is4S" class="login-newbg" style="background-image: url(http://www.gouchehui.com/Public/Home/images/login_bg.png);"></div>
+           <div v-if="is4S" class="login-newbg" style="background-image: url(/assets/img/login_bg_4s.png);"></div>
            <div class="login-adlink">
-               <a href="" title=""></a>
+               <a href="javascript:;;" title=""></a>
            </div>
            <div class="login-layout">
                <div class="login-con">
                    <div class="login-box">
                        <div class="login-form">
-                           <div class="login-title"><a href="#" title="立即注册>>" class="G_f14">立即注册&gt;&gt;</a>账户登录
+                           <div class="login-title">
+                               <a href="javascript:;;" v-bind:class="{'active':!is4S}" v-on:click="swtichClk(false,$event)">个人账户</a>
+                               |
+                               <a href="javascript:;;" v-bind:class="{'active':is4S}" v-on:click="swtichClk(true,$event)">4S店账户</a>
                            </div>
                            <!--错误信息提示-->
                            <div id="J_Message">
-                               <!--<div class="login-msg">
+                               <div class="login-msg">
                                    <i class="login-icon G_fl"></i>
                                    <p class="error G_f12">密码错误</p>
-                               </div>-->
+                               </div>
                            </div>
                            <div class="item item-fore1">
                                <label for="J_logname" class="login-label name-label"></label>
-                               <input id="J_logname" type="text" class="itxt" name="user_name" v-model="username" tabindex="1"
+                               <input id="J_logname" type="text" class="itxt" name="user_name" v-model="username" v-on:keyup="loginClks($event)" tabindex="1"
                                       autocomplete="off" placeholder="手机号">
                                <span class="clear-btn"></span>
                            </div>
                            <div class="item item-fore2">
                                <label class="login-label pwd-label" for="J_logpwd"></label>
-                               <input type="password" id="J_logpwd" name="password" class="itxt itxt-error" v-model="password" tabindex="2"
+                               <input type="password" id="J_logpwd" name="password" class="itxt itxt-error" v-model="password" v-on:keyup="loginClks($event)"  tabindex="2"
                                       autocomplete="off" placeholder="密码">
                                <span class="clear-btn"></span>
-                           </div>
-                           <div class="item item-fore3">
-                               <ul>
-                                   <li>
-                                       <input name="role" type="radio" checked="checked" value="1" id="J_role1">
-                                       <label for="J_role1">个人</label>
-                                   </li>
-                                   <li>
-                                       <input name="role" type="radio" value="2" id="J_role2">
-                                       <label for="J_role2">4S店</label>
-                                   </li>
-                                   <li>
-                                       <input name="role" type="radio" value="3" id="J_role3">
-                                       <label for="J_role3">经销商</label>
-                                   </li>
-                                   <li>
-                                       <input name="role" type="radio" value="4" id="J_role4">
-                                       <label for="J_role4">商家</label>
-                                   </li>
-                               </ul>
                            </div>
                            <div class="item item-fore4">
                                <div class="autolog">
@@ -68,12 +52,19 @@
                                 <label for="autologin">自动登录</label>
                             </span>
                                 <span class="forget-pw">
-                                <a href="/member.php/Public/findpw_verification.html" target="_blank">忘记密码</a>
+                                <a href="http://www.gouchehui.com/member.php/Public/findpw_verification.html" target="_blank">忘记密码</a>
                             </span>
                                </div>
                            </div>
                            <div class="item item-fore5">
                                <button type="submit" class="login-btn G_f18" tabindex="5" v-on:click="loginClk">登 录</button>
+                           </div>
+                           <div class="item item-fore6"  v-if="!is4S">
+                               <ul>
+                                   <li><a href="loginsdk/type/qq" title="QQ登录"><img src="http://www.gouchehui.com/Public/Home/images/login_qq.jpg">QQ登录</a></li>
+                                   <li><a href="loginsdk/type/weixin" title="微信登录"><img src="http://www.gouchehui.com/Public/Home/images/login_wechat.jpg">微信登录</a></li>
+                                   <li class="register"><a href="#" title="立即注册>>" class="G_f14">立即注册&gt;&gt;</a></li>
+                               </ul>
                            </div>
                        </div>
                    </div>
@@ -84,16 +75,17 @@
        <!--login footer-->
        <div class="footer">
            <ul class="G_f14">
-               <li><a href="/index.php/Guide/process" title="购车指南">购车指南</a><b>|</b></li>
-               <li><a href="/index.php/Guide/problem_price" title="常见问题">常见问题</a><b>|</b></li>
-               <li><a href="/index.php/Guide/introduce" title="公司简介">公司简介</a><b>|</b></li>
-               <li><a href="/index.php/Guide/contact" title="商务合作">商务合作</a><b>|</b></li>
-               <li><a href="/index.php/Guide/contact" title="客服电话">客服电话</a><b>|</b></li>
-               <li><a href="/index.php/Guide/feedback" title="在线反馈">在线反馈</a></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/process" title="购车指南">购车指南</a><b>|</b></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/problem_price" title="常见问题">常见问题</a><b>|</b></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/introduce" title="公司简介">公司简介</a><b>|</b></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/contact" title="商务合作">商务合作</a><b>|</b></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/contact" title="客服电话">客服电话</a><b>|</b></li>
+               <li><a href="http://www.gouchehui.com/index.php/Guide/feedback" title="在线反馈">在线反馈</a></li>
            </ul>
            <p>CopyRight @2015-2016 gouchehui.com All rights reserved 版权所有南京易橙汇网络科技有限公司</p>
            <p>备案号:苏ICP备13031090号-3</p>
        </div>
+
 </template>
 
 <script>
@@ -109,14 +101,21 @@
         },
         data(){
             return {
-                username:"sssaaa",
-                password:"gchjsb"
+                is4S:false,
+                username:"L01SHDZ",
+                password:"123456"
+//                username:"sssaaa",
+//                password:"gchjsb"
 //                username:"baomagouchehui",
 //                password:"123456"
             }
         },
         methods:{
-            loginClk(){
+            swtichClk(isTrue,e){
+                console.log(isTrue);
+                this.is4S = isTrue;
+            },
+            loginMethod(){
                 var that = this;
 
                 var ii = layer.load(1, {
@@ -156,6 +155,14 @@
                         layer.msg(response.desc);
                     }
                 });
+            },
+            loginClks(e){
+                if(e.keyCode == 13){
+                    this.loginMethod();
+                }
+            },
+            loginClk(){
+                this.loginMethod();
             }
         }
     }

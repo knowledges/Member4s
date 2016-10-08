@@ -39,12 +39,15 @@
                 </tr>
             </thead>
             <tbody>
-            <tr v-if="arr_offer.car_model_name=='' && arr_offer.car_name==''">
-                <td colspan="11">
-                    <p>没有搜索到内容......</p>
+            <tr v-if="istrue">
+                <td colspan="11" style="font-size: 16px;">
+                    <div class="order-nodata">
+                        <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                        <p>您可进入 <a v-link="{ path:'/active/thisShop/find/0'}">活动车款</a> 页面查看信息</p>
+                    </div>
                 </td>
             </tr>
-            <tr>
+            <tr v-if="!istrue">
                 <td>{{arr_offer.car_model_name}}</td>
                 <td>{{arr_offer.car_name}}</td>
                 <td>{{arr_offer.interior_color_name}}</td>
@@ -55,7 +58,7 @@
                 <td>{{arr_offer.stock}}</td>
                 <td>{{arr_offer.onway}}</td>
                 <td>
-                    <span v-if="arr_area_offer.length<=0">
+                    <span v-if="arr_area_offer == null ||arr_area_offer.length<=0">
                         暂无数据
                     </span>
                     <span v-for="arr in arr_area_offer">
@@ -73,10 +76,12 @@
             </tr>
             </tbody>
         </table>
+        {{sum}}
     </div>
 </template>
 
 <script>
+    import $ from 'jquery'
     export default {
         props:{
             stats:Number,
@@ -90,21 +95,20 @@
             },
             arr_offer:{
                 type:Object,
-                default:()=>[]
+                default:()=>{}
             }
         },
-        methods:{
-           /* update(){
-                layer.open({
-                    type: 2,
-                    title: '身份验证',
-                    maxmin: true,
-                    shadeClose: true, //点击遮罩关闭层
-                    skin: 'layui-layer-rim', //加上边框
-                    area : ['380px' , '310px'],
-                    content: '/static/components/template/verify/identity.html'
-                });
-            }*/
+        computed: {
+            sum: function() {
+                var obj = this.arr_offer;
+                this.istrue = $.isEmptyObject(obj);
+                return ;
+            }
+        },
+        data(){
+            return {
+                istrue:false
+            }
         }
     }
 </script>
@@ -206,5 +210,27 @@
     }
     .table-box table .car-operation a:hover{
         color:#ff791f;
+    }
+
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        display: inline-block;
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/assets/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>

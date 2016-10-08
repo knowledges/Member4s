@@ -1,4 +1,98 @@
 <template>
+    <div class="batch-change">
+        <a v-on:click="batchUpdate" style="cursor: pointer;"><i class="change"></i>批量添加</a>
+        <p class="G_fr">共：<span>{{count}}</span>条</p>
+    </div>
+
+    <!--<p>checked:id {{checkedIndex | json}}</p>-->
+    <div class="table-box">
+        <table  border=1 cellspacing=0 cellpadding=0>
+            <tr>
+                <th class="car-selected"><input type="checkbox" id="all" v-on:click="allChecked"/></th>
+                <th class="car-model">车型</th>
+                <th class="car-style">车款</th>
+                <th class="car-out-color">外观颜色</th>
+                <th class="car-int-color">内饰颜色</th>
+                <th class="car-com-pri">官方价/元
+                    <a class="prompt">
+                        <div class="prompt-mes">如您对官方有疑问，请致电 400-138-0808</div>
+                    </a>
+                </th>
+                <th class="car-off-pri">优惠/元</th>
+                <th class="car-last-pri">报价/元</th>
+                <th class="car-stock">库存/辆</th>
+                <th class="car-way">在途/辆</th>
+                <th class="car-place">销售区域</th>
+                <th class="car-operation">操作</th>
+            </tr>
+            <tr v-for="item in arr_items">
+                <td><input type="checkbox" class="all" v-model="checkedIndex" :value="$index"/></td>
+                <!--<td><input type="checkbox" class="all" v-model="checkedIndex" :value="item.carId"/></td>-->
+                <td>{{item.carModelName}}</td>
+                <td>{{item.brandName}}</td>
+                <td>{{item.exteriorColorName}}</td>
+                <td>{{item.interiorColorName}}</td>
+                <td>{{item.price}}</td>
+                <td width="100">
+                    <!--<span class="show_{{$index}}">{{item.discount}}</span>-->
+                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)" value="{{item.discount}}" style="display: none;">
+                    <p v-if="items.discount_" class="error">
+                        <i></i>
+                        {{items.discount_msg}}
+                    </p>
+                </td>
+                <td width="100">
+                    <!--<span class="show_{{$index}}">{{item.lowPrice}}</span>-->
+                    <input type="text" class="update_{{$index}}  lowPrice_{{$index}}" readonly value="{{item.lowPrice}}" style="display: none;">
+                    <p v-if="items.lowPrice_" class="error">
+                        <i></i>
+                        {{items.lowPrice_msg}}
+                    </p>
+                </td>
+                <td  width="60">
+                    <!--<span class="show_{{$index}}">{{item.stock}}</span>-->
+                    <input type="number" class="update_{{$index}}  stock_{{$index}}" value="{{item.stock}}" style="display: none;">
+                    <p v-if="items.stock_" class="error">
+                        <i></i>
+                        {{items.stock_msg}}
+                    </p>
+                </td>
+                <td width="60">
+                    <!--<span class="show_{{$index}}">{{item.onWay}}</span>-->
+                    <input type="number" class="update_{{$index}} onWay_{{$index}}" value="{{item.onWay}}" style="display: none;">
+                    <p v-if="items.onWay_" class="error">
+                        <i></i>
+                        {{items.onWay_msg}}
+                    </p>
+                </td>
+                <td>
+                    <p class="show_{{$index}}">{{item.saleArea}}</p>
+                    <p class="update_{{$index}}" style="display: none;">
+                        <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
+                    </p>
+                    <p class="update_{{$index}}" style="display: none;"><a class="selected" v-on:click="selectarea(item)">请选择</a></p>
+                </td>
+                <td>
+                    <div class="show_{{$index}}">
+                        <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">添加</button>
+                        <p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>
+                    </div>
+                    <div class="update_{{$index}}" style="display: none;">
+                        <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
+                        <p><a class="cancle" v-on:click="cancle($index)">取消</a></p>
+                    </div>
+                </td>
+            </tr>
+            <tr  v-if="arr_items.length<=0">
+                <td colspan="12">
+                    <div class="order-nodata">
+                        <h4><i class="order-nobg"></i>暂无此款车的报价！</h4>
+                        <!--<p>您可在 <a v-link="{ path:'/u/manage/add'}" style="display: inline-block">“新增报价”</a> 页面筛选此款车，手动添加报价</p>-->
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <div class="activearea" style="display: none;">
         <div class="layer_2">
@@ -110,10 +204,10 @@
                     <td>{{temp.interiorColorName}}</td>
                     <td>{{temp.exteriorColorName}}</td>
                     <td>
-                        <input type="number" class="stock_{{$index}}" value="{{temp.stock}}">
+                        <input type="number" class="stocks_{{$index}}" value="{{temp.stock}}">
                     </td>
                     <td>
-                        <input type="number" class="onWay_{{$index}}" value="{{temp.onWay}}">
+                        <input type="number" class="onWays_{{$index}}" value="{{temp.onWay}}">
                     </td>
                     <td rowspan="{{temp_arr.length}}">
                         {{temp.price}}
@@ -128,17 +222,17 @@
                         <p>
                             <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
                         </p>
-                        <a href="javascript:;;" class="selected" v-on:click="selectarea(temp)">请选择</a>
+                        <a href="javascript:;;" class="selected" v-on:click="selectarea(temp)">选择</a>
                     </td>
                 </tr>
                 <tr v-for="temp in temp_arr"  track-by="$index" v-show="temp_arr.length>1 && $index>0 ">
                     <td>{{temp.interiorColorName}}</td>
                     <td>{{temp.exteriorColorName}}</td>
                     <td>
-                        <input type="number" class="stock_{{$index}}" value="{{temp.stock}}">
+                        <input type="number" class="stocks_{{$index}}" value="{{temp.stock}}">
                     </td>
                     <td>
-                        <input type="number" class="onWay_{{$index}}" value="{{temp.onWay}}">
+                        <input type="number" class="onWays_{{$index}}" value="{{temp.onWay}}">
                     </td>
                 </tr>
                 </tbody>
@@ -154,122 +248,15 @@
         </div>
 
     </div>
-
-    <div class="batch-change">
-        <a v-on:click="batchUpdate" style="cursor: pointer;"><i class="change"></i>批量修改</a>
-        <a v-on:click="batchDel" style="cursor: pointer;"><i class="delete"></i>批量删除</a>
-        <p class="G_fr">共：<span>{{count}}</span>条</p>
-    </div>
-
-    <!--<p>checked:id {{checkedIndex}}</p>-->
-    <div class="table-box">
-        <table  border=1 cellspacing=0 cellpadding=0>
-            <tr>
-                <th class="car-selected"><input type="checkbox" id="all" v-on:click="allChecked"/></th>
-                <th class="car-model">车型</th>
-                <th class="car-style">车款</th>
-                <th class="car-out-color">外观颜色</th>
-                <th class="car-int-color">内饰颜色</th>
-                <th class="car-com-pri">官方价/元
-                    <a class="prompt">
-                        <div class="prompt-mes">如您对官方有疑问，请致电 400-138-0808</div>
-                    </a>
-                </th>
-                <th class="car-off-pri">优惠/元</th>
-                <th class="car-last-pri">报价/元</th>
-                <th class="car-stock">库存/辆</th>
-                <th class="car-way">在途/辆</th>
-                <th class="car-place">销售区域</th>
-                <th class="car-operation">操作</th>
-            </tr>
-            <tr v-for="item in arr_items">
-                <td><input type="checkbox" class="all" v-model="checkedIndex" value="{{item.carPriceId}}"/></td>
-                <td>{{item.carModelName}}</td>
-                <td>{{item.carName}}</td>
-                <td>{{item.exteriorColorName}}</td>
-                <td>{{item.interiorColorName}}</td>
-                <td>{{item.price}}</td>
-                <td width="100">
-                    <span class="show_{{$index}}">{{item.discount}}</span>
-                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)" value="{{item.discount}}" style="display: none;">
-                    <p v-if="items.discount_" class="error ">
-                        <i></i>
-                        {{items.discount_msg}}
-                    </p>
-                </td>
-                <td width="100">
-                    <span class="show_{{$index}}">{{item.lowPrice}}</span>
-                    <input type="text" class="update_{{$index}} lowPrice_{{$index}}" readonly value="{{item.lowPrice}}" style="display: none;">
-                    <p v-if="items.lowPrice_" class="error">
-                        <i></i>
-                        {{items.lowPrice_msg}}
-                    </p>
-                </td>
-                <td  width="60">
-                    <span class="show_{{$index}}">{{item.stock}}</span>
-                    <input type="number" class="update_{{$index}} stock_{{$index}}" value="{{item.stock}}" style="display: none;">
-                    <p v-if="items.stock_" class="error">
-                        <i></i>
-                        {{items.stock_msg}}
-                    </p>
-                </td>
-                <td width="60">
-                    <span class="show_{{$index}}">{{item.onWay}}</span>
-                    <input type="number" class="update_{{$index}} onWay_{{$index}}" value="{{item.onWay}}" style="display: none;">
-                    <p v-if="items.onWay_" class="error">
-                        <i></i>
-                        {{items.onWay_msg}}
-                    </p>
-                </td>
-                <td>
-                    <p class="show_{{$index}}">{{item.saleArea}}</p>
-                    <p class="update_{{$index}}" style="display: none;">
-                        <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
-                    </p>
-                    <p class="update_{{$index}}" style="display: none;"><a class="selected" v-on:click="selectarea(item)">请选择</a></p>
-                </td>
-                <td>
-                    <div class="show_{{$index}}">
-                        <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">修改</button>
-                        <p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>
-                        <p><a v-on:click="del(item,$event,$index)" style="cursor: pointer;">删除</a></p>
-                    </div>
-                    <div class="update_{{$index}}" style="display: none;">
-                        <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
-                        <p><a class="cancle" v-on:click="cancle($index)">取消</a></p>
-                    </div>
-                </td>
-            </tr>
-            <tr  v-if="arr_items.length<=0">
-                <td colspan="12">
-                    <div class="order-nodata">
-                        <h4><i class="order-nobg"></i>暂无此款车的报价！</h4>
-                        <p>您可在 <a v-link="{ path:'/u/manage/add'}" style="display: inline-block">“新增报价”</a> 页面筛选此款车，手动添加报价</p>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <div id="page2"  style="margin:20px 0;text-align: center;"></div>
-    </div>
 </template>
-<script>
+<script >
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
     export default {
         props:{
-            count:Number,
-            provinces:{
-                type: Array,
-                default: ()=>[]
-            },
-            provincecity:{
-                type: Array,
-                default: ()=>[]
-            },
-            clone_provincecity:{
-                type: Array,
-                default: ()=>[]
+            count:{
+              type:Number
             },
             arr_items: {
                 type: Array,
@@ -277,13 +264,11 @@
             }
         },
         ready(){
-//            this.getRelationship();
         },
         data(){
             return {
-                selectedKey:"",
-                global:false,
-                city_items:[],
+                checkedIndex:[],
+                checked:"",
                 items:{
                     areas:[],
                     discount:"",
@@ -302,24 +287,28 @@
                 temp_items:{},
                 temp_arr:[],
                 temps:{
-                 interiorColorName:"",
-                 exteriorColorName:"",
-                 stock:"",
-                 onWay:"",
-                 discount:"",
-                 discount:"",
-                 brandName:"",
-                 carModelName:"",
-                 carName:""
-                 },
+                    interiorColorName:"",
+                    exteriorColorName:"",
+                    stock:"",
+                    onWay:"",
+                    discount:"",
+                    lowPrice:"",
+                    brandName:"",
+                    carModelName:"",
+                    carName:""
+                },
+                provinces:"",
+                provincecity:"",
+                clone_provincecity:"",
                 mask_1:"",
                 mask_3:"",
-                checked:"",
-                checkedIndex:[]
+                selectedKey:"",
+                global:false,
+                city_items:[],
             }
         },
         methods:{
-            getRelationship(obj){
+            getRelationship(){
                 var that = this;
 
                 /*获取省市关系*/
@@ -337,16 +326,16 @@
                         that.$set("provinces",list.provinces);
                         that.$set("provincecity",list.provincecity);
                         that.$set("clone_provincecity",list.provincecity);
-                        if(obj!=null){
-                            that.getSaleAreaByArray(obj);
-                        }
+
+                        that.selectedKey="江苏省";
+                        that.selectedProvinces();
+
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
                             util.login();
-
                         }
                     }
                 });
@@ -354,27 +343,19 @@
             calc(item,index){
                 setTimeout(function () {
                     var num = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
-                   /* if(num <0){
-                        num = 0;
-                        $(".discount_"+index).val(0);
-                    }*/
                     var val = item.price-num;
                     $(".lowPrice_"+index).val(val);
                 },500);
             },
             batchCalc(item){
                 var that = this;
-                setTimeout(function () {
-                    /*if(that.temps.discount < 0){
-                        that.temps.discount = 0
-                    }*/
+                setTimeout(function (){
                     that.temps.lowPrice = item.price - that.temps.discount;
                 },500)
             },
-            /*批量修改*/
             batchUpdate(){
                 var that = this;
-                layer.confirm('您确定要批量修改吗？', {
+                layer.confirm('您确定要批量添加吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
@@ -382,7 +363,7 @@
                     if(that.checkedIndex.length>0){
                         that.mask_3 = layer.open({
                             type: 1,
-                            title: '批量修改',
+                            title: '批量添加',
                             skin: 'layui-layer-rim', //加上边框
                             area : ['800px' , '400px'],
                             content: $(".batchAdd"),
@@ -391,6 +372,7 @@
                                 that.removeAll();
                                 that.selectedKey = "0";
                                 that.city_items = [];
+                                that.items.areas = [];
                             }
                         });
 
@@ -398,7 +380,7 @@
                         /*筛选批量数据*/
                         for(var i=0;i<that.checkedIndex.length;i++){
                             for(var j = 0 ;j<that.arr_items.length;j++){
-                                if(that.checkedIndex[i] == that.arr_items[j].carPriceId){
+                                if(that.checkedIndex[i] == j){
                                     that.temp_arr.push(that.arr_items[j]);
                                 }
                             }
@@ -407,34 +389,14 @@
                         that.temps.brandName = that.temp_arr[0].brandName;
                         that.temps.carModelName = that.temp_arr[0].carModelName;
                         that.temps.carName = that.temp_arr[0].carName;
-                        that.getRelationship(that.temp_arr[0]);
-//                        that.getSaleAreaByArray(that.temp_arr[0]);
+                        that.getRelationship();
+//                        console.log(JSON.stringify(that.temp_arr));
+
                     }else{
                         layer.msg("请选择批量修改内容");
                     }
                 }, function(){});
             },
-            /*批量删除*/
-            batchDel(){
-                var that = this;
-                layer.confirm('您确定要批量删除吗？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index){
-                    layer.close(index);
-                    /*删除*/
-                    var arr = [];
-                    for(var i=0 ;i<that.checkedIndex.length;i++){
-                        var obj = {};
-                        obj.carPriceId = that.checkedIndex[i];
-                        arr.push(obj);
-                    }
-
-                    var params = {"query":arr};
-                    that.delMethod(params);
-                    window.history.go(0);
-                }, function(){});
-            },
-            /*全选*/
             allChecked(){
                 if(this.checked){
                     this.checkedIndex = [];
@@ -444,7 +406,7 @@
                     $(".all").removeAttr("checked");
                     for(var i = 0 ; i<this.arr_items.length;i++){
                         $(".all").eq(i).attr("checked","true");
-                        this.checkedIndex.push(this.arr_items[i].carPriceId);
+                        this.checkedIndex.push(i);
                     }
                 }
             },
@@ -458,77 +420,31 @@
                     content: $(".activearea")
                 });
             },
-            getSaleAreaByArray(obj){
-                var that = this;
-                that.items.areas=[];
-                /*把区域数组遍历到对象中，然后双向绑定；把效果展示在区域弹出框中*/
-                var str = obj.saleArea;
-                var list = str.substring(1,str.length-1).split(",");
-                for(var i = 0 ; i< list.length;i++){
-                    if(list[i].trim()=="全国"){
-                        that.items.areas.push({"salesAreaName":"全国","salesAreaLevel":"1"});
-                        that.global = true;
-                        $("#selectedKey").attr({"disabled":true});
-                        $("#global").addClass("selected");
-                    }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
-                        that.items.areas.push({"salesAreaName":list[i],"salesAreaLevel":"2"})
-                        var arr = that.provincecity[list[i].trim()];
-                        if(arr.length>1){
-                            /*把省插入到第一的位置*/
-                            arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
-
-                            for(var j =0 ;j <arr.length;j++){
-                                if(j == 0){
-                                    /*赋值总数去掉省*/
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
-                                }else{
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
-                                }
-                            }
-                        }else{
-                            arr[i].selected = true;
-                            that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
-                        }
-
-                    }else{
-                        if(list[i].trim()!=""){
-                            that.items.areas.push({"salesAreaName":list[i].trim(),"salesAreaLevel":"3"})
-                            $.map(that.provincecity,function (val,key) {
-                                for(var j = 0;j<val.length;j++){
-                                    if(list[i].trim() == val[j].city){
-                                        val[j].selected = true;
-                                        that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
-                                    }
-                                }
-                            })
-                        }
-
-                    }
-                }
-            },
             update(obj,e,_index){
-                var that = this;
+                $(".update").attr("disabled",true);
+                $(e.target).removeAttr("disabled");
+
+                  var that = this;
                 this.temp_items = [];
                 this.temp_items = obj;
 
-                layer.confirm('您确定要修改吗？', {
+                layer.confirm('您确定要添加吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
-                    that.getRelationship(obj);
-                    $(".update").attr("disabled",true);
-                    $(e.target).removeAttr("disabled");
-                    $("input[type='checkbox']").attr("disabled","true");
+                    that.getRelationship();
                     $(".update_"+_index).show();
                     $(".show_"+_index).hide();
+                    $("input[type='checkbox']").attr("disabled","true");
+                    $(".update").attr("disabled",true);
+                    $(e.target).removeAttr("disabled");
                 }, function(){});
-
             },
             /*修改或者批量修改我的报价*/
-            updateMethos(params,num){
+            updateMethos(params,num,obj){
                 var that = this;
                 $.ajax({
-                    url:config.API_BASE+"/4s/offer/batchUpdateCarPrice",
+                    url:config.API_BASE+"/4s/offer/batchAddCarPrice",
                     method:'POST',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -539,24 +455,13 @@
                     success:function (response) {
                         if(response.code == 0){
                             that.items.areas = [];
-                            that.items.discount="";
-                            that.items.discount_=false;
-                            that.items.discount_msg="";
-                            that.items.lowPrice="";
-                            that.items.lowPrice_=false;
-                            that.items.lowPrice_msg="";
-                            that.items.stock="";
-                            that.items.stock_=false;
-                            that.items.stock_msg="";
-                            that.items.onWay="";
-                            that.items.onWay_=false;
-                            that.items.onWay_msg="";
-                            layer.msg("修改成功");
-                            if(num==2){
-                                setTimeout(function(){
-                                    window.history.go(0);
-                                },1000);
-
+                            layer.msg("添加成功");
+                            if(num == 1){
+                                that.arr_items.$remove(obj);
+                                that.count--;
+                                $(".update,input[type='checkbox']").removeAttr("disabled");
+                            }else{
+                                window.history.go(0);
                             }
                         }
                     },
@@ -569,69 +474,13 @@
                     }
                 });
             },
-            del(obj,e,_index){
-                var that = this;
-                layer.confirm('您确定要删除吗？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index){
-                    layer.close(index);
-                    /*删除*/
-                    var params = {"query":[{"carPriceId":obj.carPriceId}]};
-                    that.delMethod(params);
-                    that.arr_items.$remove(obj);
-                    that.count--;
-                }, function(){});
-            },
-            batchDel(){
-                var that = this;
-                layer.confirm('您确定要批量删除吗？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index){
-                    layer.close(index);
-                    /*删除*/
-                    var arr = [];
-                    for(var i=0 ;i<that.checkedIndex.length;i++){
-                        var obj = {};
-                        obj.carPriceId = that.checkedIndex[i];
-                        arr.push(obj);
-                    }
-
-                    var params = {"query":arr};
-                    that.delMethod(params);
-                    window.history.go(0);
-                }, function(){});
-            },
-            /*删除或者删除修改我的报价*/
-            delMethod(params){  //删除方法
-                $.ajax({
-                    url:config.API_BASE+"/4s/offer/batchDeleteCarPrice",
-                    method:"POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    data:JSON.stringify(params),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        if(response.code == 0){
-                            layer.msg('删除成功', {icon: 1});
-                        }
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
-                        }
-                    }
-                })
-            },
             save(obj,e,index){
                 var discount_  =$(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
                 if(parseInt(obj.price) < parseInt(discount_)){
                     layer.msg("优惠价小于等于官方价！",{icon:2})
                     return;
                 }
+
                 if($(".stock_"+index).val()==""||$(".stock_"+index).val()<0){
                     layer.msg("库存/辆不能为空且大于等于0！",{icon:2})
                     return;
@@ -640,102 +489,83 @@
                     layer.msg("在途/辆不能为空且大于等于0！",{icon:2})
                     return;
                 }
+
                 if(this.items.areas.length<=0){
-                    layer.msg("请选择区域");
+                    layer.msg("请选择区域",{icon:2});
                     return;
                 }
 
                 var query = {};
-                query.carPriceId = this.temp_items.carPriceId;
+                query.carId = this.temp_items.carId;
+                query.exteriorColorId = this.temp_items.exteriorColorId;
+                query.interiorColorId = this.temp_items.interiorColorId;
+                query.price = this.temp_items.price;
                 query.stock =$(".stock_"+index).val();
                 query.onWay=$(".onWay_"+index).val();
                 query.discount =discount_;
-                query.lowPrice =$(".lowPrice_"+index).val()!=""?$(".lowPrice_"+index).val():0;
-                query.createUser = config.USERID();
+                query.lowPrice =$(".lowPrice_"+index).val()!=""?$(".lowPrice_"+index).val():obj.price;
+                query.userId = config.USERID();
                 query.areas = this.items.areas;
+
                 var arr = [];
                 arr[0] = query;
                 var params = {"query":arr};
                 var that = this;
-                layer.confirm('确定该款车<strong style="color:red;">优惠：'+discount_+'元</strong>吗？', {title:'提示',
-                    btn: ['确定','取消'] //按钮
-                }, function(){
-                    that.updateMethos(params,1);
-
-                    var areas = [];
-                    for(var i = 0 ; i< that.items.areas.length;i++) {
-                        if(that.items.areas.length == 1){
-                            areas.push("["+that.items.areas[i].salesAreaName+"]");
-                        }else if(that.items.areas.length>1 && i == 0){
-                            areas.push("["+that.items.areas[i].salesAreaName);
-                        }else if (i==that.items.areas.length-1){
-                            areas.push(that.items.areas[i].salesAreaName+"]");
-                        }else {
-                            areas.push(that.items.areas[i].salesAreaName);
-                        }
-                    }
-
-
-                    that.arr_items[index].discount = discount_;
-                    that.arr_items[index].lowPrice = $(".lowPrice_"+index).val();
-                    that.arr_items[index].onWay = $(".onWay_"+index).val();
-                    that.arr_items[index].stock = $(".stock_"+index).val();
-                    that.arr_items[index].saleArea = areas.join(',');
-
-                    $(".update_"+index).hide();
-                    $(".show_"+index).show();
-                    $(".update,input[type='checkbox']").removeAttr("disabled");
-
+                layer.confirm('确定该款车<strong style="color:red;">优惠：' + discount_ + '元</strong>吗？', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    that.updateMethos(params,1,that.temp_items);
                     /*修改弹框初始化*/
                     that.removeAll();
                     that.selectedKey = "0";
                     that.city_items = [];
-
-                }, function(){
+                    that.items.areas = [];
+                }, function () {
                     $(".update_"+index).hide();
                     $(".show_"+index).show();
                     $(".update,input[type='checkbox']").removeAttr("disabled");
                 });
+
+//                this.arr_items.$remove(this.temp_items);
             },
             cancle(_index){
                 $(".update_"+_index).hide();
                 $(".show_"+_index).show();
                 $(".update,input[type='checkbox']").removeAttr("disabled");
+
                 /*修改弹框初始化*/
                 this.removeAll();
                 this.selectedKey = "0";
                 this.city_items = [];
-            },
-            selectAllClk(){
-                this.getRelationship(null);
-                this.global = true;
-                $("#selectedKey").find("option[value=0]").attr({"selected":true});
-                $("#selectedKey").attr({"disabled":true});
-                $("#global").addClass("selected");
+                this.items.areas = [];
             },
             removeAll(){
                 $("#selectedKey").removeAttr("disabled");
                 $("#global").removeClass("selected");
                 this.global = false;
             },
-            selectedProvinces(){
-                this.city_items = this.provincecity[this.selectedKey];
+            removeCity(obj){
+                /*判断是否是直辖市*/
+                if(obj.city == obj.province){
 
-                if(this.city_items!=undefined && this.city_items.length>1){
+                    if(this.provincecity[obj.city].length>1){
+                        /*total*/
+                        obj.total = this.provincecity[obj.city].length;
+                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
+                            if(i==0){
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
+                            }else{
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
+                            }
 
-                    if(this.city_items[0].insert == undefined){
-                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
-                    }
-
-                    var total = this.city_items.length;
-                    for(var i = 1; i<this.city_items.length;i++){
-                        /*剔除已选择过的*/
-                        if(this.city_items[i].selected == true){
-                            total =total-1;
                         }
+                    }else{
+                        obj.selected = 'undefined';
                     }
 
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
+                }else{
+                    obj.selected = 'undefined';
                 }
             },
             cityClk(obj,_index){
@@ -769,27 +599,30 @@
 
                 }
             },
-            removeCity(obj){
-                /*判断是否是直辖市*/
-                if(obj.city == obj.province){
+            selectAllClk(){
+                this.getRelationship(null);
+                this.global = true;
+                $("#selectedKey").find("option[value=0]").attr({"selected":true});
+                $("#selectedKey").attr({"disabled":true});
+                $("#global").addClass("selected");
+            },
+            selectedProvinces(){
+                this.city_items = this.provincecity[this.selectedKey];
 
-                    if(this.provincecity[obj.city].length>1){
-                        /*total*/
-                        obj.total = this.provincecity[obj.city].length;
-                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
-                            if(i==0){
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
-                            }else{
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
-                            }
+                if(this.city_items!=undefined && this.city_items.length>1){
 
+                    if(this.city_items[0].insert == undefined){
+                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
+                    }
+                    var total = this.city_items.length;
+                    for(var i = 1; i<this.city_items.length;i++){
+                        /*剔除已选择过的*/
+                        if(this.city_items[i].selected == true){
+                            total =total-1;
                         }
-                    }else{
-                        obj.selected = 'undefined';
                     }
 
-                }else{
-                    obj.selected = 'undefined';
+                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
             agree(){
@@ -815,14 +648,18 @@
                     layer.msg("优惠价小于等于官方价！",{icon:2})
                     return;
                 }
+
                 if(this.items.areas.length<=0){
-                    layer.msg("请选择区域");
+                    layer.msg("请选择区域",{icon:2});
                     return;
                 }
                 var arr = [];
                 for (var i = 0;i<that.temp_arr.length; i++){
                     var query = {};
-                    query.carPriceId = that.temp_arr[i].carPriceId;
+                    query.carId = that.temp_arr[i].carId;
+                    query.exteriorColorId = this.temp_arr[i].exteriorColorId;
+                    query.interiorColorId = this.temp_arr[i].interiorColorId;
+                    query.price = this.temp_arr[i].price;
                     if(i==0){
                         if($(".stocks_"+i).eq(0).val() == "" || $(".stocks_"+i).eq(0).val()<0){
                             layer.msg("库存/辆不能为空且大于等于0",{icon:2});
@@ -848,25 +685,26 @@
                         }
                         query.onWay= $(".onWays_"+i).eq(1).val();
                     }
-                    query.discount = this.temps.discount;
-                    query.lowPrice = this.temps.lowPrice;
-                    query.createUser = config.USERID();
+                    query.discount = this.temps.discount=="" ? 0 :this.temps.discount;
+                    query.lowPrice = this.temps.lowPrice == "" ? that.temp_arr[0].price : this.temps.lowPrice;
+                    query.userId = config.USERID();
                     query.areas = this.items.areas;
                     arr.push(query);
                 }
-
                 var params = {"query":arr};
-
                 layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
                 }, function () {
-                    that.updateMethos(params,2);
+                    that.updateMethos(params,2,null);
+                    /*修改弹框初始化*/
+                    that.removeAll();
+                    that.selectedKey = "0";
+                    that.city_items = [];
+                    that.items.areas = [];
                 }, function () {
                     window.history.go(0);
                 });
-
-
             },
             cancle2(){
                 layer.close(this.mask_3);
@@ -874,6 +712,7 @@
                 this.removeAll();
                 this.selectedKey = "0";
                 this.city_items = [];
+                this.items.areas = [];
             },
         },
         watch:{
@@ -905,7 +744,6 @@
         color: #fa8c35!important;
         border: 2px solid #fa8c35!important;;
     }
-
     .batch-change{
         width:890px;
         margin:0 auto;
@@ -929,7 +767,6 @@
         margin-right:3px;
         background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxOWMwNWE1NS0zZGVkLTBjNDYtOTMyOS0xNGQ4ZTQ4ZWY3NDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6N0M1RTE4MjU3MzMxMTFFNkI4NUU4NjQyQjc5MDE1MDAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6N0M1RTE4MjQ3MzMxMTFFNkI4NUU4NjQyQjc5MDE1MDAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAyYjdkZmU3LThjZDQtOWE0NC05ZDJmLTZkMjJlNmM3YWI5NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxOWMwNWE1NS0zZGVkLTBjNDYtOTMyOS0xNGQ4ZTQ4ZWY3NDgiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4bIPLcAAAA3ElEQVR42tySPQqDQBSE16gogmhjLXgGbxGw9QCey0tYCV7BM4iInYV/IBb+ZMwja9DC2GaKYfh44+LbFdZ1raqq73v2UZqmTdMgmKbpui7nuq5bliWgEIbhPM/sSqIoBkGwFbIsY7/JcZytMAxDFEWX057naZomIS3L0nUdgmEYbdsiqKoKH8fxG2IM/uAfsG3b93048vOtAyRJPMmyzF1RlDMkPdhN/UNh3xKtmXyapjM8FvI8j+O4LEvkJEnOcC9g67hzPJCiKIjWdc1PIIgBupztLd36h5cAAwAHk2/CnNyQYgAAAABJRU5ErkJggg==) no-repeat;
     }
-
     .table-box{
         width:890px;
         margin:0 auto;
@@ -1020,6 +857,7 @@
         width: 80%;
         text-align: center;
     }
+
     table a.selected{
         display: inline-block;
         padding: 2px 8px;
@@ -1055,37 +893,6 @@
         border: none;
         background: #999999;
     }
-
-    table p i {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
-        background-position: -102px -47px;
-        vertical-align: sub;
-    }
-
-    .order-nodata h4{
-        color: #4c4c4c;
-        font-size: 18px;
-        line-height: 46px;
-    }
-    .order-nodata p a{
-        color: #2194fe;
-    }
-    .order-nodata .order-nobg{
-        width: 30px;
-        height: 30px;
-        display: inline-block;
-        vertical-align: top;
-        margin-top: 8px;
-        margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
-        background-repeat: no-repeat;
-        background-position: -82px 4px;
-        background-size: 300px 150px;
-    }
-
 
     div dl {
         margin: 10px 0;
@@ -1184,7 +991,6 @@
         background: url('/assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
-
     .add {
         padding: 0px 20px;
     }
@@ -1199,5 +1005,26 @@
     .add table tr td input[type="text"]{
         display: inline-block;
         width: 80px;
+    }
+
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/assets/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>

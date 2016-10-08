@@ -20,7 +20,7 @@
     </div>
 </template>
 <script>
-    import {loader} from '../../util/util'
+    import util from '../../util/util'
 	import ListTab from '../order/ListTab.vue'
 	import ListTop from '../order/ListTop.vue'
     import config from '../../config'
@@ -52,10 +52,10 @@
 //              var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
-//					query.id_4s = config.SESSIONID();
-//					query.status = [8];
-					query.id_4s = "223";
+					query.id_4s = config.USERID();
 					query.status = [8];
+//					query.id_4s = "223";
+//					query.status = [8];
 	                query.pagenum = 3;
 	                query.page = cur;
 					query.keyword = that.ordertext;
@@ -121,10 +121,10 @@
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }
+							sessionStorage.removeItem("SESSIONID");
+							layer.msg('登录失效，请重新登陆！');
+							util.login();
+						}
 					}
                 })
                
@@ -165,7 +165,7 @@
 	vertical-align: top;
 	margin-top: 8px;
 	margin-right: 8px;
-	background-image: url(/img/ico_warn.png);
+	background-image: url(../../assets/img/ico_warn.png);
 	background-repeat: no-repeat;
 	background-position: -82px 4px;
 	background-size: 300px 150px;

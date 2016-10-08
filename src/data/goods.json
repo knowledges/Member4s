@@ -1,0 +1,66 @@
+[
+  {
+    "id": "g001",
+    "faceImg": "../../assets/img/gift-1.jpg",
+    "integral": 400,
+    "number": "充足",
+    "name": "ZIPPO打火机（1个)",
+    "body": "<p class=\"gift-introduce\">名称：ZIPPO锻纱</p><p class=\"gift-introduce\">工艺：表面镀铬/喷射打磨&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产地：美国宾夕法尼亚</p><p class=\"gift-introduce\">外壳：纯铜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;内胆：白钢&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尺寸：55*35*12mm  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;火机重量55g</p>"
+  },
+  {
+    "id": "g002",
+    "faceImg": "../../assets/img/gift-2.jpg",
+    "integral": 400,
+    "number": "充足",
+    "name": "500元苏果购物卡（1张）",
+    "body": "<p class=\"gift-introduce\">以收到的商品实物为主。本卡仅限在苏果超市直营店使用。本卡可分次使用，不能充值，不找零，不提取现 金，金额使用完后，由苏果超市回收。本卡不记名、不挂失、遗失不补。购卡时苏果超市已向购卡人开具了发票，使用本卡时不再重复提供发票。 </p>"
+  },
+  {
+    "id": "g003",
+    "faceImg": "../../assets/img/gift-3.jpg",
+    "integral": 400,
+    "number": "充足",
+    "name": "500元大润发超市购物卡（1张）",
+    "body": "<p class=\"gift-introduce\">本卡使用范围以购卡的章程或协议为准。本卡可分次使用，卡内金额用完后，此卡回收。本卡不挂失、不提 取现金、不计息、丢失不补。有效期三年（自发卡之日起）。如过期，可到开卡门店服务台办理延续手续。本卡需妥善保存，请勿接触手机等磁性物质，并保持卡面清洁。持卡人应依据由本公司制定的法律许可范围内的使用规则进行使用。</p>"
+  },
+  {
+    "id": "g004",
+    "faceImg": "../../assets/img/gift-4.jpg",
+    "integral": 400,
+    "number": "充足",
+    "name": "古驰(GUCCI)花之舞香水 75ML（1瓶）",
+    "body": "<p class=\"gift-introduce\">商品名称：古驰(GUCCI)花之舞香水</p><p class=\"gift-introduce\">商品规格：75ML&nbsp;&nbsp;&nbsp;&nbsp;L&nbsp;&nbsp;类型：EDP淡香精L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;产地：法国L&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;包装：正装香水有外盒，有塑封</p><p class=\"gift-introduce\">保质期：5年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;香调：花香调；前调：橘子、牡丹；中调：玫瑰、规划；后调：广藿香、檀香</p>"
+  },
+  {
+    "id": "g005",
+    "faceImg": "../../assets/img/gift-5.jpg",
+    "integral": 2000,
+    "number": "充足",
+    "name": "2000元金鹰商场购物卡（1张）",
+    "body": "<p class=\"gift-introduce\">以收到的商品实物为主。金鹰贵宾积分卡可在全国金鹰连锁店使用。金鹰贵宾积分卡可分次使用，不可兑换 现金。金鹰贵宾积分卡不记名，不挂失，丢失后不予办理补卡，请持卡人妥善保管，新版金鹰贵宾积分卡购物时不再享受VIP积分，新版金鹰贵宾积分卡有效期为三年，过期可至客服中心提供延期服务。</p>"
+  },
+  {
+    "id": "g006",
+    "faceImg": "../../assets/img/gift-6.jpg",
+    "integral": 3800,
+    "number": "充足",
+    "name": "Apple iPad Air 2 金色 64G WLAN版 9.7英寸平板电脑（1台）",
+    "body": "<p class=\"gift-introduce\">【屏幕描述】 高分辨率 Retina 显示屏，多点触摸，采用防油渍防指纹涂层 全层压显示屏 抗反射涂层,264 ppi；【摄像头】iSight摄像头：800万像素自动对焦；FaceTime摄像头：120万像素照片；720p HD高清视频</p>"
+  },
+  {
+    "id": "g007",
+    "faceImg": "../../assets/img/gift-7.jpg",
+    "integral": 6500,
+    "number": "充足",
+    "name": "iphone 6s 16G 金色（1台）",
+    "body": "<p class=\"gift-introduce\">【颜色】玫瑰金色；【网络】2G、3G、4G全网通；【存储】 机身内存16GB ROM(全新状态 可用存储空间 11.2GB)；支持广阔视角的双域像素；郑敏采用防滑油渍防指纹涂层；支持多种语言文字同时显示。</p>"
+  },
+  {
+    "id": "g008",
+    "faceImg": "../../assets/img/gift-8.jpg",
+    "integral": 7000,
+    "number": "充足",
+    "name": "古驰GUCCI女士玫瑰色PVC双G单肩手提包353440 KGDHZ 9777（1个)",
+    "body": "<p class=\"gift-introduce\">Gucci在皮鞋制作上有着自己的见解，每款产品都融汇了悠久的历史和高标准的制作工艺。Gucci做工考究， 整体手工车缝走线，平整均匀，大方优雅同时不失现代美感。独特的风格、优质的材质，贴合剪裁及细密的针脚精致耐用，彰显品牌制作工艺。</p>"
+  }
+]

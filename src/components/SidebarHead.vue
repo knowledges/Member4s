@@ -4,17 +4,18 @@
             <div class="uc_person_info">
                 <div class="facePic">
                     <div class="productImg">
-                        <a href="http://www.gouchehui.com/member.php/MemberGeneral/n_uc_base_info_pic.html" style="display: inline-block; height: 120px;width: 120px;">
-                            <img v-bind:src="SESSIONID.head_url" style="display: inline-block; height: 100%;">
+                        <a v-link="{path:'/u/accout/head'}" style="display: inline-block; height: 120px;width: 120px;">
+                            <img v-bind:src="head_url" style="display: inline-block; height: 100%;">
                         </a>
                     </div>
                 </div>
                 <div class="GB_innerwrap">
-                    <div class="nameBox"><span class="name">{{SESSIONID.user_name}}</span><span
-                            class="lv">V<i>2</i></span></div>
+                    <div class="nameBox">
+                    	<span class="name">{{SESSIONID.user_name}}</span><span class="lv">V<i>2</i></span>
+                    </div>
                     <div class="G_tc jifen">
-                        <a href="javascript:;;">车币<span class="s">{{SESSIONID.nick!=""?SESSIONID.nick:0}}</span>个</a>
-                        <a href="javascript:;;">积分<span class="s">{{SESSIONID.total_jifen}}</span></a>
+                       <!-- <a href="javascript:;;">车币<span class="s">{{SESSIONID.nick!=""?SESSIONID.nick:0}}</span>个</a>-->
+                        <a v-link="{path:'/u/exchange/cashing'}">积分<span class="s">{{SESSIONID.total_jifen}}</span></a>
                     </div>
                 </div>
             </div>
@@ -25,14 +26,21 @@
     export default{
         ready(){
             this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-//            if(sessionid=="" || sessionid==null){
-//                layer.msg('登录消失，请重新登陆！');
-//                this.$route.router.go("/")
-//            }
+            if(this.SESSIONID!=null && this.SESSIONID!=""){
+                if(this.SESSIONID.head_url==""||this.SESSIONID.head_url==null||this.SESSIONID.head_url==undefined){
+                    this.head_url = "/assets/img/default.png";
+                }else{
+                    this.head_url =this.SESSIONID.head_url
+                }
+            }else{
+                this.head_url = "/assets/img/default.png";
+            }
+
         },
         data(){
             return {
-                SESSIONID:{}
+                SESSIONID:{},
+                head_url:""
             }
         }
     }

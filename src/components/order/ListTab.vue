@@ -88,7 +88,7 @@ export default {
 	width: 120px;
 }
 .ordTab-tab{
-	margin-top: 10px;
+	margin-bottom: 10px;
 }
 .ordTab-tab table{
     width: 100%;

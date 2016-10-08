@@ -29,7 +29,7 @@
                 <th class="car-stock">
                     库存/辆
                 </th>
-                <th class="car-way">
+                <th class="car-place">
                     销售区域
                 </th>
                 <th width="50">
@@ -39,12 +39,15 @@
             </tr>
             </thead>
             <tbody>
-                <tr v-if="arr_active.car_model_name == '' && arr_active.car_name==''">
-                    <td colspan="11">
-                        <p>没有搜索到内容......</p>
+                <tr v-if="istrue">
+                    <td colspan="11" style="font-size: 16px;">
+                        <div class="order-nodata">
+                            <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                            <p>您可进入 <a v-link="{ path:'/active/thisShop/find/0'}">活动车款</a> 页面查看信息</p>
+                        </div>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="!istrue">
                     <td>{{arr_active.car_model_name}}</td>
                     <td>{{arr_active.car_name}}</td>
                     <td>{{arr_active.interior_color_name}}</td>
@@ -81,6 +84,7 @@
                 </tr>
             </tbody>
         </table>
+        {{sum}}
     </div>
 </template>
 
@@ -101,6 +105,18 @@
             arr_active:{
                 type:Object,
                 default:()=>{}
+            }
+        },
+        computed: {
+            sum: function() {
+                var obj = this.arr_active;
+               this.istrue = $.isEmptyObject(obj);
+                return ;
+            }
+        },
+        data(){
+            return {
+                istrue:false
             }
         }
     }
@@ -203,5 +219,26 @@
     }
     .table-box table .car-operation a:hover{
         color:#ff791f;
+    }
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        display: inline-block;
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/assets/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>

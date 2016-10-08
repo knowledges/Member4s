@@ -16,7 +16,7 @@
     export default {
         route:{
             data({to}){
-                this.findId = to.params.findId;
+                this.findId = to.params.findId !=undefined ? to.params.findId:0;
             }
         },
         ready(){

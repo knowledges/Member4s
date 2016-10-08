@@ -13,12 +13,17 @@
 </script>
 <style scroped>
     .tab-item{
+        float: left;
+        display: inline;
         font-size: 16px;
-        padding: 6px 25px;
-        margin: 20px;
+        padding: 0 25px;
+        height: 48px;
+        line-height: 48px;
+        margin-bottom: -1px;
     }
-    .tab-item:first-child{
-        margin-left: 50px;
+    .tab-item:hover{
+        color:#ed8e07;
+        text-decoration: none;
     }
     .tab-active{
         border-bottom: 2px solid #ed8e07;

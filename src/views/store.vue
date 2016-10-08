@@ -15,8 +15,8 @@
                         <i class="font-icon">初</i>
                         初级会员
                     </li>
-                    <li>
-                        积分：<em class="orange">{{SESSIONID.total_jifen}}</em>
+                    <li><a v-link="{path:'/u/exchange/cashing'}">
+                        积分：<em class="orange">{{SESSIONID.total_jifen}}</em></a>
                     </li>
                     <li>
                         <a v-link="{path:'/u/exchange/rule'}"  class="orange">积分规则>></a>
@@ -32,11 +32,11 @@
                     </div>
                 </ul>
                 <ul class="U_info_c_ul u_info_order clearfix">
-                    <li>已付定金<em class="orange">&nbsp;&nbsp;{{baseinfo.deposit}}</em></li>
+                    <li><a v-link="{path:'/u/order/payment'}">已付定金<em class="orange">&nbsp;&nbsp;{{baseinfo.deposit}}</em></a></li>
                     <li>|</li>
-                    <li>待提车<em class="orange">&nbsp;&nbsp;{{baseinfo.mentioncars}}</em></li>
+                    <li><a v-link="{path:'/u/order/liftCar'}">待提车<em class="orange">&nbsp;&nbsp;{{baseinfo.mentioncars}}</em></a></li>
                     <li>|</li>
-                    <li>出库中<em class="orange">&nbsp;&nbsp;{{baseinfo.library}}</em></li>
+                    <li><a v-link="{path:'/u/order/shipment'}">出库中<em class="orange">&nbsp;&nbsp;{{baseinfo.library}}</em></a></li>
                 </ul>
             </div>
         </div>
@@ -54,35 +54,52 @@
                 <div class="table">
                     <table>
                         <thead>
+                        <tr>
+                            <th class="common_name">商品</th>
+                            <th class="common_low_price">总价/元</th>
+                            <th class="common_money">定金/元</th>
+                            <th class="common_status">交易状态</th>
+                            <th class="common_buy_time">提车时间</th>
+                            <th class="common_info">买家信息</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table">
+                    <table>
+                        <thead v-if="!istrue">
                             <tr>
-                                <th>商品</th>
-                                <th>总价/元</th>
-                                <th>定金/元</th>
-                                <th>交易状态</th>
-                                <th>提车时间</th>
-                                <th>买家信息</th>
+                                <th colspan="6"><p v-if="neworder!=null" style="text-align: left">下单时间：{{neworder.createtime}} 订单号：{{neworder.out_trade_no}}</p></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
+                            <tr v-if="istrue">
+                                <td colspan="6" style="height: 70px;text-align: center;line-height: 70px; font-size: 16px;">
+                                    <div class="order-nodata">
+                                        <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
+                                        <p>您可进入 <a v-link="{ path:'/u/manage/myOffer/find/0'}">报价管理</a> 页面更新底价信息</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="!istrue">
+                                <td class="common_name">
                                     <dl class="clearfix">
                                         <dt>
-                                            <img v-bind:src="neworder.exterior_img" alt="雪佛兰 科鲁兹" width="120" height="80">
+                                            <img v-bind:src="neworder.exterior_img" alt="" width="120" height="80">
                                         </dt>
                                         <dd>
-                                            <a href="javascript:;;" class="orange">{{neworder.carstyle}}</a>
+                                            <a class="orange">{{neworder.carstyle}}</a>
                                             <p>外观：{{neworder.interior_color_name}}  内饰：{{neworder.exterior_color_name}}</p>
                                         </dd>
                                     </dl>
                                 </td>
-                                <td>
+                                <td class="common_low_price">
                                     {{neworder.low_price}}
                                 </td>
-                                <td>
+                                <td class="common_money">
                                     {{neworder.money}}
                                 </td>
-                                <td>
+                                <td class="common_status">
                                     <p v-if="neworder.status==0">未支付</p>
                                     <p v-if="neworder.status==1">已支付（未完善）</p>
                                     <p v-if="neworder.status==2">已失效</p>
@@ -96,18 +113,18 @@
                                     <p v-if="neworder.status==10">支付失败</p>
                                     <!--<a v-link="" style="color:#48a6fc;">订单详情</a>-->
                                 </td>
-                                <td>
+                                <td class="common_buy_time">
                                     {{neworder.buy_time}}
                                 </td>
-                                <td>
+                                <td class="common_info">
                                     <p>姓名：{{neworder.buyer_name}}</p>
                                     <p>手机：{{neworder.buyer_tel}}</p>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    {{sum}}
                 </div>
-                <p>下单时间：{{neworder.createtime}} 订单号：{{neworder.out_trade_no}}</p>
             </div>
         </div>
         <div class="U_new_eye" role="报价">
@@ -118,7 +135,7 @@
                     <li><strong>最新报价</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/manage/myOffer'}">报价管理</a>
+                    <a v-link="{path:'/u/manage/myOffer/find/0'}">报价管理</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -132,7 +149,7 @@
                     <li><strong>最新活动</strong></li>
                 </ul>
                 <div class="nav_title_right">
-                    <a v-link="{path:'/u/active/thisShop'}">活动车款</a>
+                    <a v-link="{path:'/u/active/thisShop/find/0'}">活动车款</a>
                 </div>
             </div>
             <div class="U_info_content">
@@ -248,7 +265,6 @@
             data({to,next}){
                 this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
 
-//                var ii = layer.load();
                 var that = this;
                 var params = {"query":{"user_id":config.USERID()}};
                 $.ajax({
@@ -266,11 +282,10 @@
                             var data = response.data;
                             that.baseinfo = data.baseinfo;
                             that.neworder = data.neworder;
+                            that.istrue = $.isEmptyObject(that.neworder);
                             that.$set("arr_active",data.newactivity);
-//                        that.arr_active = data.newactivity;
                             that.arr_area_active = data.pricearea;
                             that.$set("arr_offer",data.newprice);
-//                        that.arr_offer= data.newprice;
                             that.arr_area_offer = data.specialpricearea;
                         }
                     },
@@ -278,11 +293,10 @@
                         if(fail.status == "401"){
                             sessionStorage.removeItem("SESSIONID");
                             layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            util.login();
                         }
                     }
-                })
-
+                });
                 next();
             }
         },
@@ -290,6 +304,13 @@
             this.c_width= $(".carousel_div").width();
             $(".UC_nav").find('a').removeClass("active").find("i").removeClass("i_active_1 i_active_2 i_active_3 i_active_4 i_active_5 i_active_6 i_active_0");
             $(".UC_nav").find('li').eq(0).find('a').addClass("active").find("i").addClass("i_active_0");
+        },
+        computed: {
+            sum: function() {
+                var obj = this.neworder;
+                this.istrue = $.isEmptyObject(obj);
+                return ;
+            }
         },
         data(){
             return {
@@ -306,7 +327,8 @@
                 c_sum:2,
                 SESSIONID:{},
                 baseinfo:[],
-                neworder:[]
+                neworder:{},
+                istrue:""
             }
         },
         components:{
@@ -349,7 +371,7 @@
         vertical-align: top;
         font-size: 12px;
         /*min-height: 600px;*/
-        padding-bottom: 20px;
+        padding-bottom: 0px!important;
     }
     /*store*/
     .nav_title{
@@ -499,23 +521,42 @@
     table tbody tr td a {
         display: block;
     }
+    table .common_name{
+        width: 350px;
+    }
+    table .common_low_price{
+        width: 90px;
+    }
+    table .common_money{
+        width: 90px;
+    }
+    table .common_status{
+        width: 90px;
+    }
+    table .common_buy_time{
+        width: 120px;
+    }
+    table .common_info{
+        width: 145px;
+    }
     .carousel{
         position: relative;
         margin-bottom: 50px;
     }
     .carousel_div{
-        width: 870px;
+        width: 800px;
         overflow: hidden;
+        margin: 0 auto;
     }
     .carousel ul{
         position: relative;
         width: 5400px;
-        height: 200px;
+        height: 160px;
         margin: 0 auto;
     }
     .carousel ul > li {
         float: left;
-        margin: 0 15px;
+        margin-right: 22px;
         cursor:pointer;
     }
     .carousel button{
@@ -536,7 +577,7 @@
     }
     .right{
         top: 25%;
-        right: -10px;
+        right: 8px;
     }
     .gift-left-box {
         margin-left: 0!important;
@@ -544,7 +585,10 @@
     }
     .num_full {
         background: #f0f0f0;
-        width: 260px;
+        width: 246px;
+    }
+    .num_full img{
+        width: 100%;
     }
     .num_full p {
         width: 45%;
@@ -553,5 +597,29 @@
     .G_fl {
         float: left;
         _display: inline;
+    }
+	.order-nodata{
+		border: none;
+	}
+    .order-nodata h4{
+        color: #4c4c4c;
+        font-size: 18px;
+        line-height: 46px;
+    }
+    .order-nodata p a{
+        display: inline-block;
+        color: #2194fe;
+    }
+    .order-nodata .order-nobg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-image: url(/assets/img/ico_warn.png);
+        background-repeat: no-repeat;
+        background-position: -82px 4px;
+        background-size: 300px 150px;
     }
 </style>
