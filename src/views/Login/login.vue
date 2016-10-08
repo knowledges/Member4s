@@ -167,7 +167,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
     @import './../../assets/css/app.css';
     @import './../../assets/css/login.css';
     [v-cloak] {
