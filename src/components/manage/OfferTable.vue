@@ -547,6 +547,7 @@
                         $("#selectedKey").attr({"disabled":true});
                         $("#global").addClass("selected");
                     }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
+                        debugger
                         that.items.areas.push({"salesAreaName":list[i],"salesAreaLevel":"2"})
                         var arr = that.provincecity[list[i].trim()];
                         if(arr.length>1){
@@ -556,14 +557,14 @@
                             for(var j =0 ;j <arr.length;j++){
                                 if(j == 0){
                                     /*赋值总数去掉省*/
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true,"insert":true});
                                 }else{
                                     that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
                                 }
                             }
                         }else{
-                            arr[i].selected = true;
-                            that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
+                            arr[0].selected = true;
+                            that.provincecity[list[i].trim()].$set(0,{province:arr[0].province,city:arr[0].city,selected:true,insert:true});
                         }
 
                     }else{
@@ -805,6 +806,7 @@
                 this.global = false;
             },
             selectedProvinces(){
+                debugger;
                 this.city_items = this.provincecity[this.selectedKey];
 
                 if(this.city_items!=undefined && this.city_items.length>1){
@@ -812,7 +814,6 @@
                     if(this.city_items[0].insert == undefined){
                         this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
                     }
-
                     var total = this.city_items.length;
                     for(var i = 1; i<this.city_items.length;i++){
                         /*剔除已选择过的*/
@@ -820,7 +821,6 @@
                             total =total-1;
                         }
                     }
-
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
