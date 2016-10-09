@@ -107,8 +107,8 @@
                 </thead>
                 <tbody>
                 <tr v-for="temp in temp_arr" track-by="$index" v-show="$index==0">
-                    <td>{{temp.interiorColorName}}</td>
                     <td>{{temp.exteriorColorName}}</td>
+                    <td>{{temp.interiorColorName}}</td>
                     <td>
                         <input type="number" class="stock_{{$index}}" value="{{temp.stock}}">
                     </td>
@@ -231,7 +231,8 @@
                 <td>
                     <div class="show_{{$index}}">
                         <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">修改</button>
-                        <p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>
+                        <!--<p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>-->
+                        <p><a href="#" @click.prevent="getHistoryList(item)">历史</a></p>
                         <p><a v-on:click="del(item,$event,$index)" style="cursor: pointer;">删除</a></p>
                     </div>
                     <div class="update_{{$index}}" style="display: none;">
@@ -251,11 +252,15 @@
         </table>
         <div id="page2"  style="margin:20px 0;text-align: center;"></div>
     </div>
+    
+    <history-tpl :history="history"></history-tpl>
+    
 </template>
 <script>
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
+    import historyTpl from './../historyTpl.vue'
     export default {
         props:{
             count:Number,
@@ -279,6 +284,9 @@
         ready(){
 //            this.getRelationship();
         },
+        components:{
+	        historyTpl
+	    },
         data(){
             return {
                 selectedKey:"",
@@ -312,6 +320,16 @@
                  carModelName:"",
                  carName:""
                  },
+                history: {
+                    index:0,
+                    brandName: '',
+                    carModelName: '',
+                    carName: '',
+                    exColorName: '',
+                    inColorName: '',
+                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
+                    list:[]
+                },
                 mask_1:"",
                 mask_3:"",
                 checked:"",
@@ -319,6 +337,60 @@
             }
         },
         methods:{
+//      	新改的历史
+			getHistoryList(item){
+                var self = this,
+                    query = {},
+                    params = {};
+                console.log(item);
+                query.user_id = config.USERID();
+                query.interior_color_id = item.interiorColorId;
+                query.exterior_color_id= item.exteriorColorId;
+                query.pagenum = 100;
+                query.page = 1;
+                query.car_id = item.carId;
+                params = {"query":query};
+
+                self.history.brandName = item.brandName;
+                self.history.carModelName = item.carModelName;
+                self.history.carName = item.carName;
+                self.history.exColorName = item.exteriorColorName;
+                self.history.inColorName = item.interiorColorName;
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/activityTrend/list/",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        console.log(response);
+                        if(response.code === 0){
+                            self.history.list = response.data.rows;
+                            self.history.index = layer.open({
+                                type: 1,
+                                title: '历史记录',
+                                skin: 'layui-layer-rim', //加上边框
+                                area : ['750px' , '800px'],
+                                content: $("#J_HistoryPop")
+                            });
+                        }else{
+                            layer.msg(request.desc);
+                        }
+                    },
+                    error:function(fail){
+                        if(fail.status == "401"){
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+            },
+        	
             getRelationship(obj){
                 var that = this;
 
@@ -343,10 +415,14 @@
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
-
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -562,9 +638,14 @@
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -619,9 +700,14 @@
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 })
@@ -863,7 +949,7 @@
                 }, function () {
                     that.updateMethos(params,2);
                 }, function () {
-                    window.history.go(0);
+                    /*window.history.go(0);*/
                 });
 
 
@@ -1060,7 +1146,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url('../../assets/img/pwd-icons-new.png') no-repeat;
         background-position: -102px -47px;
         vertical-align: sub;
     }
@@ -1080,7 +1166,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url('../../assets/img/ico_warn.png');
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;
@@ -1115,7 +1201,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url('../../assets/img/pwd-icons-new.png') no-repeat;
         background-position: -102px -47px;
         vertical-align: sub;
     }
@@ -1181,7 +1267,7 @@
         position: absolute;
         right: -10px;
         top:-10px;
-        background: url('/assets/img/close_1.png') no-repeat;
+        background: url('../../assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
 

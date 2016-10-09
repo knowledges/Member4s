@@ -16,18 +16,18 @@
                 <div class="recommend">
                     <h3 class="recommend-title">推荐头像</h3>
                     <ul class="recommend-ul clearfix">
-                        <li><a v-on:click="recommendBtn('/assets/img/default.png')"><img src="/assets/img/default.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_1.png')"><img src="/assets/img/head_1.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_2.png')"><img src="/assets/img/head_2.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_3.png')"><img src="/assets/img/head_3.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_4.png')"><img src="/assets/img/head_4.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_5.png')"><img src="/assets/img/head_5.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_6.png')"><img src="/assets/img/head_6.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_7.png')"><img src="/assets/img/head_7.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_8.png')"><img src="/assets/img/head_8.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_9.png')"><img src="/assets/img/head_9.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_10.png')"><img src="/assets/img/head_10.png" alt=""></a></li>
-                        <li><a v-on:click="recommendBtn('/assets/img/head_11.png')"><img src="/assets/img/head_11.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/default.png')"><img src="../../assets/img/default.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_1.png')"><img src="../../assets/img/head_1.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_2.png')"><img src="../../assets/img/head_2.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_3.png')"><img src="../../assets/img/head_3.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_4.png')"><img src="../../assets/img/head_4.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_5.png')"><img src="../../assets/img/head_5.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_6.png')"><img src="../../assets/img/head_6.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_7.png')"><img src="../../assets/img/head_7.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_8.png')"><img src="../../assets/img/head_8.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_9.png')"><img src="../../assets/img/head_9.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_10.png')"><img src="../../assets/img/head_10.png" alt=""></a></li>
+                        <li><a v-on:click="recommendBtn('../../member4s/assets/img/head_11.png')"><img src="../../assets/img/head_11.png" alt=""></a></li>
                     </ul>
                     <button class="save" id="btnCrop" v-on:click="btnCrop">保存</button>
                     <button class="cancle">取消</button>
@@ -37,7 +37,7 @@
                 <h4>预览效果</h4>
                 <!--<h5>您可以在此娱乐最终生成的头像效果</h5>-->
                 <div class="cropped">
-                    <img src="/assets/img/default.png" class="large" alt="120*120">
+                    <img src="../../assets/img/default.png" class="large" alt="120*120">
                     <p>120*120像素</p>
                     <!--<img src="../../assets/img/default.png" class="medium" alt="80*80">
                     <p>80*80像素</p>
@@ -63,7 +63,7 @@
                 options :{
                     thumbBox: '.thumbBox',
                     spinner: '.spinner',
-                    imgSrc: '/assets/img/default.png'
+                    imgSrc: '../../member4s/assets/img/default.png'
                 },
                 cropper :""
             }
@@ -118,9 +118,14 @@
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
 					}
                 });
@@ -171,7 +176,7 @@
         display: inline-block;
         width: 21px;
         height: 21px;
-        background-image: url('/assets/img/icon-upload.png');
+        background-image: url(../../assets/img/icon-upload.png);
         background-size: 100% 100%;
         vertical-align: middle;
     }

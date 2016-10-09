@@ -53,6 +53,7 @@
         },
         methods:{
         	alink(){
+        		this.ordertext = "";
         		this.showdata(1);
         		this.datasearch = false;
         	},
@@ -77,7 +78,6 @@
 	                query.page = cur;
 					query.keyword = that.ordertext;
 				var param = { query:query };
-				
                 $.ajax({
                     url:url,
                     type:'POST',
@@ -105,6 +105,7 @@
 	                        		that.datano = true;
 	                        	}
 	                        }else{
+	                        	that.datasearch = false;
 	                        	that.datano = false;
 	                        	that.datatab = true;
 	                        	that.datapage = true;
@@ -145,9 +146,14 @@
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-							sessionStorage.removeItem("SESSIONID");
-							layer.msg('登录失效，请重新登陆！');
-							util.login();
+							var SESSIONID = sessionStorage.getItem("SESSIONID");
+							if(SESSIONID == null){
+								that.$route.router.go("/login");
+							}else{
+								sessionStorage.removeItem("SESSIONID");
+								layer.msg('登录失效，请重新登陆！');
+								util.login();
+							}
 						}
 					}
                 })
@@ -177,13 +183,12 @@
 #orderSearch input[type=text]{
 	width: 125px;
 	float: left;
-	padding-left: 5px;
+	padding-left: 8px;
 	height: 26px;
 	line-height: 26px;
 	color: #cccccc;
 	font-family: simsun;
 	border: none;
-	outline: none;
 }
 #orderSearch button{
 	width: 78px;

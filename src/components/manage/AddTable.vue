@@ -29,7 +29,7 @@
                 <td><input type="checkbox" class="all" v-model="checkedIndex" :value="$index"/></td>
                 <!--<td><input type="checkbox" class="all" v-model="checkedIndex" :value="item.carId"/></td>-->
                 <td>{{item.carModelName}}</td>
-                <td>{{item.brandName}}</td>
+                <td>{{item.carName}}</td>
                 <td>{{item.exteriorColorName}}</td>
                 <td>{{item.interiorColorName}}</td>
                 <td>{{item.price}}</td>
@@ -75,7 +75,8 @@
                 <td>
                     <div class="show_{{$index}}">
                         <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">添加</button>
-                        <p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>
+                        <!--<p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>-->
+                        <p><a href="#" @click.prevent="getHistoryList(item)">历史</a></p>
                     </div>
                     <div class="update_{{$index}}" style="display: none;">
                         <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
@@ -201,8 +202,8 @@
                 </thead>
                 <tbody>
                 <tr v-for="temp in temp_arr" track-by="$index" v-show="$index==0">
-                    <td>{{temp.interiorColorName}}</td>
                     <td>{{temp.exteriorColorName}}</td>
+                    <td>{{temp.interiorColorName}}</td>
                     <td>
                         <input type="number" class="stocks_{{$index}}" value="{{temp.stock}}">
                     </td>
@@ -248,11 +249,14 @@
         </div>
 
     </div>
+    
+    <history-tpl :history="history"></history-tpl>
 </template>
 <script >
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
+    import historyTpl from './../historyTpl.vue'
     export default {
         props:{
             count:{
@@ -265,6 +269,9 @@
         },
         ready(){
         },
+        components:{
+	        historyTpl
+	    },
         data(){
             return {
                 checkedIndex:[],
@@ -297,6 +304,16 @@
                     carModelName:"",
                     carName:""
                 },
+                history: {
+                    index:0,
+                    brandName: '',
+                    carModelName: '',
+                    carName: '',
+                    exColorName: '',
+                    inColorName: '',
+                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
+                    list:[]
+                },
                 provinces:"",
                 provincecity:"",
                 clone_provincecity:"",
@@ -308,6 +325,60 @@
             }
         },
         methods:{
+//      	新改的历史
+        	getHistoryList(item){
+                var self = this,
+                    query = {},
+                    params = {};
+                console.log(item);
+                query.user_id = config.USERID();
+                query.interior_color_id = item.interiorColorId;
+                query.exterior_color_id= item.exteriorColorId;
+                query.pagenum = 100;
+                query.page = 1;
+                query.car_id = item.carId;
+                params = {"query":query};
+
+                self.history.brandName = item.brandName;
+                self.history.carModelName = item.carModelName;
+                self.history.carName = item.carName;
+                self.history.exColorName = item.exteriorColorName;
+                self.history.inColorName = item.interiorColorName;
+
+                $.ajax({
+                    url:config.API_BASE+"/4s/activityTrend/list/",
+                    method:"POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        console.log(response);
+                        if(response.code === 0){
+                            self.history.list = response.data.rows;
+                            self.history.index = layer.open({
+                                type: 1,
+                                title: '历史记录',
+                                skin: 'layui-layer-rim', //加上边框
+                                area : ['750px' , '800px'],
+                                content: $("#J_HistoryPop")
+                            });
+                        }else{
+                            layer.msg(request.desc);
+                        }
+                    },
+                    error:function(fail){
+                        if(fail.status == "401"){
+                            layer.msg('登录失效，请重新登陆！');
+                            that.$route.router.go("/login");
+                        }
+                    }
+                });
+
+            },
+        	
             getRelationship(){
                 var that = this;
 
@@ -333,9 +404,14 @@
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -461,15 +537,22 @@
                                 that.count--;
                                 $(".update,input[type='checkbox']").removeAttr("disabled");
                             }else{
+                                that.checkedIndex
+
                                 window.history.go(0);
                             }
                         }
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -703,7 +786,7 @@
                     that.city_items = [];
                     that.items.areas = [];
                 }, function () {
-                    window.history.go(0);
+                    /*window.history.go(0);*/
                 });
             },
             cancle2(){
@@ -768,12 +851,12 @@
         background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxOWMwNWE1NS0zZGVkLTBjNDYtOTMyOS0xNGQ4ZTQ4ZWY3NDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6N0M1RTE4MjU3MzMxMTFFNkI4NUU4NjQyQjc5MDE1MDAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6N0M1RTE4MjQ3MzMxMTFFNkI4NUU4NjQyQjc5MDE1MDAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAyYjdkZmU3LThjZDQtOWE0NC05ZDJmLTZkMjJlNmM3YWI5NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxOWMwNWE1NS0zZGVkLTBjNDYtOTMyOS0xNGQ4ZTQ4ZWY3NDgiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4bIPLcAAAA3ElEQVR42tySPQqDQBSE16gogmhjLXgGbxGw9QCey0tYCV7BM4iInYV/IBb+ZMwja9DC2GaKYfh44+LbFdZ1raqq73v2UZqmTdMgmKbpui7nuq5bliWgEIbhPM/sSqIoBkGwFbIsY7/JcZytMAxDFEWX057naZomIS3L0nUdgmEYbdsiqKoKH8fxG2IM/uAfsG3b93048vOtAyRJPMmyzF1RlDMkPdhN/UNh3xKtmXyapjM8FvI8j+O4LEvkJEnOcC9g67hzPJCiKIjWdc1PIIgBupztLd36h5cAAwAHk2/CnNyQYgAAAABJRU5ErkJggg==) no-repeat;
     }
     .table-box{
-        width:890px;
         margin:0 auto;
     }
     .table-box table{
+        width: 100%;
         border:1px solid #e5e5e5;
-        margin-top:10px;
+        margin-top:20px;
     }
     .table-box table th{
         height:36px;
@@ -922,7 +1005,7 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
+        background: url('../../assets/img/pwd-icons-new.png') no-repeat;
         background-position: -102px -47px;
         vertical-align: sub;
     }
@@ -988,7 +1071,7 @@
         position: absolute;
         right: -10px;
         top:-10px;
-        background: url('/assets/img/close_1.png') no-repeat;
+        background: url('../../assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
     .add {
@@ -1022,7 +1105,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url('../../assets/img/ico_warn.png');
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

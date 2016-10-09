@@ -180,9 +180,14 @@
 						},
 						error:function(fail){
 							if(fail.status == "401"){
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
+                                var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                if(SESSIONID == null){
+                                    that.$route.router.go("/login");
+                                }else{
+                                    sessionStorage.removeItem("SESSIONID");
+                                    layer.msg('登录失效，请重新登陆！');
+                                    util.login();
+                                }
 	                        }
 						}
 	                });
@@ -268,9 +273,14 @@
 									},
 									error:function(fail){
 										if(fail.status == "401"){
-                                            sessionStorage.removeItem("SESSIONID");
-                                            layer.msg('登录失效，请重新登陆！');
-                                            util.login();
+                                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                            if(SESSIONID == null){
+                                                that.$route.router.go("/login");
+                                            }else{
+                                                sessionStorage.removeItem("SESSIONID");
+                                                layer.msg('登录失效，请重新登陆！');
+                                                util.login();
+                                            }
 				                        }
 									}
 				                })
@@ -323,9 +333,14 @@
 					},
 					error:function(fail){
 						if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
 					}
                 })

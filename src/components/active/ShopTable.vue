@@ -53,12 +53,12 @@
                 <td>{{item.number}}</td>
                 <td>{{item.sales_area}}</td>
                 <td>
-                    <p v-if="item.status == 1">审核中</p>
-                    <p v-if="item.status == 2">未开始</p>
-                    <p v-if="item.status == 3">在售</p>
-                    <p v-if="item.status == 4">停售</p>
-                    <p v-if="item.status == 5">过期</p>
-                    <p v-if="item.status == 6">审核失败</p>
+                    <p v-if="item.status == 1" class="status_review">审核中</p>
+                    <p v-if="item.status == 2" class="status_unbegin">未开始</p>
+                    <p v-if="item.status == 3" class="status_suc">在售</p>
+                    <p v-if="item.status == 4" class="status_fail">停售</p>
+                    <p v-if="item.status == 5" class="status_fail">过期</p>
+                    <p v-if="item.status == 6" class="status_fail">审核失败</p>
                 </td>
                 <td v-if="stats > 0">
                     <a href="#" v-if="item.status == 3" @click.prevent="stop(item,$index)">停售</a>
@@ -81,7 +81,7 @@
     </div>
     <div class="activeinfo" style="display: none;">
         <div class="layer_1">
-            <dl class="clearfix">
+            <dl class="clearfix spe">
                 <dt>品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
                 <dd v-text="items.brandName"></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
@@ -89,7 +89,7 @@
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                 <dd v-text="items.carName"></dd>
             </dl>
-            <dl class="clearfix">
+            <dl class="clearfix spe">
                 <dt>外观颜色：</dt>
                 <dd v-text="items.exteriorColorName"></dd>
                 <dt>内饰颜色：</dt>
@@ -111,7 +111,7 @@
                 <dd>
                     <input type="text" id="start-date" v-model="items.start_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                     至
-                    <input type="text" id="end-date" v-model="items.end_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" id="end-date"  class="end-date" v-model="items.end_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                 </dd>
                 <dd v-if="items.timer_" class="error"> <i></i>{{items.timer_msg}}</dd>
             </dl>
@@ -122,11 +122,11 @@
             </dl>
             <dl class="clearfix">
                 <dt>销售区域：</dt>
-                <dd style="display: inline-block;height: 100%;width: 550px;">
-                    <ul id="areas_" class="clearfix">
-                        <li v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</li>
+                <dd>
+                    <div class="clearfix sales-area j_salesArea">
+                        <span v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</span>
                         <a href="javascript:;;" @click="selectarea" class="a_style">选择区域</a>
-                    </ul>
+                    </div>
                 </dd>
                 <dd v-if="items.selectarea_"  class="error">
                     <i></i>
@@ -136,39 +136,45 @@
             <dl class="clearfix" style="position: relative;">
                 <dt>活动图片：</dt>
                 <dd>
-                    <a class="upload-img a_style"  href="javascript:;;">
-                        <label for="upload-file">上传文件</label>
-                    </a>
-                    <input type="file"  name="upload-file" id="upload-file" @change="uploadfile($event)">
-                    <span class="file_value">{{items.file_value}}</span>
+                    <form enctype="multipart/form-data">
+                        <div>
+                            <a class="upload-img a_style"  href="javascript:;">
+                                <label for="upload-file" style="cursor: pointer;">上传文件</label>
+                            </a>
+                            （图片尺寸不小于800*360px）
+                        </div>
+                        <div class="fileInner">
+                            <input type="file"  name="upload-file" id="upload-file" @change="uploadfile($event)">
+                            <div class="imgbox"><img :src="items.file_img" alt=""/></div>
+                        </div>
+
+                        <p class="file_value">{{items.file_value}}</p>
+
+                    </form>
                 </dd>
                 <dd v-if="items.file_"  class="error">
                     <i></i>{{items.file_msg}}
                 </dd>
-                <dd>
-                    （图片尺寸不小于800*360px）
-                </dd>
+
             </dl>
             <dl class="clearfix">
                 <dt>活动说明：</dt>
-                <dd style="display: inline-block;width: 576px;height: 210px;">
-                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~" style="padding: 5px;text-indent: 2em;"></textarea>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
                 <dd>
-                    <button @click="save">保存</button>
-                    <button @click="cancle">取消</button>
+                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~" ></textarea>
                 </dd>
             </dl>
+            <div class="btn-box">
+                <button @click="save" class="btn-confirm">确定</button>
+                <button @click="cancle" class="btn-cancle">取消</button>
+            </div>
+
         </div>
     </div>
     <div class="activearea" style="display: none;">
         <div class="layer_2">
             <dl class="clearfix">
                 <dt>已选区域：</dt>
-                <dd style="display: inline-block;width: 490px;height: 100%;min-height: 45px;border-bottom: 1px solid #ccc;">
+                <dd>
                     <ul class="filter_li">
                         <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -208,44 +214,38 @@
                     </ul>
                 </dd>
             </dl>
-            <dl class="clearfix">
+
+            <dl class="clearfix optional-area">
                 <dt>可选区域：</dt>
                 <dd>
-                    <ul>
-                        <li v-on:click="selectAllClk" id="global">全国</li>
+                    <div class="line"></div>
+                    <ul class="clearfix">
+                        <li v-on:click="selectAllClk" class="btn-global" id="global">全国</li>
                     </ul>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
                 <dd>
                     <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>==请选择==</option>
+                        <option value="0" selected>--- 请选择 ---</option>
                         <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                     </select>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd style="width: 500px;height: 100%;" class="city_dd">
-                    <ul>
-                        <!--<li v-for="province in city_items_province"-->
-                            <!--v-on:click="cityClk(province,$index,$event,0)"-->
-                            <!--:class="{'selected':province.selected==true}">-->
-                            <!--{{province.name}}-->
-                        <!--</li>-->
-                        <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
-                            class="city_li" :class="{'selected':city.selected==true}">
+                <dd class="city_dd">
+                    <ul v-if="!global" class="clearfix">
+                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
+                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
                             {{city.city}}
                         </li>
                     </ul>
+                    <div class="line"></div>
                 </dd>
             </dl>
             <dl class="clearfix">
                 <dt></dt>
                 <dd>
-                    <button v-on:click="agree">确定</button>
-                    <button v-on:click="cancle1">取消</button>
+                    <div class="btn-box">
+                        <button @click="agree" class="btn-confirm G_btn_a">确定</button>
+                        <button @click="cancle1" class="btn-cancle G_btn_c">取消</button>
+                    </div>
                 </dd>
             </dl>
         </div>
@@ -258,7 +258,6 @@
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
-//    import  ActiveInfo from './ActiveInfo.vue'
     export default {
         props: {
             stats: Number,
@@ -275,23 +274,19 @@
                 default: ()=>[]
             }
         },
-//        components:{
-//            ActiveInfo
-//        },
         ready(){
+        $('#start-date').Zebra_DatePicker({
+            direction: true,
+            pair: $('#end-date'),
+            format: 'Y-m-d',
+            onSelect:function(){
+                $("#end-date").val("");
+            }
+        });
 
-            $('#start-date').Zebra_DatePicker({
-                direction: [false,new Date()],
-                pair: $('#end-date'),
-                format: 'Y-m-d',
-                onSelect:function(){
-                    $("#end-date").val("");
-                }
-            });
-
-            $('#end-date').Zebra_DatePicker({
-                direction: [true, new Date()],
-            });
+        $('#end-date').Zebra_DatePicker({
+            direction: 1
+        });
         },
         data(){
             return {
@@ -340,9 +335,10 @@
             /*
             *
             * 状态说明
-             * 1:审核中 2:未开始 3:在售 4:停售 5:过期 6:审核失败
+            * 1:审核中 2:未开始 3:在售 4:停售 5:过期 6:审核失败
             *
             * */
+
             getRelationship(obj){
                 var that = this;
 
@@ -358,10 +354,10 @@
                     },
                     success:function (response) {
                         var list = response.data;
-                        that.$set("provinces",list.provinces);
-                        that.$set("provincecity",list.provincecity);
-                        that.$set("clone_provincecity",list.provincecity);
-                        if(obj!=null){
+                        that.$set("provinces", list.provinces);
+                        that.$set("provincecity", list.provincecity);
+                        that.$set("clone_provincecity", list.provincecity);
+                        if(obj !== null){
                             that.getSaleAreaByArray(obj);
                         }
                     },
@@ -408,12 +404,18 @@
                     }
                 })
             },
-            stop(obj, _index){
+            /*
+            * 改变状态为停售
+            * @method stop
+            * @param {Object} obj:当前数据对象
+            * @param {Number} index: 当前索引
+            * */
+            stop(obj, index){
                 var that = this;
                 layer.confirm('您确定要停售吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(){
-                    that.updateCarActivityStatus(obj, 4, _index);
+                    that.updateCarActivityStatus(obj, 4, index);
                 }, function(){
                 });
 
@@ -450,6 +452,7 @@
                 that.items.desc = obj.description;
                 var str = obj.sales_area;
                 var list = str.substring(1,str.length-1).split(",");
+
                 for(var i = 0 ; i< list.length;i++){
                     if(list[i].trim()=="全国"){
                         that.items.areas.push({"sales_area_name":"全国","sales_area_level":"1"})
@@ -459,24 +462,20 @@
                     }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
                         that.items.areas.push({"sales_area_name":list[i],"sales_area_level":"2"});
                         var arr = that.provincecity[list[i].trim()];
-                        if(arr.length>1){
-                            /*把省插入到第一的位置*/
+                        if(arr.length > 1){
+                            /* 把省插入到第一的位置 */
                             arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
-
-
                             for(var j =0 ;j <arr.length;j++){
                                 if(j == 0){
-                                    /*赋值总数去掉省*/
                                     that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
                                 }else{
                                     that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
                                 }
                             }
                         }else{
-                            arr[i].selected = true;
-                            that.provincecity[list[i].trim()].$set(0,{province:arr[i].province,city:arr[i].city,selected:true,insert:true});
+                            arr[0].selected = true;
+                            that.provincecity[list[i].trim()].$set(0,{province:arr[0].province,city:arr[0].city,selected:true,insert:true});
                         }
-
                     }else{
                         that.items.areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
                         $.map(that.provincecity,function (val,key) {
@@ -488,19 +487,25 @@
                             }
                         })
                     }
+                    console.log(that.items);
                 }
             },
-            update(obj,_index){
+            /*
+             * 重新修改选中的特价车数据
+             * @method update
+             * @param {Object} obj: 当前数据对象
+             * @param {Number} index: 当前索引
+             * */
+            update(obj, _index){
                 this.temp_items = obj;
-                this.temp_index=_index;
-
+                this.temp_index = _index;
                 var that = this;
                 layer.confirm('您确定要修改吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
                     that.getRelationship(obj);
-                    that.mask_2= layer.open({
+                    that.mask_2 = layer.open({
                         type: 1,
                         title: '活动详情修改',
                         skin: 'layui-layer-rim', //加上边框
@@ -564,26 +569,65 @@
                 });
             },
             uploadfile(e){
-                this.items.file_img = "";
+                var _this = this;
                 var reader = new FileReader();
-                reader.onload = function(e) {
-                    var result = e.target.result;
-                };
                 var that = e.target;
                 var filesType = that.files[0].type;
+
                 if(filesType == "image/jpeg" || filesType == "image/jpg" || filesType == "image/png" || filesType == "image/gif" ){
-                    if(that.files[0].size/1024/1024>=2){
-                        layer.msg('上传图片过大', {icon: 7});
+                    if(that.files[0].size/1024/1024>=10){
+                        layer.msg('上传图片过大');
                         that.files = {};
                     }else {
+                        var MAXWIDTH  = 580;
+                        var MAXHEIGHT = 230;
+                        var img, imgBox = $(that).closest('.fileInner').find('.imgbox');
+
+                        imgBox.html('<img class="imghead">');
+                        img = imgBox.find('.imghead').get(0);
+
+                        img.onload = function(){
+                            console.log(img.offsetWidth);
+                            var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                            img.width  =  rect.width;
+                            img.height =  rect.height;
+                            img.style.marginTop = rect.top+'px';
+                        }
+
                         this.items.file_value = that.files[0].name;
+                        reader.onload = function(evt){
+                            img.src = evt.target.result;
+                            _this.items.file_img = evt.target.result;
+                        }
                         reader.readAsDataURL(that.files[0]);
-                        that.files = {};
+                        that.files = null;
                     }
                 }else{
-                    layer.msg('暂不支持该格式', {icon: 7});
-                    that.files = {};
+                    layer.msg('暂不支持该格式');
+                    that.files = null;
                 }
+            },
+            clacImgZoomParam( maxWidth, maxHeight, width, height ){
+                var param = {top:0, left:0, width:width, height:height};
+                if( width>maxWidth || height>maxHeight )
+                {
+                    var rateWidth = width / maxWidth;
+                    var rateHeight = height / maxHeight;
+
+                    if( rateWidth > rateHeight )
+                    {
+                        param.width =  maxWidth;
+                        param.height = Math.round(height / rateWidth);
+                    }else
+                    {
+                        param.width = Math.round(width / rateHeight);
+                        param.height = maxHeight;
+                    }
+                }
+
+                param.left = Math.round((maxWidth - param.width) / 2);
+                param.top = Math.round((maxHeight - param.height) / 2);
+                return param;
             },
             save(){
                 var items = this.items;
@@ -619,10 +663,10 @@
                     items.number_ = false;
                 }
 
-                if($("#areas_ > li").length<=0){
+                if($(".j_salesArea > span").length <= 0){
                     items.selectarea_ = true;
                     items.selectarea_msg = "请选择区域";
-                    return;
+                    return false;
                 }else{
                     items.selectarea_ = false;
                 }
@@ -639,17 +683,15 @@
                 var that = this;
 
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
-
+                console.log("断点");
                 if(that.items.file_img == ""){
-
                     var formd = new FormData();
                     formd.append("img",$("#upload-file")[0].files[0]);
-
                     $.ajax({
                         type: "POST",
                         contentType: false,
                         processData: false,
-                        url: "http://test3.gouchehui.com:8082/index.php/api/upload_file",
+                        url: config.FILE_IMG + "/index.php/api/upload_file",
                         data:formd,
                         success: function(data) {
                             if(data.code==0){
@@ -706,10 +748,10 @@
                     return year+"-"+month+"-"+day;
                 }
                 $.ajax({
-                    url:config.API_BASE+"/4s/activity/updateCarActivity/",
-                    method:"POST",
+                    url: config.API_BASE + "/4s/activity/updateCarActivity/",
+                    method: "POST",
                     contentType: 'application/json; charset=utf-8',
-                    dataType:"json",
+                    dataType: "json",
                     data:JSON.stringify(params),
                     beforeSend:function (request) {
                         request.setRequestHeader("sessionid",config.SESSIONID());
@@ -785,7 +827,7 @@
                     if(this.city_items.length>1){
 
                         for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                         }
 
                     }
@@ -801,7 +843,7 @@
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
 
                             for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                             }
 
                         }
@@ -887,17 +929,59 @@
 
 <style scoped>
     @import "./../../assets/css/datepicker.css";
-
-    select{
-        display: inline-block;
-        height: 28px;
-        line-height: 28px;
-        font-size: 14px;
-        padding: 0 10px;
-        margin-left: 10px;
-        outline: none;
+    .status_suc{
+        color: #00c100;
     }
+    .status_review{
+        color: #0088c3;
+    }
+    .status_unbegin{
+        color: #0088c3;
+    }
+    .status_fail{
+        color: #f40a0a;
+    }
+    /* Button group */
+    .G_btn_a,.G_btn_b,.G_btn_c,.G_btn_d,.G_btn_e{padding:0 10px 0 10px;white-space:nowrap;display:inline-block; border-radius:2px; height:26px;line-height:26px; *line-height:26px; text-decoration:none; font-size:14px; min-width:40px; text-align:center; outline:none; border: none;cursor:pointer;}
+    .G_btn_a:hover,.G_btn_b:hover,.G_btn_c:hover,.G_btn_d:hover,.G_btn_e:hover{text-decoration:none;}
+    .G_btn_a{background:#ff8140; color:#fff;}
+    .G_btn_a:hover{background:#f7671d;}
+    .G_btn_b{background:#2194ff;color:#fff;}
+    .G_btn_c{background:#ccc;color:#fff;box-shadow: 0px 1px 2px rgba(0,0,0,0.25);}
+    .G_btn_c:hover{background:#bbb;}
+    .G_btn_d{background:#fff; color:#000; border: 1px solid #B1B1B1;/*box-shadow: 0px 1px 2px rgba(0,0,0,0.25);*/}
+    .G_btn_d:hover{background:#ddd;}
+    .G_btn_e{background:#FF4242; color:#fff; border:1px solid #F00;/*box-shadow: 0px 1px 2px rgba(0,0,0,0.25);*/}
+    .G_btn_e:hover{background:#F00;}
+    .G_btn_a_disable, .G_btn_a_disable:hover{
+        background: #ffc09f;
+        color: #fff;
+        border: 1px solid #fbbd9e;
+        box-shadow: none;
+        cursor: default;
+    }
+    .G_btn_disabled, .G_btn_disabled:hover{
+        color: #FFF;
+        background: #aaa;
+        cursor: default;
+    }
+    .btn_22px{display:inline-block;height:20px;line-height:21px; *line-height:20px; min-width:28px;}
+    .btn_24px{display:inline-block;height:22px;line-height:23px; *line-height:20px; min-width:28px;}
+    .btn_26px{display:inline-block;height:24px;line-height:25px; *line-height:20px; min-width:28px;}
+    .btn_28px{display:inline-block;height:26px;line-height:27px; *line-height:20px; min-width:28px;}
+    .btn_30px{display:inline-block;height:28px;line-height:29px; *line-height:28px; width:60px; font-size:14px;}
+    .btn_32px{display:inline-block;height:32px;line-height:33px; *line-height:32px;font-size:14px;}
+    .btn_34px{display:inline-block;height:34px;line-height:35px; padding:0 15px; font-size:14px;}
+    .btn_42px{display:inline-block;height:42px;line-height:43px; font-size:14px;}
+    .btn_54px{display:inline-block;height:54px;line-height:55px; padding:0 15px; font-size:26px;}
+    .btn_100P{display:inline-block;height:42px;line-height:43px; width:100%; font-size:20px;}
+    .btn_100P u{text-decoration: none!important;}
 
+    .err{
+        background: #FED9D9!important;
+        border: 1px solid #FD8080!important;
+        color: #8C8C8C!important;
+    }
     table thead tr th{
         border: 1px solid #ccc;
         text-align: center;
@@ -910,14 +994,17 @@
     }
     table tbody tr td a {
         display: block;
+        margin-bottom: 5px;
     }
+
     .table-box{
-        width:870px;
+        width: 100%;
         margin:0 auto;
     }
     .table-box table{
-        border:1px solid #e5e5e5;
-        margin-top:10px;
+        width: 100%;
+        border: 1px solid #e5e5e5;
+        margin-top: 20px;
     }
     .table-box table th{
         height:36px;
@@ -925,7 +1012,7 @@
         color:#333;
     }
     .table-box table td{
-        padding: 5px;
+        padding: 15px 5px;
         text-align:center;
     }
     .table-box table tr:hover{
@@ -995,73 +1082,152 @@
     .table-box table .car-operation a:hover{
         color:#ff791f;
     }
-    div.activeinfo {
+    .activeinfo {
         display: inline-block;
         padding: 20px;
-        font-size: 16px;
+        font-size: 14px;
     }
-
+    .activeinfo dl{
+        margin-bottom: 17px;
+        line-height: 26px;
+    }
+    .activeinfo dt{
+        float: left;
+    }
+    .activeinfo dd{
+        float: left;
+    }
+    .activeinfo input{
+        padding-left: 10px;
+        margin-right: 5px;
+        font-size: 12px;
+        height: 26px;
+        line-height: 26px;
+    }
+    .activeinfo .end-date{
+        margin-left: 5px;
+    }
+    .activeinfo .btn-box{
+        text-align: center;
+    }
+    .activeinfo button{
+        height: 30px;
+        line-height: 30px;
+        padding: 0 50px;
+        margin: 0 10px;
+        font-size: 16px;
+        background: #fa8c35;
+        color: #FFF;
+        border-radius: 3px;
+        border: none;
+        cursor: pointer;
+    }
+    .activeinfo .btn-cancle{
+        background: #ccc;
+    }
+    .activeinfo  textarea{
+        padding: 10px;
+    }
+    .activeinfo .spe dd{
+        margin-right: 50px;
+    }
+    .activeinfo .imgbox{
+        margin-top: 10px;
+        border: 1px dotted #bfbfbf;
+    }
+    .activeinfo .file_value{
+        margin: 10px 0;
+    }
+    .activeinfo  .sales-area span{
+        display: inline-block;
+        padding: 0 10px;
+        margin-right: 10px;
+        background: #e8e8e8;
+        margin-bottom: 10px;
+    }
     .error{
         color: red;
+        margin-left: 15px;
     }
     .selected{
         color: #fa8c35!important;
-        border: 2px solid #fa8c35!important;;
+        border: 1px solid #fa8c35!important;;
     }
-    div dl {
-        margin: 10px 0;
+    .layer_2{
+        padding-top: 15px;
+    }
+    .layer_2 dl{
+        margin-bottom: 10px;
     }
 
-    div dl dt, div dl dd {
+    .layer_2 dl dt{
         float: left;
-        height: 35px;
-        line-height: 35px;
-    }
-    div.layer_1 dl dt:nth-child(n+2){
-        margin-left: 60px;
-    }
-
-    div dl dt {
-        display: inline-block;
-        width: 80px;
+        width: 100px;
         text-align: right;
+        height: 28px;
+        line-height: 28px;
     }
-    div.layer_2  dl dt {
-        display: inline-block;
-        width: 80px;
-        text-align: right;
+    .layer_2 dl dd{
+        margin-left: 110px;
     }
-
-    div dl dd {
-        margin-left: 20px;
-        text-align: left;
+    .layer_2 .city_dd{
+        margin-top: 20px;
     }
-
-    div dl dd i {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: url('/img/pwd-icons-new.png') no-repeat;
-        background-position: -102px -47px;
-        vertical-align: sub;
+    .layer_2 dd li{
+        float: left;
+        display: inline;
+        line-height: 24px;
+        padding: 0 10px;
+        position: relative;
+        border: 1px solid #5f5c5c;
+        background:#FFF;
+        color: #5f5c5c;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 13px;
+        margin-right: 13px;
     }
-    div dl dd em{
+    .layer_2 ul li i{
+        display: block;
+        width: 19px;
+        height: 19px;
         position: absolute;
-        right: 8px;
-        top: 0;
-        color: #999;
+        right: -9px;
+        top: -9px;
+        background: url('/assets/img/close_1.png') no-repeat;
+        background-position: 0 0!important;
     }
-    div dl dd span {
+    .layer_2 .optional-area dl{
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+    }
+    .layer_2 ul .no-slt{
+        background-color: #F9F9F9;
+        color: #C2C2C2;
+        border: 1px solid #C2C2C2;
+        cursor: not-allowed;
+    }
+    .layer_2 select{
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px;
+        border-color: #5f5c5c;
+        outline: none;
+    }
+    .layer_2 .btn-global{
+        padding: 0 30px;
+    }
+    .layer_2 .line{
+        height: 1px;
+        line-height: 1px;
+        font-size: 0;
+        background: #ddd;
+        margin-bottom: 10px;
+    }
+    .layer_2 .btn-box button{
         margin: 0 10px;
-    }
-    div dl dd ul li {
-        float: left;
-        margin: 0 10px;
-    }
-    div dl dd input[type="text"] ,div dl dd input[type="number"]{
-        padding: 0 5px;
-        border: 1px solid #CCCCCC;
-        height: 34px;
     }
     div dl dd input[type="file"]{
         position: absolute;
@@ -1071,61 +1237,24 @@
         z-index: 2;
         opacity: 0;
     }
-    div dl dd button {
-        padding: 5px 60px;
-        margin: 20px 15px;
-        background: #fa8c35;
-        color: #FFF;
-        border: none;
-        cursor: pointer;
-    }
-    div dl dd button:hover{
-
-    }
-    div dl dd button:last-child{
-        background: #ccc;
-    }
-    div dl dd button:last-child:hover{
-        background: #666;
-    }
     .a_style{
+        display: inline-block;
         border: 1px solid #ff791f;
         color: #ff791f;
         background: #ffe5d3;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 0 8px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 2px;
+        font-size: 12px;
     }
-
-    .layer_2 ul li {
-        margin:5px 10px!important ;
-        position: relative;
-        border: 2px solid #ccc;
-        background:#FFF;
-        color: #ccc;
-        display: inline-block;
-        padding: 0 10px;
-        height: 30px;
-        font-size: 16px;
-        line-height: 30px;
-        text-align: center;
-        cursor: pointer;
-    }
-    .layer_2 ul li i{
-        position: absolute;
-        right: -10px;
-        top:-10px;
-        background: url('/assets/img/close_1.png') no-repeat;
-        background-position: 0 0!important;
-    }
-    .city_dd li{
-        margin: 10px;
+    .a_style:hover{
+        text-decoration: none;
     }
     option{
         text-align: center;
     }
-    .order-nodata{
-        padding: 15px 0;
-    }
+
     .order-nodata h4{
         color: #4c4c4c;
         font-size: 18px;
@@ -1146,5 +1275,4 @@
         background-position: -82px 4px;
         background-size: 300px 150px;
     }
-
 </style>

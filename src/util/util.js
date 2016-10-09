@@ -7,7 +7,7 @@ export  default {
         '<div style="position: relative;   width: 320px;padding: 25px 20px 20px;color: #6c6c6c;background: #fff;margin: 0 auto;">'+
         '<div style="position: relative;">'+
         '<div style="height: 18px;line-height: 18px;font-size: 16px;color: #333;margin-top: 2px;margin-bottom: 10px;padding: 10px 0;border-bottom: 1px solid #bdbdbd;">'+
-        '<a href="javascript:;;" id="close" title="关闭" style="float: right;color: #ff791f;font-size: 14px;">关闭</a>账户登录'+
+        '<a href="javascript:;;" id="close" >&nbsp;&nbsp;&nbsp;&nbsp;</a>4S店账户'+
         '</div>'+
         '<!--错误信息提示-->'+
         '<div id="L_Message" style="display:none;width: 296px;margin: 8px 0;">'+
@@ -17,14 +17,14 @@ export  default {
         '</div>'+
         '</div>'+
         '<div style=" position: relative;margin-bottom: 16px;z-index: 1;   border: 1px solid #bdbdbd;height: 38px;width: 318px; z-index: 6;margin-bottom: 20px;">'+
-        '<label for="J_logname"  style="position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../img/pwd-icons-new.png) no-repeat; background-position: 0 0;" ></label>'+
-        '<input id="J_logname" type="text" style=" line-height: 18px;border: 0;padding: 10px 0 10px 50px;width: 268px;float: none;overflow: hidden;font-size: 14px;outline: none;" name="user_name" tabindex="1" autocomplete="off" placeholder="手机号">'+
-        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
+        '<label for="J_logname"  style="position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../../assets/img/pwd-icons-new.png) no-repeat; background-position: 0 0;" ></label>'+
+        '<input id="J_logname" type="text" style=" line-height: 18px;border: 0;padding: 10px 0 10px 50px;width: 268px;float: none;overflow: hidden;font-size: 14px;outline: none;" name="user_name" tabindex="1" autocomplete="off" placeholder="4S店账户">'+
+        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
         '</div>'+
         '<div  style=" position: relative;margin-bottom: 16px;z-index: 1;border: 1px solid #bdbdbd;height: 38px;width: 318px;  height: 38px;margin-bottom: 15px;">'+
-        '<label style=" position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../img/pwd-icons-new.png) no-repeat;background-position: -48px 0;" for="J_logpwd"></label>'+
+        '<label style=" position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../../assets/img/pwd-icons-new.png) no-repeat;background-position: -48px 0;" for="J_logpwd"></label>'+
         '<input type="password" id="J_logpwd" name="password" style=" line-height: 18px;border: 0;padding: 10px 0 10px 50px;width: 268px;float: none;overflow: hidden;font-size: 14px;outline: none;" tabindex="2"autocomplete="off" placeholder="密码">'+
-        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
+        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
         '</div>'+
         '<div style=" position: relative;margin-bottom: 16px;z-index: 1;">'+
         '<div style="position: relative;color: #666;">'+
@@ -33,7 +33,7 @@ export  default {
         '<label for="autologin">自动登录</label>'+
         '</span>'+
         '<span class="forget-pw" style=" position: absolute;right: 0;top: 0;margin: 0;">'+
-        '<a href="http://www.gouchehui.com/member.php/Public/findpw_verification.html" style="color: #999;" target="_blank">忘记密码</a>'+
+        '<a href="javascript:;;" class="forgetPwd" style="color: #999;" target="_blank">忘记密码</a>'+
         '</span>'+
         '</div>'+
         '</div>'+
@@ -56,15 +56,20 @@ export  default {
       }
     });
 
-    $("#close").unbind("click").bind("click",function (e) {
+   /* $("#close").unbind("click").bind("click",function (e) {
       $(".mask-model").hide().remove();
+    });*/
+
+    $(".forgetPwd").unbind("click").bind("click",function (e) {
+        $(".error").text("请联系客服 400-138-0808");
+        $("#L_Message").show();
     });
 
     function loginMethod() {
         var username = $("#J_logname").val(),password = $("#J_logpwd").val();
 
         if(username==""){
-            $(".error").text("手机号不能为空");
+            $(".error").text("4S店账户不能为空");
             $("#L_Message").show();
             return;
         }else{

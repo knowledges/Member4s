@@ -11,7 +11,7 @@
                 </div>
                 <div class="GB_innerwrap">
                     <div class="nameBox">
-                    	<span class="name">{{SESSIONID.user_name}}</span><span class="lv">V<i>2</i></span>
+                    	<span class="name">{{SESSIONID.user_name}}</span><span class="lv"><i>{{realGrade}}</i></span>
                     </div>
                     <div class="G_tc jifen">
                        <!-- <a href="javascript:;;">车币<span class="s">{{SESSIONID.nick!=""?SESSIONID.nick:0}}</span>个</a>-->
@@ -42,7 +42,24 @@
                 SESSIONID:{},
                 head_url:""
             }
-        }
+        },
+        computed: {
+//          等级分类
+            realGrade: function(){
+            	this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
+				var grade = this.SESSIONID.total_jifen;
+				
+	            if(grade < 5000){
+	                return "初";
+	            }else if(grade <= 10000){
+	                return "中";
+	            }else if(grade > 10000){
+	                return "高";
+	            }else{
+	                return "无";
+	            }
+	        }
+        },
     }
 </script>
 
@@ -99,7 +116,7 @@
         padding: 15px;
     }
     .nameBox {
-        line-height: 20px;
+        line-height: 30px;
         height: 20px;
         padding-top: 5px;
         margin-bottom: 20px;
@@ -114,6 +131,7 @@
         font-weight: bold;
         text-overflow: ellipsis;
         white-space: nowrap;
+        vertical-align: middle;
     }
     .uc_person_info .lv {
         display: inline-block;
@@ -125,6 +143,10 @@
         background: #ff791f;
         color: #fff;
         border-radius: 1px;
+        vertical-align: middle;
+    }
+    .uc_person_info .lv i{
+    	font-style: normal;
     }
     .uc_person_info .jifen {
         color: #999;

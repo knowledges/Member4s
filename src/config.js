@@ -37,8 +37,8 @@ export default {
      all:总数
      */
 
-    API_BASE:"https://www.woodche.com/YchLrestServer_test/api",
-    // API_BASE:"http://192.168.13.111/YchLrestServer/api",
+    // API_BASE:"https://www.woodche.com/YchLrestServer_test/api",
+    API_BASE:"http://192.168.13.111/YchLrestServer/api",
     // API_BASE:"http://192.168.13.250:3000/api",
     FILE_IMG:"http://test3.gouchehui.com:8082",
     // FILE_IMG:"http://www.gouchehui.com",

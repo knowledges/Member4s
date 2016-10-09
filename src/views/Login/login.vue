@@ -12,30 +12,29 @@
        <!--login content-->
        <div class="content">
            <div v-if="!is4S" class="login-newbg" style="background-image: url(http://www.gouchehui.com/Public/Home/images/login_bg.png);"></div>
-           <div v-if="is4S" class="login-newbg" style="background-image: url(/assets/img/login_bg_4s.png);"></div>
+           <div v-if="is4S" class="login-newbg" style="background-image: url(assets/img/login_bg_4s.png);"></div>
            <div class="login-adlink">
                <a href="javascript:;;" title=""></a>
            </div>
            <div class="login-layout">
                <div class="login-con">
+                   <div class="login-title">
+                       <a href="javascript:;;" v-bind:class="{'current':!is4S}" v-on:click="swtichClk(false,$event)">个人账户</a>
+                       <a href="javascript:;;" v-bind:class="{'current':is4S}" v-on:click="swtichClk(true,$event)">4S店账户</a>
+                   </div>
                    <div class="login-box">
                        <div class="login-form">
-                           <div class="login-title">
-                               <a href="javascript:;;" v-bind:class="{'active':!is4S}" v-on:click="swtichClk(false,$event)">个人账户</a>
-                               |
-                               <a href="javascript:;;" v-bind:class="{'active':is4S}" v-on:click="swtichClk(true,$event)">4S店账户</a>
-                           </div>
                            <!--错误信息提示-->
                            <div id="J_Message">
                                <div class="login-msg">
                                    <i class="login-icon G_fl"></i>
-                                   <p class="error G_f12">密码错误</p>
+                                   <p class="error G_f12"></p>
                                </div>
                            </div>
                            <div class="item item-fore1">
                                <label for="J_logname" class="login-label name-label"></label>
                                <input id="J_logname" type="text" class="itxt" name="user_name" v-model="username" v-on:keyup="loginClks($event)" tabindex="1"
-                                      autocomplete="off" placeholder="手机号">
+                                      autocomplete="off" placeholder="4S店账户">
                                <span class="clear-btn"></span>
                            </div>
                            <div class="item item-fore2">
@@ -52,7 +51,7 @@
                                 <label for="autologin">自动登录</label>
                             </span>
                                 <span class="forget-pw">
-                                <a href="http://www.gouchehui.com/member.php/Public/findpw_verification.html" target="_blank">忘记密码</a>
+                                <a href="javascript:;;" v-on:click="forgetPwd" target="_blank">忘记密码</a>
                             </span>
                                </div>
                            </div>
@@ -101,7 +100,7 @@
         },
         data(){
             return {
-                is4S:false,
+                is4S:true,
                 username:"L01SHDZ",
                 password:"123456"
 //                username:"sssaaa",
@@ -112,8 +111,9 @@
         },
         methods:{
             swtichClk(isTrue,e){
-                console.log(isTrue);
-                this.is4S = isTrue;
+                if(!isTrue){
+                    window.location.href="http://test3.gouchehui.com:8082/member.php/Public/login?callback=http%3A%2F%2F_%2F";
+                }
             },
             loginMethod(){
                 var that = this;
@@ -129,15 +129,22 @@
                 param.password = that.password;
 
                 if(param.username == ""){
-                    layer.msg('手机号不能为空');
+                    $(".error").text("手机号不能为空");
+                    $("#J_Message").show();
                     layer.close(ii);
                     return;
+                }else{
+                    $("#J_Message").hide();
                 }
                 if(param.password == ""){
-                    layer.msg('密码不能为空');
+                    $(".error").text("密码不能为空");
+                    $("#J_Message").show();
                     layer.close(ii);
                     return;
+                }else{
+                    $("#J_Message").hide();
                 }
+
                 $.ajax({
                     url:url,
                     method:'POST',
@@ -152,9 +159,14 @@
                         that.$route.router.go("/u");
                     }else if (response.code == -1){
                         layer.close(ii);
-                        layer.msg(response.desc);
+                        $(".error").text(response.desc);
+                        $("#J_Message").show();
                     }
                 });
+            },
+            forgetPwd(){
+                $(".error").text("请联系客服 400-138-0808");
+                $("#J_Message").show();
             },
             loginClks(e){
                 if(e.keyCode == 13){

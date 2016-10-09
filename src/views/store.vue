@@ -12,8 +12,9 @@
                 <ul class="U_info_c_ul clearfix">
                     <li><h3>{{SESSIONID.user_name}} <em>，欢迎您！</em></h3></li>
                     <li>
-                        <i class="font-icon">初</i>
-                        初级会员
+                        <i class="font-icon">{{realGrade | limitBy 1}}</i>
+                        <!--初级会员-->
+                        {{realGrade}}
                     </li>
                     <li><a v-link="{path:'/u/exchange/cashing'}">
                         积分：<em class="orange">{{SESSIONID.total_jifen}}</em></a>
@@ -87,7 +88,7 @@
                                         <dt>
                                             <img v-bind:src="neworder.exterior_img" alt="" width="120" height="80">
                                         </dt>
-                                        <dd>
+                                        <dd style="width: 218px;">
                                             <a class="orange">{{neworder.carstyle}}</a>
                                             <p>外观：{{neworder.interior_color_name}}  内饰：{{neworder.exterior_color_name}}</p>
                                         </dd>
@@ -264,7 +265,7 @@
         route:{
             data({to,next}){
                 this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-
+				
                 var that = this;
                 var params = {"query":{"user_id":config.USERID()}};
                 $.ajax({
@@ -287,13 +288,19 @@
                             that.arr_area_active = data.pricearea;
                             that.$set("arr_offer",data.newprice);
                             that.arr_area_offer = data.specialpricearea;
+                            that.grade = data.grade;
                         }
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -310,7 +317,22 @@
                 var obj = this.neworder;
                 this.istrue = $.isEmptyObject(obj);
                 return ;
-            }
+            },
+//          等级分类
+            realGrade: function(){
+            	this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
+				var grade = this.SESSIONID.total_jifen;
+				
+	            if(grade < 5000){
+	                return "初";
+	            }else if(grade <= 10000){
+	                return "中";
+	            }else if(grade > 10000){
+	                return "高";
+	            }else{
+	                return "无";
+	            }
+	        }
         },
         data(){
             return {
@@ -328,7 +350,8 @@
                 SESSIONID:{},
                 baseinfo:[],
                 neworder:{},
-                istrue:""
+                istrue:"",
+                grade:1
             }
         },
         components:{
@@ -435,10 +458,11 @@
         border-radius: 4px;
         background: #ff791f;
         color: #FFFFFF;
-        vertical-align: middle;
+        /*vertical-align: middle;*/
         line-height: 18px;
         font-style: normal;
         text-align: center;
+        overflow: hidden;
     }
     .U_info_content .U_info_c_ul li {
         float: left;
@@ -498,7 +522,7 @@
         border:1px solid #ccc;
     }
     table thead tr th{
-        padding: 10px;
+        padding: 10px 0;
         text-align: center;
         background: #f1f2f3;
         color: #000000;
@@ -617,7 +641,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url('./../assets/img/ico_warn.png');
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

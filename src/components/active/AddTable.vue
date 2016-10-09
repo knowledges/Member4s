@@ -70,7 +70,7 @@
     </div>
     <div class="activeinfo" style="display: none;">
         <div class="layer_1">
-            <dl class="clearfix">
+            <dl class="clearfix spe">
                 <dt>品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
                 <dd v-text="items.brandName"></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
@@ -78,7 +78,7 @@
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                 <dd v-text="items.carName"></dd>
             </dl>
-            <dl class="clearfix">
+            <dl class="clearfix spe">
                 <dt>外观颜色：</dt>
                 <dd v-text="items.exteriorColorName"></dd>
                 <dt>内饰颜色：</dt>
@@ -100,7 +100,7 @@
                 <dd>
                     <input type="text" id="start-date" v-model="items.start_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                     至
-                    <input type="text" id="end-date" v-model="items.end_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" id="end-date" class="end-date" v-model="items.end_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                 </dd>
                 <dd v-if="items.timer_" class="error"> <i></i>{{items.timer_msg}}</dd>
             </dl>
@@ -111,11 +111,11 @@
             </dl>
             <dl class="clearfix">
                 <dt>销售区域：</dt>
-                <dd style="display: inline-block;height: 100%;width: 550px;">
-                    <ul id="areas_" class="clearfix">
-                        <li v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</li>
+                <dd>
+                    <div class="clearfix sales-area j_salesArea">
+                        <span v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</span>
                         <a href="javascript:;" @click="selectarea" class="a_style">选择区域</a>
-                    </ul>
+                    </div>
                 </dd>
                 <dd v-if="items.selectarea_"  class="error">
                     <i></i>
@@ -152,21 +152,18 @@
                     <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~"></textarea>
                 </dd>
             </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd>
-                    <button v-on:click="save">保存</button>
-                    <button v-on:click="cancle">取消</button>
-                </dd>
-            </dl>
+            <div class="btn-box">
+                <button @click="save" class="btn-confirm">确定</button>
+                <button @click="cancle" class="btn-cancle">取消</button>
+            </div>
         </div>
     </div>
     <div class="activearea" style="display: none;">
         <div class="layer_2">
             <dl class="clearfix">
                 <dt>已选区域：</dt>
-                <dd style="display: inline-block;width: 490px;height: 100%;min-height: 45px;border-bottom: 1px solid #ccc;">
-                    <ul class="filter_li">
+                <dd>
+                    <ul class="filter_li clearfix">
                         <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
                         <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -205,41 +202,40 @@
                     </ul>
                 </dd>
             </dl>
-            <dl class="clearfix">
+            <dl class="clearfix optional-area">
                 <dt>可选区域：</dt>
                 <dd>
-                    <ul>
-                        <li v-on:click="selectAllClk" id="global">全国</li>
+                    <div class="line"></div>
+                    <ul class="clearfix">
+                        <li v-on:click="selectAllClk" class="btn-global" id="global">全国</li>
                     </ul>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
                 <dd>
                     <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>==请选择==</option>
+                        <option value="0" selected>--- 请选择 ---</option>
                         <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                     </select>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd style="width: 500px;height: 100%;" class="city_dd">
-                    <ul v-if="!global">
-                        <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
-                            class="city_li" :class="{'selected':city.selected==true}">
+                <dd class="city_dd">
+                    <ul v-if="!global" class="clearfix">
+                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
+                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
                             {{city.city}}
                         </li>
                     </ul>
+                    <div class="line"></div>
                 </dd>
             </dl>
             <dl class="clearfix">
                 <dt></dt>
                 <dd>
-                    <button v-on:click="agree">确定</button>
-                    <button v-on:click="cancle1">取消</button>
+                    <div class="btn-box">
+                        <button @click="agree" class="btn-confirm G_btn_a">确定</button>
+                        <button @click="cancle1" class="btn-cancle G_btn_c">取消</button>
+                    </div>
                 </dd>
             </dl>
+
         </div>
     </div>
 
@@ -381,8 +377,14 @@
                     },
                     error:function(fail){
                         if(fail.status == "401"){
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -421,9 +423,14 @@
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
@@ -568,7 +575,7 @@
                     items.timer_ = false;
                 }
 
-                if($("#areas_ > li").length<=0){
+                if($(".j_salesArea > span").length<=0){
                     items.selectarea_ = true;
                     items.selectarea_msg = "请选择区域";
                     return;
@@ -576,12 +583,12 @@
                     items.selectarea_ = false;
                 }
 
-                if(items.file_value==""){
-                    items.file_=true;
+                if(items.file_value == ""){
+                    items.file_ = true;
                     items.file_msg = "请上传图片";
-                    return;
+                    return false;
                 }else{
-                    items.file_=false;
+                    items.file_ = false;
                 }
 
             var that = this;
@@ -596,7 +603,7 @@
                     type: "POST",
                     contentType: false,
                     processData: false,
-                    url: "http://test3.gouchehui.com:8082/index.php/api/upload_file",
+                    url: config.FILE_IMG + "/index.php/api/upload_file",
                     data:formd,
                     success: function(data) {
                         if(data.code==0){
@@ -663,9 +670,14 @@
                                 },
                                 error:function (fail) {
                                     if(fail.status == "401"){
-                                        sessionStorage.removeItem("SESSIONID");
-                                        layer.msg('登录失效，请重新登陆！');
-                                        util.login();
+                                        var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                        if(SESSIONID == null){
+                                            that.$route.router.go("/login");
+                                        }else{
+                                            sessionStorage.removeItem("SESSIONID");
+                                            layer.msg('登录失效，请重新登陆！');
+                                            util.login();
+                                        }
                                     }
                                 }
                             })
@@ -694,7 +706,7 @@
                     if(this.city_items.length>1){
 
                         for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                         }
 
                     }
@@ -710,7 +722,7 @@
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
 
                             for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                             }
 
                         }
@@ -872,16 +884,6 @@
         border: 1px solid #FD8080!important;
         color: #8C8C8C!important;
     }
-    select{
-        display: inline-block;
-        height: 28px;
-        line-height: 28px;
-        font-size: 14px;
-        padding: 0 10px;
-        margin-left: 10px;
-        outline: none;
-    }
-
     table thead tr th{
         border: 1px solid #ccc;
         text-align: center;
@@ -987,14 +989,49 @@
         padding: 20px;
         font-size: 14px;
     }
+    .activeinfo dl{
+        margin-bottom: 17px;
+        line-height: 26px;
+    }
+    .activeinfo dt{
+        float: left;
+    }
+    .activeinfo dd{
+        float: left;
+    }
     .activeinfo input{
         padding-left: 10px;
+        margin-right: 5px;
         font-size: 12px;
         height: 26px;
         line-height: 26px;
     }
+    .activeinfo .end-date{
+        margin-left: 5px;
+    }
+    .activeinfo .btn-box{
+        text-align: center;
+    }
+    .activeinfo button{
+        height: 30px;
+        line-height: 30px;
+        padding: 0 50px;
+        margin: 0 10px;
+        font-size: 16px;
+        background: #fa8c35;
+        color: #FFF;
+        border-radius: 3px;
+        border: none;
+        cursor: pointer;
+    }
+    .activeinfo .btn-cancle{
+        background: #ccc;
+    }
     .activeinfo  textarea{
         padding: 10px;
+    }
+    .activeinfo .spe dd{
+        margin-right: 50px;
     }
     .activeinfo .imgbox{
         margin-top: 10px;
@@ -1003,71 +1040,97 @@
     .activeinfo .file_value{
         margin: 10px 0;
     }
+    .activeinfo  .sales-area span{
+        display: inline-block;
+        padding: 0 10px;
+        margin-right: 10px;
+        background: #e8e8e8;
+        margin-bottom: 10px;
+    }
     .error{
         color: red;
         margin-left: 15px;
     }
     .selected{
         color: #fa8c35!important;
-        border: 2px solid #fa8c35!important;;
+        border: 1px solid #fa8c35!important;;
     }
-    div dl {
-        margin: 10px 0;
+    .layer_2{
+        padding-top: 15px;
     }
-    div.layer_2{
-        margin-top: 5px;
-    }
-    div.layer_2 dl{
-        margin: 0 0!important;
-    }
-    div dl dt, div dl dd {
-        float: left;
+    .layer_2 dl{
         margin-bottom: 10px;
     }
-    div.layer_2 dl dt, div.layer_2 dl dd {
-        float: left;
-        height: 35px;
-        line-height: 35px;
-    }
-    div.layer_1 dl dt:nth-child(n+2){
-        margin-left: 60px;
-    }
 
-    div.layer_2  dl dt {
-        display: inline-block;
-        width: 80px;
+    .layer_2 dl dt{
+        float: left;
+        width: 100px;
         text-align: right;
+        height: 28px;
+        line-height: 28px;
     }
-
-    div dl dd {
-        margin-left: 2px;
-        text-align: left;
+    .layer_2 dl dd{
+        margin-left: 110px;
     }
-
-    div dl dd i {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background: url(/img/pwd-icons-new.png) no-repeat;
-        background-position: -102px -47px;
-        vertical-align: -5px;
-        margin-right: 5px;
+    .layer_2 .city_dd{
+        margin-top: 20px;
     }
-    div dl dd em{
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        color: #999;
-        margin-top: -11px;
-    }
-    div dl dd span {
-        margin: 0 10px;
-    }
-    div dl dd ul li {
+    .layer_2 dd li{
         float: left;
+        display: inline;
+        line-height: 24px;
+        padding: 0 10px;
+        position: relative;
+        border: 1px solid #5f5c5c;
+        background:#FFF;
+        color: #5f5c5c;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 13px;
+        margin-right: 13px;
+    }
+    .layer_2 ul li i{
+        display: block;
+        width: 19px;
+        height: 19px;
+        position: absolute;
+        right: -9px;
+        top: -9px;
+        background: url('/assets/img/close_1.png') no-repeat;
+        background-position: 0 0!important;
+    }
+    .layer_2 .optional-area dl{
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+    }
+    .layer_2 ul .no-slt{
+        background-color: #F9F9F9;
+        color: #C2C2C2;
+        border: 1px solid #C2C2C2;
+        cursor: not-allowed;
+    }
+    .layer_2 select{
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px;
+        border-color: #5f5c5c;
+        outline: none;
+    }
+    .layer_2 .btn-global{
+        padding: 0 30px;
+    }
+    .layer_2 .line{
+        height: 1px;
+        line-height: 1px;
+        font-size: 0;
+        background: #ddd;
+        margin-bottom: 10px;
+    }
+    .layer_2 .btn-box button{
         margin: 0 10px;
     }
-
     div dl dd input[type="file"]{
         position: absolute;
         left: 0;
@@ -1075,24 +1138,6 @@
         height: 35px;
         z-index: 2;
         opacity: 0;
-    }
-    div dl dd button {
-        padding: 5px 60px;
-        margin: 20px 15px;
-        font-size: 16px;
-        background: #fa8c35;
-        color: #FFF;
-        border: none;
-        cursor: pointer;
-    }
-    div dl dd button:hover{
-
-    }
-    div dl dd button:last-child{
-        background: #ccc;
-    }
-    div dl dd button:last-child:hover{
-        background: #666;
     }
     .a_style{
         display: inline-block;
@@ -1107,30 +1152,6 @@
     }
     .a_style:hover{
         text-decoration: none;
-    }
-    .layer_2 ul li {
-        margin:5px 10px!important;
-        position: relative;
-        border: 2px solid #ccc;
-        background:#FFF;
-        color: #ccc;
-        display: inline-block;
-        padding: 0 10px;
-        height: 30px;
-        font-size: 16px;
-        line-height: 30px;
-        text-align: center;
-        cursor: pointer;
-    }
-    .layer_2 ul li i{
-        position: absolute;
-        right: -10px;
-        top:-10px;
-        background: url('/assets/img/close_1.png') no-repeat;
-        background-position: 0 0!important;
-    }
-    .city_dd li{
-        margin: 10px;
     }
     option{
         text-align: center;
