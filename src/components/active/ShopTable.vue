@@ -160,7 +160,7 @@
             <dl class="clearfix">
                 <dt>活动说明：</dt>
                 <dd>
-                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~" ></textarea>
+                    <textarea name="desc" v-model="items.desc" cols="64" rows="8" placeholder="填写相关活动说明~" ></textarea>
                 </dd>
             </dl>
             <div class="btn-box">
@@ -467,7 +467,7 @@
                             arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
                             for(var j =0 ;j <arr.length;j++){
                                 if(j == 0){
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true});
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true,"insert":true});
                                 }else{
                                     that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
                                 }
@@ -487,7 +487,6 @@
                             }
                         })
                     }
-                    console.log(that.items);
                 }
             },
             /*
@@ -509,7 +508,7 @@
                         type: 1,
                         title: '活动详情修改',
                         skin: 'layui-layer-rim', //加上边框
-                        area : ['750px' , '800px'],
+                        area : ['660px' , '800px'],
                         content: $(".activeinfo"),
                         cancel:function () {
                             /*修改弹框初始化*/
@@ -587,7 +586,6 @@
                         img = imgBox.find('.imghead').get(0);
 
                         img.onload = function(){
-                            console.log(img.offsetWidth);
                             var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
                             img.width  =  rect.width;
                             img.height =  rect.height;
@@ -683,8 +681,7 @@
                 var that = this;
 
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
-                console.log("断点");
-                if(that.items.file_img == ""){
+                if($("#upload-file")[0].files[0] !== undefined){
                     var formd = new FormData();
                     formd.append("img",$("#upload-file")[0].files[0]);
                     $.ajax({
@@ -694,8 +691,8 @@
                         url: config.FILE_IMG + "/index.php/api/upload_file",
                         data:formd,
                         success: function(data) {
-                            if(data.code==0){
-                                that.items.file_img=data.img_url;
+                            if(data.code == 0){
+                                that.items.file_img = data.img_url;
                                 that.updataActive();
                             }else{
                                 layer.msg("保存失败",{icon: 7});
@@ -848,6 +845,7 @@
 
                         }
                     }
+
                 }
             },
             selectedProvinces(){
@@ -1193,7 +1191,7 @@
         position: absolute;
         right: -9px;
         top: -9px;
-        background: url('/assets/img/close_1.png') no-repeat;
+        background: url('../../assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
     .layer_2 .optional-area dl{
@@ -1269,7 +1267,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url(../../assets/img/ico_warn.png);
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

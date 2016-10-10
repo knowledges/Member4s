@@ -11,11 +11,11 @@
                 </div>
                 <div class="GB_innerwrap">
                     <div class="nameBox">
-                    	<span class="name">{{SESSIONID.user_name}}</span><span class="lv"><i>{{realGrade}}</i></span>
+                    	<span class="name" v-if="SESSIONID!=null&&SESSIONID.user_name!=null">{{SESSIONID.user_name}}</span><span class="lv"><i>{{realGrade}}</i></span>
                     </div>
                     <div class="G_tc jifen">
                        <!-- <a href="javascript:;;">车币<span class="s">{{SESSIONID.nick!=""?SESSIONID.nick:0}}</span>个</a>-->
-                        <a v-link="{path:'/u/exchange/cashing'}">积分<span class="s">{{SESSIONID.total_jifen}}</span></a>
+                        <a v-link="{path:'/u/exchange/cashing'}">积分<span class="s"  v-if="SESSIONID!=null">{{SESSIONID.total_jifen}}</span></a>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
     export default{
         ready(){
             this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-            if(this.SESSIONID!=null && this.SESSIONID!=""){
+            if(this.SESSIONID!=null){
                 if(this.SESSIONID.head_url==""||this.SESSIONID.head_url==null||this.SESSIONID.head_url==undefined){
                     this.head_url = "/assets/img/default.png";
                 }else{
@@ -44,20 +44,21 @@
             }
         },
         computed: {
-//          等级分类
-            realGrade: function(){
+            realGrade(){
             	this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-				var grade = this.SESSIONID.total_jifen;
-				
-	            if(grade < 5000){
-	                return "初";
-	            }else if(grade <= 10000){
-	                return "中";
-	            }else if(grade > 10000){
-	                return "高";
-	            }else{
-	                return "无";
-	            }
+                if(this.SESSIONID!=null) {
+                    var grade = this.SESSIONID.total_jifen;
+
+                    if (grade < 5000) {
+                        return "初";
+                    } else if (grade <= 10000) {
+                        return "中";
+                    } else if (grade > 10000) {
+                        return "高";
+                    } else {
+                        return "无";
+                    }
+                }
 	        }
         },
     }
@@ -144,6 +145,7 @@
         color: #fff;
         border-radius: 1px;
         vertical-align: middle;
+        border-radius: 4px;
     }
     .uc_person_info .lv i{
     	font-style: normal;

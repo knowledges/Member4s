@@ -75,7 +75,7 @@
                         </thead>
                         <tbody>
                             <tr v-if="istrue">
-                                <td colspan="6" style="height: 70px;text-align: center;line-height: 70px; font-size: 16px;">
+                                <td colspan="6" style="text-align: center; font-size: 16px;">
                                     <div class="order-nodata">
                                         <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
                                         <p>您可进入 <a v-link="{ path:'/u/manage/myOffer/find/0'}">报价管理</a> 页面更新底价信息</p>
@@ -318,20 +318,22 @@
                 this.istrue = $.isEmptyObject(obj);
                 return ;
             },
-//          等级分类
-            realGrade: function(){
+            realGrade(){
+                // 等级分类
             	this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
-				var grade = this.SESSIONID.total_jifen;
-				
-	            if(grade < 5000){
-	                return "初";
-	            }else if(grade <= 10000){
-	                return "中";
-	            }else if(grade > 10000){
-	                return "高";
-	            }else{
-	                return "无";
-	            }
+                if(this.SESSIONID!=null||this.SESSIONID!=undefined){
+                    var grade = this.SESSIONID.total_jifen;
+
+                    if(grade < 5000){
+                        return "初级会员";
+                    }else if(grade <= 10000){
+                        return "中级会员";
+                    }else if(grade > 10000){
+                        return "高级会员";
+                    }else{
+                        return "无";
+                    }
+                }
 	        }
         },
         data(){
@@ -463,6 +465,8 @@
         font-style: normal;
         text-align: center;
         overflow: hidden;
+        vertical-align: top;
+    	margin-top: 5px;
     }
     .U_info_content .U_info_c_ul li {
         float: left;

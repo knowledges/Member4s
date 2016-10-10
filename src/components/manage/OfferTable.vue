@@ -4,7 +4,7 @@
         <div class="layer_2">
             <dl class="clearfix">
                 <dt>已选区域：</dt>
-                <dd style="display: inline-block;width: 490px;height: 100%;min-height: 45px;border-bottom: 1px solid #ccc;">
+                <dd>
                     <ul class="filter_li">
                         <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                         <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -47,26 +47,21 @@
             <dl class="clearfix">
                 <dt>可选区域：</dt>
                 <dd>
-                    <ul>
+                    <div class="line"></div>
+                    <ul class="clearfix">
                         <li v-on:click="selectAllClk" id="global">全国</li>
                     </ul>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
                 <dd>
                     <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>==请选择==</option>
+                        <option value="0" selected>--- 请选择 ---</option>
                         <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                     </select>
                 </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd style="width: 490px;height: 100%;" class="city_dd">
-                    <ul v-if="!global">
-                        <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
-                            class="city_li" :class="{'selected':city.selected==true}">
+                <dd class="city_dd">
+                    <ul v-if="!global" class="clearfix">
+                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
+                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
                             {{city.city}}
                         </li>
                     </ul>
@@ -75,6 +70,7 @@
             <dl class="clearfix">
                 <dt></dt>
                 <dd>
+                    <div class="line"></div>
                     <button v-on:click="agree">确定</button>
                     <button v-on:click="cancle1">取消</button>
                 </dd>
@@ -92,7 +88,7 @@
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                 <dd v-text="temps.carName"></dd>
             </dl>
-            <table>
+            <table style="min-height: 200px">
                 <thead>
                 <tr>
                     <th class="car-out-color">外观颜色</th>
@@ -126,14 +122,14 @@
                     </td>
                     <td rowspan="{{temp_arr.length}}">
                         <p>
-                            <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
+                            <span v-for="city in items.areas" class="cityStyle" track-by="$index">{{city.salesAreaName}}</span>
                         </p>
                         <a href="javascript:;;" class="selected" v-on:click="selectarea(temp)">请选择</a>
                     </td>
                 </tr>
                 <tr v-for="temp in temp_arr"  track-by="$index" v-show="temp_arr.length>1 && $index>0 ">
-                    <td>{{temp.interiorColorName}}</td>
                     <td>{{temp.exteriorColorName}}</td>
+                    <td>{{temp.interiorColorName}}</td>
                     <td>
                         <input type="number" class="stock_{{$index}}" value="{{temp.stock}}">
                     </td>
@@ -165,7 +161,7 @@
     <div class="table-box">
         <table  border=1 cellspacing=0 cellpadding=0>
             <tr>
-                <th class="car-selected"><input type="checkbox" id="all" v-on:click="allChecked"/></th>
+                <th class="car-selected"><input type="checkbox" id="all"  v-model="checkedAll" :checked="checkedAll"  v-on:click="allChecked"/></th>
                 <th class="car-model">车型</th>
                 <th class="car-style">车款</th>
                 <th class="car-out-color">外观颜色</th>
@@ -224,7 +220,7 @@
                 <td>
                     <p class="show_{{$index}}">{{item.saleArea}}</p>
                     <p class="update_{{$index}}" style="display: none;">
-                        <span v-for="city in items.areas" track-by="$index">{{city.salesAreaName}}</span>
+                        <span v-for="city in items.areas" class="cityStyle" track-by="$index">{{city.salesAreaName}}</span>
                     </p>
                     <p class="update_{{$index}}" style="display: none;"><a class="selected" v-on:click="selectarea(item)">请选择</a></p>
                 </td>
@@ -310,15 +306,15 @@
                 temp_items:{},
                 temp_arr:[],
                 temps:{
-                 interiorColorName:"",
-                 exteriorColorName:"",
-                 stock:"",
-                 onWay:"",
-                 discount:"",
-                 discount:"",
-                 brandName:"",
-                 carModelName:"",
-                 carName:""
+                    carId:"",
+                    interiorColorName:"",
+                    exteriorColorName:"",
+                    stock:"",
+                    onWay:"",
+                    discount:"",
+                    brandName:"",
+                    carModelName:"",
+                    carName:""
                  },
                 history: {
                     index:0,
@@ -332,7 +328,7 @@
                 },
                 mask_1:"",
                 mask_3:"",
-                checked:"",
+                checkedAll:false,
                 checkedIndex:[]
             }
         },
@@ -449,6 +445,15 @@
             },
             /*批量修改*/
             batchUpdate(){
+
+                if($(".model .acton").attr("carmodelid")==undefined){
+                    layer.msg("请选择一款车型");
+                    return;
+                }
+                if($(".style .acton").attr("carid")==undefined){
+                    layer.msg("请选择车款类型");
+                    return;
+                }
                 var that = this;
                 layer.confirm('您确定要批量修改吗？', {
                     btn: ['确定','取消'] //按钮
@@ -479,12 +484,11 @@
                                 }
                             }
                         }
-
+                        that.temps.carId = that.temp_arr[0].carId;
                         that.temps.brandName = that.temp_arr[0].brandName;
                         that.temps.carModelName = that.temp_arr[0].carModelName;
                         that.temps.carName = that.temp_arr[0].carName;
                         that.getRelationship(that.temp_arr[0]);
-//                        that.getSaleAreaByArray(that.temp_arr[0]);
                     }else{
                         layer.msg("请选择批量修改内容");
                     }
@@ -512,16 +516,16 @@
             },
             /*全选*/
             allChecked(){
-                if(this.checked){
-                    this.checkedIndex = [];
-                    $(".all").removeAttr("checked");
-                }else{
+                if(!$("#all").attr("checked")){
                     this.checkedIndex = [];
                     $(".all").removeAttr("checked");
                     for(var i = 0 ; i<this.arr_items.length;i++){
                         $(".all").eq(i).attr("checked","true");
                         this.checkedIndex.push(this.arr_items[i].carPriceId);
                     }
+                }else{
+                    this.checkedIndex = [];
+                    $(".all").removeAttr("checked");
                 }
             },
             selectarea(obj){
@@ -547,7 +551,6 @@
                         $("#selectedKey").attr({"disabled":true});
                         $("#global").addClass("selected");
                     }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
-                        debugger
                         that.items.areas.push({"salesAreaName":list[i],"salesAreaLevel":"2"})
                         var arr = that.provincecity[list[i].trim()];
                         if(arr.length>1){
@@ -733,6 +736,7 @@
                 }
 
                 var query = {};
+                query.carId = obj.carId;
                 query.carPriceId = this.temp_items.carPriceId;
                 query.stock =$(".stock_"+index).val();
                 query.onWay=$(".onWay_"+index).val();
@@ -743,6 +747,7 @@
                 var arr = [];
                 arr[0] = query;
                 var params = {"query":arr};
+                console.log("单个修改:"+JSON.stringify(params));
                 var that = this;
                 layer.confirm('确定该款车<strong style="color:red;">优惠：'+discount_+'元</strong>吗？', {title:'提示',
                     btn: ['确定','取消'] //按钮
@@ -806,7 +811,6 @@
                 this.global = false;
             },
             selectedProvinces(){
-                debugger;
                 this.city_items = this.provincecity[this.selectedKey];
 
                 if(this.city_items!=undefined && this.city_items.length>1){
@@ -814,6 +818,7 @@
                     if(this.city_items[0].insert == undefined){
                         this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
                     }
+
                     var total = this.city_items.length;
                     for(var i = 1; i<this.city_items.length;i++){
                         /*剔除已选择过的*/
@@ -821,6 +826,7 @@
                             total =total-1;
                         }
                     }
+
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
@@ -910,39 +916,41 @@
                     var query = {};
                     query.carPriceId = that.temp_arr[i].carPriceId;
                     if(i==0){
-                        if($(".stocks_"+i).eq(0).val() == "" || $(".stocks_"+i).eq(0).val()<0){
+                        if($(".stock_"+i).eq(0).val() == "" || $(".stock_"+i).eq(0).val()<0){
                             layer.msg("库存/辆不能为空且大于等于0",{icon:2});
                             return ;
                         }
-                        query.stock = $(".stocks_"+i).eq(0).val();
+                        query.stock = $(".stock_"+i).eq(0).val();
 
-                        if($(".onWays_"+i).eq(0).val() == "" || $(".onWays_"+i).eq(0).val()<0){
+                        if($(".onWay_"+i).eq(0).val() == "" || $(".onWay_"+i).eq(0).val()<0){
                             layer.msg("在途/辆不能为空且大于等于0",{icon:2});
                             return ;
                         }
-                        query.onWay= $(".onWays_"+i).eq(0).val();
+                        query.onWay= $(".onWay_"+i).eq(0).val();
                     }else{
-                        if($(".stocks_"+i).eq(1).val() == "" || $(".stocks_"+i).eq(1).val()<0){
+                        if($(".stock_"+i).eq(1).val() == "" || $(".stock_"+i).eq(1).val()<0){
                             layer.msg("库存/辆不能为空且大于等于0",{icon:2});
                             return ;
                         }
-                        query.stock = $(".stocks_"+i).eq(1).val();
+                        query.stock = $(".stock_"+i).eq(1).val();
 
-                        if($(".onWays_"+i).eq(1).val() == "" || $(".onWays_"+i).eq(1).val()<0){
+                        if($(".onWay_"+i).eq(1).val() == "" || $(".onWay_"+i).eq(1).val()<0){
                             layer.msg("在途/辆不能为空且大于等于0",{icon:2});
                             return ;
                         }
-                        query.onWay= $(".onWays_"+i).eq(1).val();
+                        query.onWay= $(".onWay_"+i).eq(1).val();
                     }
                     query.discount = this.temps.discount;
                     query.lowPrice = this.temps.lowPrice;
                     query.createUser = config.USERID();
                     query.areas = this.items.areas;
+                    query.carId = this.temps.carId;
                     arr.push(query);
                 }
 
                 var params = {"query":arr};
-
+                console.log("批量修改:"+JSON.stringify(params));
+                debugger;
                 layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
@@ -961,19 +969,6 @@
                 this.selectedKey = "0";
                 this.city_items = [];
             },
-        },
-        watch:{
-            'checkedIndex':{
-                handler: function (val, oldVal) {
-                    if(this.checkedIndex.length == this.arr_items.length){
-                        this.checked = true;
-                    }else{
-                        this.checked = false;
-                    }
-                },
-                //监听数组不用添加
-                deep: true
-            }
         }
     }
 </script>
@@ -989,7 +984,7 @@
     }
     .selected{
         color: #fa8c35!important;
-        border: 2px solid #fa8c35!important;;
+        border: 1px solid #fa8c35!important;;
     }
 
     .batch-change{
@@ -1176,12 +1171,12 @@
     div dl {
         margin: 10px 0;
     }
-
-    div dl dt, div dl dd {
+    div.add dl dt, div.add dl dd {
         float: left;
         height: 35px;
         line-height: 35px;
     }
+
     div.add dl dt:nth-child(n+2){
         margin-left: 60px;
     }
@@ -1231,7 +1226,7 @@
         z-index: 2;
         opacity: 0;
     }
-    div dl dd button {
+    div.add button {
         padding: 5px 60px;
         margin: 20px 15px;
         font-size: 16px;
@@ -1240,8 +1235,22 @@
         border: none;
         cursor: pointer;
     }
-    div dl dd button:hover{
-
+    div.activearea button {
+        padding: 0 10px 0 10px;
+        white-space: nowrap;
+        display: inline-block;
+        border-radius: 2px;
+        height: 26px;
+        line-height: 26px;
+        text-decoration: none;
+        font-size: 14px;
+        min-width: 40px;
+        text-align: center;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        background: #fa8c35;
+        color: #FFF;
     }
     div dl dd button:last-child{
         background: #ccc;
@@ -1249,26 +1258,81 @@
     div dl dd button:last-child:hover{
         background: #666;
     }
-    .layer_2 ul li {
-        margin:5px 10px!important;
-        position: relative;
-        border: 2px solid #ccc;
-        background:#FFF;
-        color: #ccc;
-        display: inline-block;
+    .layer_2{
+        padding-top: 15px;
+    }
+    .layer_2 dl{
+        margin-bottom: 10px;
+    }
+
+    .layer_2 dl dt{
+        float: left;
+        width: 100px;
+        text-align: right;
+        height: 28px;
+        line-height: 28px;
+    }
+    .layer_2 dl dd{
+        margin-left: 110px;
+    }
+    .layer_2 .city_dd{
+        margin-top: 20px;
+    }
+    .layer_2 dd li{
+        float: left;
+        display: inline;
+        line-height: 24px;
         padding: 0 10px;
-        height: 30px;
-        font-size: 16px;
-        line-height: 30px;
+        position: relative;
+        border: 1px solid #5f5c5c;
+        background:#FFF;
+        color: #5f5c5c;
         text-align: center;
         cursor: pointer;
+        margin-bottom: 13px;
+        margin-right: 13px;
     }
     .layer_2 ul li i{
+        display: block;
+        width: 19px;
+        height: 19px;
         position: absolute;
-        right: -10px;
-        top:-10px;
+        right: -9px;
+        top: -9px;
         background: url('../../assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
+    }
+    .layer_2 .optional-area dl{
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+    }
+    .layer_2 ul .no-slt{
+        background-color: #F9F9F9;
+        color: #C2C2C2;
+        border: 1px solid #C2C2C2;
+        cursor: not-allowed;
+    }
+    .layer_2 select{
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px;
+        border-color: #5f5c5c;
+        outline: none;
+    }
+    .layer_2 .btn-global{
+        padding: 0 30px;
+    }
+    .layer_2 .line{
+        height: 1px;
+        line-height: 1px;
+        font-size: 0;
+        background: #ddd;
+        margin-bottom: 10px;
+    }
+    .layer_2 .btn-box button{
+        margin: 0 10px;
     }
 
     .add {
@@ -1285,5 +1349,12 @@
     .add table tr td input[type="text"]{
         display: inline-block;
         width: 80px;
+    }
+    .cityStyle{
+        display: inline-block;
+        padding: 0 10px;
+        margin-right: 10px;
+        background: #e8e8e8;
+        margin-bottom: 10px;
     }
 </style>

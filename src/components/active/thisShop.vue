@@ -156,7 +156,7 @@
                                 laypage({
                                     cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
                                     pages: Math.ceil(that.count/that.pagesize), //总页数
-                                    curr:cur||1,
+                                    curr:cur || 1,
                                     skip: true, //是否开启跳页
                                     skin: '#ff9205;',
                                     groups: 7, //连续显示分页数
@@ -222,7 +222,7 @@
         font-weight:bold;
         font-size:14px;
         color:#666;
-        margin:30px 30px 25px 0;
+        margin:0px 30px 25px 0;
     }
     .brand-list p span{
         margin-right:20px;

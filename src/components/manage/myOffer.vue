@@ -8,7 +8,7 @@
             <dl class="brands clearfix">
                 <dt class="G_fl">品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
                 <div class="detailsCon">
-                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event)" brandId="{{brand.brandId}}" class="style-box brandslink" title="{{brand.brandName}}">{{brand.brandName}}<b></b></a></dd>
+                <dd v-for="brand in brands"><a v-on:click="brandClk(brand,$event,$index)" brandId="{{brand.brandId}}" class="style-box brandslink" title="{{brand.brandName}}">{{brand.brandName}}<b></b></a></dd>
                 </div>
             </dl>
 
@@ -86,7 +86,7 @@
             </dl>
             <dl class="clearfix">
                 <dt>全部车型：</dt>
-                <dd style="width: 500px;height: 100%;" class="city_dd">
+                <dd style="width: 500px;height: 100%;min-height: 160px;" class="city_dd">
                     <ul>
                         <li v-for="item in findCarModelByBrand" v-on:click="carModelClk(item,$index)" class="city_li" :class="{'selected':item.selected==true}">
                             {{item.carModelName}}
@@ -105,10 +105,10 @@
     </div>
 
     <div class="eaitCarsModels" style="display: none;">
-        <div class="layer_2">
+        <div class="layer_2 car_dd">
             <dl class="clearfix">
                 <dt>已选车款：</dt>
-                <dd style="display: inline-block;width: 500px;height: 100%;min-height:44px;border-bottom:1px solid #ccc;">
+                <dd style="display: inline-block;width: 540px;height: 100%;min-height:44px;border-bottom:1px solid #ccc;">
                     <ul class="filter_car">
                         <li class="selected" v-for="item in findCarByCarModel | filterBy 'true' in 'selected'" track-by="$index" carId="{{item.carId}}">{{item.carName}}<i v-on:click="removeCar(item)"></i></li>
                     </ul>
@@ -116,9 +116,9 @@
             </dl>
             <dl class="clearfix">
                 <dt>全部车款：</dt>
-                <dd style="width: 500px;height: 100%;" class="city_dd">
+                <dd style="width: 540px;height: 100%;min-height: 230px;" class="car_dd">
                     <ul>
-                        <li v-for="item in findCarByCarModel" v-on:click="carClk(item,$index)" class="city_li" :class="{'selected':item.selected==true}"  carId="{{item.carId}}">
+                        <li v-for="item in findCarByCarModel" v-on:click="carClk(item,$index)" :class="{'selected':item.selected==true}"  carId="{{item.carId}}">
                             {{item.carName}}
                         </li>
                     </ul>
@@ -147,46 +147,7 @@
         route:{
             data({to}){
                 var that = this;
-                /*品牌*/
-                $.ajax({
-                    url:config.API_BASE+"/4s/prefer/preferBrandModelCar",
-                    method:'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    data:JSON.stringify({"query":{"userId":config.USERID()}}),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        if(response.code == 0){
-                            var list = response.data;
-                            that.brands = list.brand;
-                            that.cars = list.car;
-                            that.carModels = list.carModel;
-//                          debugger;
-                            /*
-                             * v-for 遍历完
-                             * */
-                            
-                            that.$nextTick(function () {
-                                that.brandLoad({"brandId":that.brands[0].brandId,"brandName":that.brands[0].brandName},null);
-                            })
-                            
-                        }
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                });
+                that.getCarM(0);
                 /*主营、副营品牌*/
                 $.ajax({
                     url:config.API_BASE+"/4s/accountmanagement/information",
@@ -249,6 +210,49 @@
             OfferTable
         },
         methods:{
+        	getCarM(num){
+        		var that = this;
+        		/*品牌*/
+                $.ajax({
+                    url:config.API_BASE+"/4s/prefer/preferBrandModelCar",
+                    method:'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data:JSON.stringify({"query":{"userId":config.USERID()}}),
+                    beforeSend:function (request) {
+                        request.setRequestHeader("sessionid",config.SESSIONID());
+                    },
+                    success:function (response) {
+                        if(response.code == 0){
+                            var list = response.data;
+                            that.brands = list.brand;
+                            that.cars = list.car;
+                            that.carModels = list.carModel;
+                            /*
+                             * v-for 遍历完
+                             * */
+                            
+                            that.$nextTick(function () {
+                                that.brandLoad({"brandId":that.brands[num].brandId,"brandName":that.brands[num].brandName},null,num);
+                            })
+                            
+                        }
+                    },
+                    error:function (fail) {
+                        if(fail.status == "401"){
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
+                        }
+                    }
+                });
+                
+        	},
             eaitModels(){
                 var that = this;
                 var brandId = $(".brands dd a.acton").attr("brandId");
@@ -295,7 +299,7 @@
                     type: 1,
                     title: '编辑车型',
                     skin: 'layui-layer-rim', //加上边框
-                    area : ['650px' , '600px'],
+                    area : ['650px' , '350px'],
                     content: $(".eaitCarsModelsByBrand")
                 });
                 this.isCarModelId = $(".model .acton").attr("carmodelid");
@@ -362,7 +366,7 @@
                     type: 1,
                     title: '编辑车款',
                     skin: 'layui-layer-rim', //加上边框
-                    area : ['650px' , '600px'],
+                    area : ['650px' , '450px'],
                     content: $(".eaitCarsModels")
                 });
                 this.isCarId = $(".style .acton").attr("carid");
@@ -396,7 +400,6 @@
                     obj.carModelName = list.eq(i).text();
                     carModels.push(obj);
                 }
-                console.log(carModels);
                 var that = this;
                 var brandId = $(".brands dd a.acton").attr("brandId");
                 var query = {};
@@ -419,7 +422,6 @@
                             that.$set("screen_carModels",carModels);
                             layer.close(that.mask_eaitModelsBrand);
                             console.log("下标："+that.isCarModelIndex);
-                            debugger;
                             if(that.isCarModel){
                                 that.selectModelAll();
                                 that.isCarModel = false;
@@ -510,7 +512,6 @@
             	that.ModelAll = false;
 				that.CarAll = false;
 				var brandId = $(".brands dd a.acton").attr("brandid");
-                console.log("点击车型的全部brandId："+brandId);
                 that.getActivityList(1,{"brandId":brandId});
 				$(".model dd.selectall a").addClass("acton");
             	$(".model dd.selectall").siblings("dd").find("a").removeClass("acton");
@@ -520,6 +521,8 @@
                 $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
                 $(".inColor .selectall").find("a").addClass("acton");
                 $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                var num = $(".brands .acton").parent().index();
+                this.getCarM(num);
                 
             },
 //          点击车款的全部
@@ -529,8 +532,6 @@
 				that.CarAll = false;
 				var brandId = $(".brands dd a.acton").attr("brandid");
 				var carModelId = $(".model dd a.acton").attr("carmodelid");
-                console.log("点击车款的全部brandId："+brandId);
-                console.log("点击车款的全部carModelId："+carModelId);
                 that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId});
                 $(".style .selectall").find("a").addClass("acton");
                 $(".style .selectall").siblings("dd").find("a").removeClass("acton");
@@ -546,11 +547,7 @@
 				var brandId = $(".brands dd a.acton").attr("brandid");
 				var carModelId = $(".model dd a.acton").attr("carmodelid");
 				var carId = $(".style dd a.acton").attr("carid");
-                console.log("点击外观颜色的全部brandId："+brandId);
-                console.log("点击外观颜色的全部carModelId："+carModelId);
-                console.log("点击外观颜色的全部carId："+carId);
                 that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId});
-                
 				$(".outColor .selectall").find("a").addClass("acton");
                 $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
                 $(".inColor .selectall").find("a").addClass("acton");
@@ -564,17 +561,12 @@
 				var carModelId = $(".model dd a.acton").attr("carmodelid");
 				var carId = $(".style dd a.acton").attr("carid");
 				var exteriorColorId = $(".outColor dd a.acton").attr("outcolorid");
-                console.log("点击外观颜色的全部brandId："+brandId);
-                console.log("点击外观颜色的全部carModelId："+carModelId);
-                console.log("点击外观颜色的全部carId："+carId);
-                console.log("点击外观颜色的全部exteriorColorId："+exteriorColorId);
                 that.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId,"exteriorColorId":exteriorColorId});
                 $(".inColor .selectall").find("a").addClass("acton");
                 $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
 			},
 //          获取颜色
             getColor(carId){
-            	console.log("获取颜色的："+carId);
             	var that = this;
             	var query = {};
             	query.userId = config.USERID();
@@ -685,6 +677,10 @@
                                     }
                                 });
                             }else{$("#page2").empty();}
+                            that.$nextTick(function () {
+                                this.$children[0]._data.checkedIndex = [];
+                                this.$children[0]._data.checkedAll=false;
+                            });
                         }
                         layer.close(ii);
                     },
@@ -702,13 +698,13 @@
                     }
                 })
             },
-            brandLoad(obj,e){
+            brandLoad(obj,e,index){
                 var brandId = obj.brandId;
                 this.BrandAll = true;
                 console.log("brandLoad是："+brandId);
                 this.screen_carModels = this.carModels[brandId];
                 $(".brands dd").find('a').removeClass("acton");
-        		$(".brands dd").eq(0).find('a').addClass("acton");
+        		$(".brands dd").eq(index).find('a').addClass("acton");
         		if(brandId!=null){
                     var _index = 1;
                     this.$nextTick(function () {
@@ -725,8 +721,9 @@
                 }
             },
 //          点击品牌
-            brandClk(obj,e){
-//              debugger;
+            brandClk(obj,e,index){
+				var num = index!=null?index:0; 
+				this.getCarM(num);
 				this.BrandAll = true;
 				this.ModelAll = false;
 				this.CarAll = false;
@@ -776,7 +773,6 @@
                 $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
                 var _index = num!=null?num:1;
                 console.log("下标："+_index);
-//          	debugger;
 
                 if(carModelId != null){
                     this.$nextTick(function () {
@@ -804,7 +800,6 @@
             },
 //          点击车款
             scrCarClk(obj,e,num){
-//          	debugger;
 				$(".outColor .selectall").find("a").addClass("acton");
                 $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
                 $(".inColor .selectall").find("a").addClass("acton");
@@ -896,7 +891,7 @@
     }
     .selected{
         color: #fa8c35!important;
-        border: 2px solid #fa8c35!important;;
+        border: 1px solid #fa8c35!important;;
     }
     .actived{
         background:#fa8c35!important;
@@ -1143,7 +1138,7 @@
     }
     div dl dd button {
         padding: 5px 60px;
-        margin: 20px 15px;
+        margin: 0 10px;
         font-size: 16px;
         background: #fa8c35;
         color: #FFF;
@@ -1161,13 +1156,13 @@
     .layer_2 ul li {
         margin:5px 10px!important;
         position: relative;
-        border: 2px solid #ccc;
+        border: 1px solid #000;
         background:#FFF;
-        color: #ccc;
+        color: #000;
         display: inline-block;
         padding: 0 10px;
         height: 30px;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 30px;
         text-align: center;
         cursor: pointer;
@@ -1181,6 +1176,10 @@
     }
     .city_dd li{
         margin: 10px;
+    }
+    .car_dd li{
+        width: 248px;
+        padding: 0 0!important;
     }
     option{
         text-align: center;

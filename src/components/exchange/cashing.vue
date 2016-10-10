@@ -4,7 +4,7 @@
         <p> <i></i>尊敬的购车惠4S店用户，您好！ <span>您当前积分：<b>{{SESSIONID.total_jifen}}</b></span>   <span>等级：<b>{{realGrade}}</b></span>
             <span>本月兑换次数：<b  v-if="surplus > 0">{{surplus}}</b><b v-else>很抱歉！您的本月兑换次数已用完！</b></span><a v-link="{path:'/u/exchange/rule'}">查看兑换规则>></a></p>
     </div>
-    <h2>积分礼品 <span>收益积分可直接兑换礼品</span></h2>
+    <h2>积分礼品 <span>(收益积分可直接兑换礼品)</span></h2>
     </div>
     <ul class="gift-list">
         <li class="clearfix" v-for="good of dataGoods">
@@ -125,6 +125,7 @@
         bottom:10px;
     }
     .gift-right-box a:hover{
+        text-decoration: none;
         background:#ff791f;
         color:#fff;
     }

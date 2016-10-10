@@ -239,6 +239,9 @@ export  default function (router) {
         },
     });
     router.beforeEach(({to, from, next}) => {
+        if(to.matched == null){
+            return;
+        }
         let toPath = to.path
         let fromPath = from.path
         console.log('to: ' + toPath + ' from: ' + fromPath)
@@ -250,11 +253,14 @@ export  default function (router) {
             router.app.isIndex = depath ? 0 : 1
         }
         next()//调用过度动画
-
     });
 
     router.afterEach(function ({to}) {
         console.log(`成功浏览到: ${to.path}`);
+        if(sessionStorage.getItem("SESSIONID")==null){
+            router.go("/login");
+            return;
+        }
         // return router;
     })
 }

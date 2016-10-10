@@ -193,7 +193,7 @@
                         this.$set("arr_items",[]);
                     }
                     if(e!=null){
-                        _index = $(e.target).parent().index()-1;
+                        _index = $(e.target).parent().index();
                     }
                     $(".brands dd").find('a').removeClass("acton");
                     $(".brands dd").eq(_index).find('a').addClass("acton");
@@ -408,6 +408,11 @@
                                     }
                                 });
                             }else{$("#page2").empty();}
+                            that.$nextTick(function () {
+                                debugger;
+                                this.$children[0]._data.checkedIndex = [];
+                                this.$children[0]._data.checkedAll=false;
+                            });
                         }
                         layer.close(ii);
                     },
@@ -429,6 +434,8 @@
             scrModelClk(obj,e){
                 var carModelId = obj.carModelId;
                 this.screen_car = this.cars[carModelId];
+                this.outColors = "";
+            	this.inColors = "";
                 var _index = 0;
                 if(carModelId != null){
                     this.$nextTick(function () {

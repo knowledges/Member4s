@@ -228,7 +228,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url(../../assets/img/ico_warn.png);
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

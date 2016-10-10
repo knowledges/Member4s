@@ -148,8 +148,8 @@
             </dl>
             <dl class="clearfix">
                 <dt>活动说明：</dt>
-                <dd style="display: inline-block;width: 576px;height: 210px;">
-                    <textarea name="desc" v-model="items.desc" cols="68" rows="8" placeholder="填写相关活动说明~"></textarea>
+                <dd>
+                    <textarea name="desc" v-model="items.desc" cols="64" rows="8" placeholder="填写相关活动说明~"></textarea>
                 </dd>
             </dl>
             <div class="btn-box">
@@ -336,7 +336,6 @@
                 var self = this,
                         query = {},
                         params = {};
-                console.log(item);
                 query.user_id = config.USERID();
                 query.interior_color_id = item.interiorColorId;
                 query.exterior_color_id= item.exteriorColorId;
@@ -361,7 +360,6 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        console.log(response);
                         if(response.code === 0){
                             self.history.list = response.data.rows;
                             self.history.index = layer.open({
@@ -452,7 +450,7 @@
                     type: 1,
                     title: '活动详情添加',
                     skin: 'layui-layer-rim', //加上边框
-                    area : ['750px' , '800px'],
+                    area : ['660px' , '800px'],
                     content: $(".activeinfo"),
                     cancel:function () {
                         /*修改弹框初始化*/
@@ -491,7 +489,6 @@
                         img = imgBox.find('.imghead').get(0);
 
                         img.onload = function(){
-                            console.log(img.offsetWidth);
                             var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
                             img.width  =  rect.width;
                             img.height =  rect.height;
@@ -1096,7 +1093,7 @@
         position: absolute;
         right: -9px;
         top: -9px;
-        background: url('/assets/img/close_1.png') no-repeat;
+        background: url('../../assets/img/close_1.png') no-repeat;
         background-position: 0 0!important;
     }
     .layer_2 .optional-area dl{
@@ -1172,7 +1169,7 @@
         vertical-align: top;
         margin-top: 8px;
         margin-right: 8px;
-        background-image: url(/assets/img/ico_warn.png);
+        background-image: url(../../assets/img/ico_warn.png);
         background-repeat: no-repeat;
         background-position: -82px 4px;
         background-size: 300px 150px;

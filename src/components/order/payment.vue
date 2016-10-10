@@ -53,7 +53,7 @@
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
 					query.id_4s = config.USERID();
-					query.status = [1];
+					query.status = [1,3,4,5];
 //					query.id_4s = "223";
 //					query.status = [1];
 	                query.pagenum = 3;

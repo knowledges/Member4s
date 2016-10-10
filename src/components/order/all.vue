@@ -71,7 +71,7 @@
                 var url = config.API_BASE+"/4s/order/list";
                 var query = {};
 					query.id_4s = config.USERID();
-					query.status = [1,6,7,8];
+					query.status = [1,3,4,5,6,7,8];
 //					query.id_4s = "223";
 //					query.status = [0,1,2];
 	                query.pagenum = 3;

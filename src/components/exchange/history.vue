@@ -19,7 +19,7 @@
             </thead>
             <tbody>
 
-            <template v-if="recordList.legnth > 0">
+            <template v-if="recordList.length > 0">
             <tr v-for="record in recordList">
                 <td class="time">{{record.createtime}}</td>
                 <td class="action">{{record.info}}</td>
