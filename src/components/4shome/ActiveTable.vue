@@ -50,12 +50,13 @@
                 <tr v-if="!istrue">
                     <td>{{arr_active.car_model_name}}</td>
                     <td>{{arr_active.car_name}}</td>
-                    <td>{{arr_active.interior_color_name}}</td>
                     <td>{{arr_active.exterior_color_name}}</td>
+                    <td>{{arr_active.interior_color_name}}</td>
                     <td>{{arr_active.price}}</td>
                     <td>{{arr_active.special_price}}</td>
                     <td>
                         <p>{{arr_active.start_date}}</p>
+                        至
                         <p>{{arr_active.end_date}}</p>
                     </td>
                     <td>{{arr_active.number}}</td>

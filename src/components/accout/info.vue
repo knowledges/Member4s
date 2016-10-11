@@ -45,7 +45,7 @@
         <div class="fill_in_info">
             <dl class="clearfix">
                 <dt><em class="orange">*</em>联系人：</dt>
-                <dd><input type="text" v-model="user" id="user_"></dd>
+                <dd><input type="text" v-model="user" id="user_" placeholder="请输入联系人名称"></dd>
                 <dd v-if="user_"> <i></i> {{user_msg}} </dd>
             </dl>
             <!--<dl class="clearfix">
@@ -59,7 +59,7 @@
             <dl class="clearfix">
                 <dt><em class="orange">*</em>手机：</dt>
                 <dd>
-                    <input type="text" v-model="phone" id="phone_">
+                    <input type="text" v-model="phone" id="phone_" placeholder="请输入手机号">
                     <input type="text" v-model="code">
                     <button class="getCode" v-on:click="getCode">获取验证码</button>
                 </dd>
@@ -76,7 +76,7 @@
             <dl class="clearfix">
                 <dt>邮箱：</dt>
                 <dd>
-                    <input type="text" v-model="email" id="email">
+                    <input type="text" v-model="email" id="email" placeholder="请输入邮箱">
                 </dd>
                 <dd v-if="email_">
                     <i></i> {{email_msg}}
@@ -127,7 +127,7 @@
         methods:{
         	getCode(){
 				var that = this;
-				var url = "http://test3.gouchehui.com:8082/index.php/Api/sendMessages";
+				var url = config.PHP_API+"/index.php/Api/sendMessages";
 				var	mobile = that.phone;
 				var	tpl_id = "5774";
 				var formd = new FormData();
@@ -226,7 +226,7 @@
                     layer.msg("验证码不能为空");
                 }else if(this.code != ''){
                 	var that = this;
-                	var urlver = "http://test3.gouchehui.com:8082/index.php/api/verifyMessages";
+                	var urlver = config.PHP_API+"/index.php/api/verifyMessages";
 					var code = that.code;
 					var	mobile = that.phone;
 					var	md5code = that.codemd5;
@@ -266,6 +266,12 @@
 					                success:function(response){
 										if(response.code == 1){
 					                       layer.msg('信息修改成功',{icon:1});
+                                            var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
+                                            debugger;
+                                            sessionid.user_name = that.user;
+                                            sessionid.email = that.email;
+                                            sessionid.tel = that.phone;
+                                            sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));
 					                       setTimeout("window.history.go(0)",1500);
 					                    }else{
 					                       layer.msg('信息修改失败',{icon:2});

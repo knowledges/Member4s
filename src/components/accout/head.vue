@@ -95,7 +95,7 @@
             btnCrop(){
                 var that = this;
                 var img = that.cropper.getDataURL();
-				var url = "http://test3.gouchehui.com:8082/index.php/api/uploadBase64";
+				var url = config.PHP_API+"/index.php/api/uploadBase64";
 				var base64 = img;
 				var user_id = config.USERID();
                 
@@ -207,6 +207,7 @@
         overflow: hidden;
         background-repeat: no-repeat;
         cursor: move;
+        pointer-events:none;
     }
     .imageBox .thumbBox {
         position: absolute;
@@ -220,6 +221,7 @@
         border: 1px solid rgb(102, 102, 102);
 	    box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.6);
         background: none repeat scroll 0% 0% transparent;
+        pointer-events:auto;
     }
     .imageBox .spinner {
         position: absolute;

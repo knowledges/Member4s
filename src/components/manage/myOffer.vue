@@ -110,7 +110,10 @@
                 <dt>已选车款：</dt>
                 <dd style="display: inline-block;width: 540px;height: 100%;min-height:44px;border-bottom:1px solid #ccc;">
                     <ul class="filter_car">
-                        <li class="selected" v-for="item in findCarByCarModel | filterBy 'true' in 'selected'" track-by="$index" carId="{{item.carId}}">{{item.carName}}<i v-on:click="removeCar(item)"></i></li>
+                        <li class="selected" v-for="item in findCarByCarModel | filterBy 'true' in 'selected'" track-by="$index" carId="{{item.carId}}">
+                            <a href="javascript:;;" title="{{item.carName}}" class="selected">{{item.carName}}</a>
+                            <i v-on:click="removeCar(item)"></i>
+                        </li>
                     </ul>
                 </dd>
             </dl>
@@ -119,7 +122,7 @@
                 <dd style="width: 540px;height: 100%;min-height: 230px;" class="car_dd">
                     <ul>
                         <li v-for="item in findCarByCarModel" v-on:click="carClk(item,$index)" :class="{'selected':item.selected==true}"  carId="{{item.carId}}">
-                            {{item.carName}}
+                            <a href="javascript:;;" title="{{item.carName}}" :class="{'selected':item.selected==true}" >{{item.carName}}</a>
                         </li>
                     </ul>
                 </dd>
@@ -270,17 +273,31 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        var list = response.data;
-                        if(that.screen_carModels!=undefined){
-                            for(var i =0 ;i<that.screen_carModels.length;i++){
-                                for(var j = 0; j<list.length;j++){
-                                    if(that.screen_carModels[i].carModelName == list[j].carModelName ){
-                                        list[j].selected = true;
+                        if(response.code == 0){
+                            if(response.data.length>0){
+                                var list = response.data;
+                                if(that.screen_carModels!=undefined){
+                                    for(var i =0 ;i<that.screen_carModels.length;i++){
+                                        for(var j = 0; j<list.length;j++){
+                                            if(that.screen_carModels[i].carModelName == list[j].carModelName ){
+                                                list[j].selected = true;
+                                            }
+                                        }
                                     }
                                 }
+                                that.$set("findCarModelByBrand",list);
+                                that.mask_eaitModelsBrand = layer.open({
+                                    type: 1,
+                                    title: '编辑车型',
+                                    skin: 'layui-layer-rim', //加上边框
+                                    area : ['650px' , '350px'],
+                                    content: $(".eaitCarsModelsByBrand")
+                                });
+                            }else{
+                                layer.msg("该品牌未找到车型，请选择其他的品牌");
                             }
                         }
-                        that.$set("findCarModelByBrand",list)
+
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
@@ -295,13 +312,7 @@
                         }
                     }
                 });
-                this.mask_eaitModelsBrand = layer.open({
-                    type: 1,
-                    title: '编辑车型',
-                    skin: 'layui-layer-rim', //加上边框
-                    area : ['650px' , '350px'],
-                    content: $(".eaitCarsModelsByBrand")
-                });
+
                 this.isCarModelId = $(".model .acton").attr("carmodelid");
                 /*如果当前选择是全部*/
                 if(this.isCarModelId==undefined){
@@ -337,17 +348,31 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        var list = response.data;
-                        if(that.screen_car!=undefined){
-                            for(var i =0 ;i<that.screen_car.length;i++){
-                                for(var j = 0; j<list.length;j++){
-                                    if(that.screen_car[i].carName == list[j].carName){
-                                        list[j].selected = true;
+                        if(response.code == 0){
+                            if(response.data.length>0){
+                                var list = response.data;
+                                debugger;
+                                if(that.screen_car!=undefined){
+                                    for(var i =0 ;i<that.screen_car.length;i++){
+                                        for(var j = 0; j<list.length;j++){
+                                            if(that.screen_car[i].carName.trim() == list[j].carName){
+                                                list[j].selected = true;
+                                            }
+                                        }
                                     }
                                 }
+                                that.$set("findCarByCarModel",response.data);
+                                that.mask_eaitModels= layer.open({
+                                    type: 1,
+                                    title: '编辑车款',
+                                    skin: 'layui-layer-rim', //加上边框
+                                    area : ['650px' , '450px'],
+                                    content: $(".eaitCarsModels")
+                                });
+                            }else{
+                                layer.msg("该车型未找到车款，请选择其他的车型");
                             }
                         }
-                        that.$set("findCarByCarModel",response.data)
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
@@ -361,13 +386,6 @@
                             }
                         }
                     }
-                });
-                this.mask_eaitModels= layer.open({
-                    type: 1,
-                    title: '编辑车款',
-                    skin: 'layui-layer-rim', //加上边框
-                    area : ['650px' , '450px'],
-                    content: $(".eaitCarsModels")
                 });
                 this.isCarId = $(".style .acton").attr("carid");
                 /*如果当前选择是全部*/
@@ -1157,15 +1175,22 @@
         margin:5px 10px!important;
         position: relative;
         border: 1px solid #000;
+        padding: 0 10px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        cursor: pointer;
+    }
+    .layer_2 ul li a {
+        display: inline-block;
+        width: 245px;
+        border: none!important;
         background:#FFF;
         color: #000;
-        display: inline-block;
-        padding: 0 10px;
-        height: 30px;
-        font-size: 14px;
-        line-height: 30px;
-        text-align: center;
-        cursor: pointer;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .layer_2 ul li i{
         position: absolute;

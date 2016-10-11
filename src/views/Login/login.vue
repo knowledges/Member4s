@@ -101,18 +101,14 @@
         data(){
             return {
                 is4S:true,
-                username:"L01SHDZ",
-                password:"123456"
-//                username:"sssaaa",
-//                password:"gchjsb"
-//                username:"baomagouchehui",
-//                password:"123456"
+                username:"",
+                password:""
             }
         },
         methods:{
             swtichClk(isTrue,e){
                 if(!isTrue){
-                    window.location.href="http://test3.gouchehui.com:8082/member.php/Public/login?callback=http%3A%2F%2F_%2F";
+                    window.location.href=config.PHP_API+"/member.php/Public/login?callback=http%3A%2F%2F_%2F";
                 }
             },
             loginMethod(){
@@ -123,7 +119,6 @@
                     shade: [0.1,'#fff'] //0.1透明度的白色背景
                 });
                 var url = config.API_BASE+"/login/auth/4s/web";
-//                var url = " http://192.168.13.111/YchLrestServer/api/login/auth/4s/web";
                 var param = {};
                 param.username = that.username;
                 param.password = that.password;

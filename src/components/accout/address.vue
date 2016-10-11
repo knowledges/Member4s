@@ -9,42 +9,6 @@
             </div>
         </div>
         <div class="address_magment ohd" id="J_address_magment">
-            <ul class="address_listbox clearfix">
-                <li>
-                    <a v-on:click="newAddress">
-                        <i class="add"></i>
-                        添加新地址
-                    </a>
-                </li>
-                <li v-for="item in addlist | limitBy 8" data-id="{{item.id}}">
-                    <div class="hover" v-if="item.status == 1">
-                        <h2>{{item.receiver}}</h2>
-                        <p>{{item.telphone}}</p>
-                        <p><span>{{item.receipt_province}}</span><span>{{item.receipt_city}}</span><span>{{item.receipt_quarter}}</span></p>
-                        <p>{{item.receipt_address}}</p>
-                        <!--<p>({{item.receiver}})</p>-->
-                        <p class="setting">
-                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
-                            <a class="orange" v-on:click="del(item,_index)">删除</a>
-                        </p>
-						<p style="position: absolute;top: 0;right: 0;background: #ff791f;color: #FFF;padding: 0 5px;">默认地址</p>
-                        <i class="selected" role="选中"></i>
-                    </div>
-                    <div v-else="item.status == 0">
-                        <h2>{{item.receiver}}</h2>
-                        <p>{{item.telphone}}</p>
-                        <p><span>{{item.receipt_province}}</span><span>{{item.receipt_city}}</span><span>{{item.receipt_quarter}}</span></p>
-                        <p>{{item.receipt_address}}</p>
-                        <!--<p>({{item.receiver}})</p>-->
-                        <p class="setting">
-                            <a class="orange" v-on:click="setting(item,_index)">设为默认</a>
-                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
-                            <a class="orange" v-on:click="del(item,_index)">删除</a>
-                        </p>
-                        <i class="selected" role="选中"></i>
-                    </div>
-                </li>
-            </ul>
             <div class="add_new addre" v-if="address" v-bind:data-id="modid" v-bind:data-inx="modinx">
             	<div class="titbox G_f16">
             		<h2 class="tit"><b>{{tit_msg}}</b><span>( <em>*</em>星号为必填项 )</span></h2>
@@ -100,6 +64,42 @@
             		</dd>
             	</dl>
             </div>
+            <ul class="address_listbox clearfix">
+                <li>
+                    <a v-on:click="newAddress">
+                        <i class="add"></i>
+                        添加新地址
+                    </a>
+                </li>
+                <li v-for="item in addlist | limitBy 8" data-id="{{item.id}}">
+                    <div class="hover" v-if="item.status == 1">
+                        <h2>{{item.receiver}}</h2>
+                        <p>{{item.telphone}}</p>
+                        <p><span>{{item.receipt_province}}</span><span>{{item.receipt_city}}</span><span>{{item.receipt_quarter}}</span></p>
+                        <p>{{item.receipt_address}}</p>
+                        <!--<p>({{item.receiver}})</p>-->
+                        <p class="setting">
+                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
+                            <a class="orange" v-on:click="del(item,_index)">删除</a>
+                        </p>
+						<p style="position: absolute;top: 0;right: 0;background: #ff791f;color: #FFF;padding: 0 5px;">默认地址</p>
+                        <i class="selected" role="选中"></i>
+                    </div>
+                    <div v-else="item.status == 0">
+                        <h2>{{item.receiver}}</h2>
+                        <p>{{item.telphone}}</p>
+                        <p><span>{{item.receipt_province}}</span><span>{{item.receipt_city}}</span><span>{{item.receipt_quarter}}</span></p>
+                        <p>{{item.receipt_address}}</p>
+                        <!--<p>({{item.receiver}})</p>-->
+                        <p class="setting">
+                            <a class="orange" v-on:click="setting(item,_index)">设为默认</a>
+                            <a class="orange" v-on:click="modify(item,$index)">修改</a>
+                            <a class="orange" v-on:click="del(item,_index)">删除</a>
+                        </p>
+                        <i class="selected" role="选中"></i>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </template>

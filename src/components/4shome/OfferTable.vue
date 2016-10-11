@@ -50,8 +50,8 @@
             <tr v-if="!istrue">
                 <td>{{arr_offer.car_model_name}}</td>
                 <td>{{arr_offer.car_name}}</td>
-                <td>{{arr_offer.interior_color_name}}</td>
                 <td>{{arr_offer.exterior_color_name}}</td>
+                <td>{{arr_offer.interior_color_name}}</td>
                 <td>{{arr_offer.price}}</td>
                 <td>{{arr_offer.discount}}</td>
                 <td>{{arr_offer.low_price}}</td>

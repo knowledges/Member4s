@@ -70,7 +70,11 @@
                     <table>
                         <thead v-if="!istrue">
                             <tr>
-                                <th colspan="6"><p v-if="neworder!=null" style="text-align: left">下单时间：{{neworder.createtime}} 订单号：{{neworder.out_trade_no}}</p></th>
+                                <th colspan="6">
+                                    <p v-if="neworder!=null"  class="order">
+                                        下单时间：<span>{{neworder.createtime}} </span>订单号：<span>{{neworder.out_trade_no}}</span>
+                                    </p>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -566,6 +570,14 @@
     }
     table .common_info{
         width: 145px;
+    }
+    table .order{
+        color: #999;;
+        text-align: left;
+        margin-left: 15px;
+    }
+    table .order span{
+        color: #666;
     }
     .carousel{
         position: relative;

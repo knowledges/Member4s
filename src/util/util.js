@@ -12,19 +12,19 @@ export  default {
         '<!--错误信息提示-->'+
         '<div id="L_Message" style="display:none;width: 296px;margin: 8px 0;">'+
         '<div style="line-height: 34px;padding: 0 10px;overflow: hidden;width: 298px;background: #fef2f2;border: 1px solid;border-color: #f40a0a;background-color: #fee6e6;color: #f40a0a;">'+
-        '<i style="display:inline-block;width: 16px;height: 16px;background: url(../img/pwd-icons-new.png) no-repeat;background-position: -104px -49px;margin: 9px 6px 0 0;"></i>'+
+        '<i style="display:inline-block;width: 16px;height: 16px;background: url(../assets/img/pwd-icons-new.png) no-repeat;background-position: -104px -49px;margin: 9px 6px 0 0;"></i>'+
         '<p class="error G_f12" style="display:inline-block;"></p>'+
         '</div>'+
         '</div>'+
         '<div style=" position: relative;margin-bottom: 16px;z-index: 1;   border: 1px solid #bdbdbd;height: 38px;width: 318px; z-index: 6;margin-bottom: 20px;">'+
-        '<label for="J_logname"  style="position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../../assets/img/pwd-icons-new.png) no-repeat; background-position: 0 0;" ></label>'+
+        '<label for="J_logname"  style="position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../assets/img/pwd-icons-new.png) no-repeat; background-position: 0 0;" ></label>'+
         '<input id="J_logname" type="text" style=" line-height: 18px;border: 0;padding: 10px 0 10px 50px;width: 268px;float: none;overflow: hidden;font-size: 14px;outline: none;" name="user_name" tabindex="1" autocomplete="off" placeholder="4S店账户">'+
-        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
+        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
         '</div>'+
         '<div  style=" position: relative;margin-bottom: 16px;z-index: 1;border: 1px solid #bdbdbd;height: 38px;width: 318px;  height: 38px;margin-bottom: 15px;">'+
-        '<label style=" position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../../assets/img/pwd-icons-new.png) no-repeat;background-position: -48px 0;" for="J_logpwd"></label>'+
+        '<label style=" position: absolute;z-index: 3;top: 0;left: 0;width: 38px;height: 38px;border-right: 1px solid #bdbdbd;background: url(../assets/img/pwd-icons-new.png) no-repeat;background-position: -48px 0;" for="J_logpwd"></label>'+
         '<input type="password" id="J_logpwd" name="password" style=" line-height: 18px;border: 0;padding: 10px 0 10px 50px;width: 268px;float: none;overflow: hidden;font-size: 14px;outline: none;" tabindex="2"autocomplete="off" placeholder="密码">'+
-        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
+        '<span style=" position: absolute;z-index: 20;right: 6px;top: 12px;width: 14px;height: 14px;background: url(../assets/img/pwd-icons-new.png) -25px -143px no-repeat;cursor: pointer;display: none;"></span>'+
         '</div>'+
         '<div style=" position: relative;margin-bottom: 16px;z-index: 1;">'+
         '<div style="position: relative;color: #666;">'+

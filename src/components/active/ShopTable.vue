@@ -48,7 +48,8 @@
                 <td>{{item.special_price}}</td>
                 <td>
                     <p>{{item.start_date}}</p>
-                    <p>{{item.endTimer}}</p>
+                    <p>至</p>
+                    <p>{{item.end_date}}</p>
                 </td>
                 <td>{{item.number}}</td>
                 <td>{{item.sales_area}}</td>
@@ -688,7 +689,7 @@
                         type: "POST",
                         contentType: false,
                         processData: false,
-                        url: config.FILE_IMG + "/index.php/api/upload_file",
+                        url: config.PHP_API + "/index.php/api/upload_file",
                         data:formd,
                         success: function(data) {
                             if(data.code == 0){

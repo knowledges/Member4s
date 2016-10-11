@@ -239,11 +239,14 @@ export  default function (router) {
         },
     });
     router.beforeEach(({to, from, next}) => {
+        console.log("to matched :"+to.matched);
         if(to.matched == null){
+            window.location.href="http://www.gouchehui.com/Public/404.html";
+            // router.go("/404");
             return;
         }
-        let toPath = to.path
-        let fromPath = from.path
+        let toPath = to.path;
+        let fromPath = from.path;
         console.log('to: ' + toPath + ' from: ' + fromPath)
         if (toPath.replace(/[^/]/g, '').length > 1) {
             router.app.isIndex = false
@@ -261,6 +264,5 @@ export  default function (router) {
             router.go("/login");
             return;
         }
-        // return router;
     })
 }

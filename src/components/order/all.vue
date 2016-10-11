@@ -74,7 +74,7 @@
 					query.status = [1,3,4,5,6,7,8];
 //					query.id_4s = "223";
 //					query.status = [0,1,2];
-	                query.pagenum = 3;
+	                query.pagenum = 5;
 	                query.page = cur;
 					query.keyword = that.ordertext;
 				var param = { query:query };

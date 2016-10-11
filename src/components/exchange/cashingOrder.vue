@@ -112,7 +112,7 @@
     }
     .auth-verification-box .tips{
         text-align: center;
-        color: #ccc;
+        color: #666;
     }
     .auth-verification-box dt{
         float: left;
@@ -535,8 +535,7 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
         this.find = this.$route.params.goodsId;
         var that = this;
         that.good = that.goods[this.find];
-        //this.verificationTel = this.SESSIONID.tel;
-
+        this.verificationTel = this.SESSIONID.tel;
     }
     },
     ready(){
@@ -660,7 +659,7 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
             addlist: [],
             defAddressId: '',
             defAddress:{},
-            verificationTel: "13809040655",
+            verificationTel: "",
             code: '',
             codemd5: ''
         }
@@ -688,7 +687,7 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
                 area : ['340px'],
                 content: $('.j_authVerificationBox'),
                 success: function($layer, index){
-                    var url = "http://test3.gouchehui.com:8082/index.php/Api/sendMessages";
+                    var url = config.PHP_API + "/index.php/Api/sendMessages";
                     var	mobile = that.verificationTel;
                     var	tpl_id = "5774";
                     var formd = new FormData();

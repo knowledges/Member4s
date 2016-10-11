@@ -20,21 +20,6 @@
                         <div class="prompt-mes">如您对官方有疑问，请致电 400-138-0808</div>
                     </a>
                 </th>
-                <!--<th class="car-off-pri">-->
-                    <!--特价/元-->
-                <!--</th>-->
-                <!--<th class="car-place">-->
-                    <!--活动时间-->
-                <!--</th>-->
-                <!--<th class="car-stock">-->
-                    <!--库存/辆-->
-                <!--</th>-->
-                <!--<th class="car-way">-->
-                    <!--销售区域-->
-                <!--</th>-->
-                <!--<th width="50">-->
-                    <!--状态-->
-                <!--</th>-->
                 <th class="car-operation">操作</th>
             </tr>
             </thead>
@@ -600,7 +585,7 @@
                     type: "POST",
                     contentType: false,
                     processData: false,
-                    url: config.FILE_IMG + "/index.php/api/upload_file",
+                    url: config.PHP_API + "/index.php/api/upload_file",
                     data:formd,
                     success: function(data) {
                         if(data.code==0){

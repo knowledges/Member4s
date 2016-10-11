@@ -28,12 +28,12 @@
             this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID")) ;
             if(this.SESSIONID!=null){
                 if(this.SESSIONID.head_url==""||this.SESSIONID.head_url==null||this.SESSIONID.head_url==undefined){
-                    this.head_url = "/assets/img/default.png";
+                    this.head_url = "/member4s/assets/img/default.png";
                 }else{
                     this.head_url =this.SESSIONID.head_url
                 }
             }else{
-                this.head_url = "/assets/img/default.png";
+                this.head_url = "/member4s/assets/img/default.png";
             }
 
         },
