@@ -262,84 +262,7 @@
                 });
             },
             /*分页*/
-            getActivityList11(cur,car_id){
-                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
-                var that = this;
-                var query = {};
-                query.pagenum = this.pagesize;
-                query.page = cur;
-                 query.carId = car_id;
-                 query.userId = config.USERID();
-                var params = {"query":query};
-
-                $.ajax({
-                    url:config.API_BASE+"/4s/offer/findNewOfferlist",
-                    method:'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    data:JSON.stringify(params),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        if(response.code == 0){
-                            that.count = response.data.count;
-                            that.$set("arr_items",response.data.rows);
-                            if(response.data.count>that.pagesize){
-
-                                laypage({
-                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
-                                    pages: Math.ceil(that.count/that.pagesize), //总页数
-                                    curr:cur||1,
-                                    skip: true, //是否开启跳页
-                                    skin: '#ff9205;',
-                                    groups: 7, //连续显示分页数
-                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
-                                    last: Math.ceil(that.count/that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
-                                    jump: function(obj, first){
-                                        //回调
-                                        //得到了当前页，用于向服务端请求对应数据
-                                        var curr = obj.curr;
-                                        if(!first){
-                                            that.getActivityList(curr,car_id);
-                                        }
-
-                                        $(".laypage_btn").unbind("click").on('click',function(){
-                                            if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/that.pagesize)){
-                                                that.getActivityList($(".laypage_skip").val(),car_id);
-                                            }else{
-                                                layer.msg('请输入正确的跳转页码');
-                                            }
-                                        })
-                                    }
-                                });
-
-                            }else{$("#page2").empty();}
-                        }
-                        layer.close(ii);
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                })
-            },
-            /*分页*/
             getActivityList(cur,newobj){
-//          	console.log("分页的数据：");
-//          	console.log("分页的brandId是："+newobj.brandId);
-//          	console.log("分页的carModelId是："+newobj.carModelId);
-//          	console.log("分页的carId是："+newobj.carId);
-//          	console.log("分页的exteriorColorId是："+newobj.exteriorColorId);
-//          	console.log("分页的interiorColorId是："+newobj.interiorColorId);
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var that = this;
                 var query = {};
@@ -408,13 +331,18 @@
                                     }
                                 });
                             }else{$("#page2").empty();}
-                            that.$nextTick(function () {
-                                debugger;
+                            that.$nextTick(function (e) {
+                                console.log("我渲染了嗎");
+                                setTimeout(function () {
+                                    layer.close(ii);
+                                },1000);
                                 this.$children[0]._data.checkedIndex = [];
                                 this.$children[0]._data.checkedAll=false;
                             });
+                        }else{
+                            console.log("我偷偷的進來了。");
+                            layer.close(ii);
                         }
-                        layer.close(ii);
                     },
                     error:function (fail) {
                         if(fail.status == "401"){

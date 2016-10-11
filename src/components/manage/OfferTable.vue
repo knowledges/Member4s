@@ -606,6 +606,7 @@
             },
             /*修改或者批量修改我的报价*/
             updateMethos(params,num){
+//                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
                 var that = this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchUpdateCarPrice",
@@ -631,6 +632,7 @@
                             that.items.onWay="";
                             that.items.onWay_=false;
                             that.items.onWay_msg="";
+//                            layer.close(ii);
                             layer.msg("修改成功");
                             if(num==2){
                                 setTimeout(function(){
@@ -950,7 +952,6 @@
 
                 var params = {"query":arr};
                 console.log("批量修改:"+JSON.stringify(params));
-                debugger;
                 layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮

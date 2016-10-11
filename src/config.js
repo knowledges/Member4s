@@ -37,14 +37,23 @@ export default {
      all:总数
      */
 
-    API_BASE:"https://www.woodche.com/YchLrestServer_test/api",
-    // API_BASE:"http://192.168.13.111/YchLrestServer/api",
+    //test
+    API_BASE:"http://192.168.13.111/YchLrestServer/api",
+    PHP_API:"http://test3.gouchehui.com:8082",
+
+    //test hanwq
     // API_BASE:"http://192.168.13.250:3000/api",
     // PHP_API:"http://test3.gouchehui.com:8082",
 
-    API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
-    FILE_IMG:"http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web",
-    PHP_API:"http://www.gouchehui.com",
+
+    ////product
+    // API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
+    // PHP_API:"http://www.gouchehui.com",
+
+
+    // API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
+    // FILE_IMG:"http://yichenghui.oss-cn-shanghai.aliyuncs.com/gouchehui/web",
+    // PHP_API:"http://www.gouchehui.com",
 
     SESSIONID:function () {
         return  JSON.parse(sessionStorage.getItem("SESSIONID"))!=null?JSON.parse(sessionStorage.getItem("SESSIONID")).session.sessionid:""

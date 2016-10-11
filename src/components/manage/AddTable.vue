@@ -264,6 +264,9 @@
             }
         },
         ready(){
+            this.$nextTick(function () {
+                console.log("子類渲染了嗎");
+            })
         },
         components:{
 	        historyTpl
@@ -320,6 +323,7 @@
                 checkedAll:false,
                 checkedIndex:[],
                 city_items:[],
+                mask_add:"",
             }
         },
         methods:{
@@ -498,7 +502,7 @@
                 $(".update").attr("disabled",true);
                 $(e.target).removeAttr("disabled");
 
-                  var that = this;
+                 var that = this;
                 this.temp_items = [];
                 this.temp_items = obj;
 
@@ -516,6 +520,8 @@
             },
             /*修改或者批量修改我的报价*/
             updateMethos(params,num,obj){
+                var ii = layer.msg('保存中......', {icon: 16,shade : [0.5,'#000'],time:0});
+                console.log("開始");
                 var that = this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchAddCarPrice",
@@ -528,17 +534,24 @@
                     },
                     success:function (response) {
                         if(response.code == 0){
-                            that.items.areas = [];
-                            layer.msg("添加成功");
+                            console.log("結束");
+                            layer.msg("添加成功......");
+                            layer.close(this.mask_3);
+                            layer.close(ii);
                             if(num == 1){
+                            that.items.areas = [];
                                 that.arr_items.$remove(obj);
                                 that.count--;
                                 $(".update,input[type='checkbox']").removeAttr("disabled");
                             }else{
-                                that.checkedIndex
-
-                                window.history.go(0);
+                                setTimeout(function(){
+                                    that.checkedIndex = [];
+                                    window.history.go(0);
+                                },800)
                             }
+                        }else{
+                            console.log("失敗");
+                            layer.close(ii);
                         }
                     },
                     error:function (fail) {
@@ -556,7 +569,7 @@
                 });
             },
             save(obj,e,index){
-                var discount_  =$(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
+                var discount_  = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
                 if(parseInt(obj.price) < parseInt(discount_)){
                     layer.msg("优惠价小于等于官方价！",{icon:2})
                     return;
@@ -595,7 +608,8 @@
                 layer.confirm('确定该款车<strong style="color:red;">优惠：' + discount_ + '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
-                }, function () {
+                }, function (index) {
+                    layer.close(index);
                     that.updateMethos(params,1,that.temp_items);
                     /*修改弹框初始化*/
                     that.removeAll();
@@ -776,13 +790,14 @@
                 layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
-                }, function () {
+                }, function (index) {
+                    layer.close(index);
                     that.updateMethos(params,2,null);
-                    /*修改弹框初始化*/
+                  /*  /!*修改弹框初始化*!/
                     that.removeAll();
                     that.selectedKey = "0";
                     that.city_items = [];
-                    that.items.areas = [];
+                    that.items.areas = [];*/
                 }, function () {
                     /*window.history.go(0);*/
                 });
