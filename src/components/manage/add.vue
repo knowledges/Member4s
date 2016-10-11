@@ -263,7 +263,7 @@
             },
             /*分页*/
             getActivityList(cur,newobj){
-                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+                var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000'],time:0});
                 var that = this;
                 var query = {};
                 query.pagenum = this.pagesize;

@@ -82,7 +82,7 @@
                                 <td colspan="6" style="text-align: center; font-size: 16px;">
                                     <div class="order-nodata">
                                         <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
-                                        <p>您可进入 <a v-link="{ path:'/u/manage/myOffer/find/0'}">报价管理</a> 页面更新底价信息</p>
+                                        <p>您可进入 <a v-link="{ path:'/u/order/all'}">购车订单</a> 页面更新底价信息</p>
                                     </div>
                                 </td>
                             </tr>

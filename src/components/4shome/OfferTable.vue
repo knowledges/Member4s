@@ -43,7 +43,7 @@
                 <td colspan="11" style="font-size: 16px;">
                     <div class="order-nodata">
                         <h4><i class="order-nobg"></i>抱歉，暂无相关信息！</h4>
-                        <p>您可进入 <a v-link="{ path:'/active/thisShop/find/0'}">活动车款</a> 页面查看信息</p>
+                        <p>您可进入 <a v-link="{ path:'/u/manage/myOffer/find/0'}">报价管理</a> 页面查看信息</p>
                     </div>
                 </td>
             </tr>

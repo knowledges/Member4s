@@ -35,9 +35,7 @@
         route:{
             data(){
                 this.find = this.$route.params.findId != undefined ? this.$route.params.findId : 0;
-
                 this.getSpecialList(this.find ,1);
-
                 var that = this;
 
                 $.ajax({
@@ -90,6 +88,7 @@
             }
         },
         ready(){
+
         },
         data(){
             return {
@@ -149,7 +148,11 @@
                     success:function (response) {
                         if(response.code == 0){
                             that.count = response.data.count;
-                            that.$set("arr_items",response.data.rows);
+
+                            setTimeout(function () {
+                                that.$set("arr_items",response.data.rows);
+
+                            },500);
 
                             if(response.data.count>that.pagesize){
 

@@ -892,7 +892,12 @@
 	    font-size: 16px;
 	}
 	.address_magment .add_new{
-		margin-left: 50px;
+		/*margin-left: 50px;*/
+		margin-left: 20px;
+	    background: #e6e6e6;
+	    padding-left: 15px;
+	    padding-bottom: 10px;
+	    width: 794px;
 	}
 	.address_magment .add_new dl dt em{
 		color: red;
