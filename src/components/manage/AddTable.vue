@@ -6,7 +6,7 @@
 
     <!--<p>checked:id {{checkedIndex | json}}</p>-->
     <div class="table-box">
-        <table  border=1 cellspacing=0 cellpadding=0>
+       <table  border=1 cellspacing=0 cellpadding=0>
             <tr>
                 <th class="car-selected"><input type="checkbox" id="all"  v-model="checkedAll" :checked="checkedAll" v-on:click="allChecked"/></th>
                 <th class="car-model">车型</th>
@@ -76,7 +76,7 @@
                     <div class="show_{{$index}}">
                         <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">添加</button>
                         <!--<p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>-->
-                        <p><a href="#" @click.prevent="getHistoryList(item)">历史</a></p>
+                        <!--<p><a href="#" @click.prevent="getHistoryList(item)">历史</a></p>-->
                     </div>
                     <div class="update_{{$index}}" style="display: none;">
                         <p><a class="save" v-on:click="save(item,$event,$index)">保存</a></p>
@@ -246,13 +246,15 @@
 
     </div>
     
-    <history-tpl :history="history"></history-tpl>
+    <!--<history-tpl :history="history"></history-tpl>-->
+    <history-list :history="history"></history-list>
 </template>
 <script >
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
-    import historyTpl from './../historyTpl.vue'
+//  import historyTpl from './../historyTpl.vue'
+	import historyList from './historyList.vue'
     export default {
         props:{
             count:{
@@ -269,7 +271,7 @@
             })
         },
         components:{
-	        historyTpl
+	        historyList
 	    },
         data(){
             return {
@@ -310,7 +312,7 @@
                     carName: '',
                     exColorName: '',
                     inColorName: '',
-                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
+                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '报价 / 元'],
                     list:[]
                 },
                 provinces:"",
@@ -327,18 +329,28 @@
             }
         },
         methods:{
+            /*验证*/
+            discountInvalid(){
+                layer.msg("请输入正确的数值类型");
+            },
 //      	新改的历史
         	getHistoryList(item){
                 var self = this,
                     query = {},
                     params = {};
                 console.log(item);
-                query.user_id = config.USERID();
-                query.interior_color_id = item.interiorColorId;
-                query.exterior_color_id= item.exteriorColorId;
+//              query.user_id = config.USERID();
+//              query.interior_color_id = item.interiorColorId;
+//              query.exterior_color_id= item.exteriorColorId;
+//              query.pagenum = 100;
+//              query.page = 1;
+//              query.car_id = item.carId;
+				query.userId = config.USERID();
+                query.interiorColorId = item.interiorColorId;
+                query.exteriorColorId= item.exteriorColorId;
                 query.pagenum = 100;
                 query.page = 1;
-                query.car_id = item.carId;
+                query.carId = item.carId;
                 params = {"query":query};
 
                 self.history.brandName = item.brandName;
@@ -348,7 +360,7 @@
                 self.history.inColorName = item.interiorColorName;
 
                 $.ajax({
-                    url:config.API_BASE+"/4s/activityTrend/list/",
+                    url:config.API_BASE+"/4s/offerTrend/list/",
                     method:"POST",
                     contentType: 'application/json; charset=utf-8',
                     dataType: "json",
@@ -359,12 +371,18 @@
                     success:function (response) {
                         console.log(response);
                         if(response.code === 0){
+                        	var winHeight= $(window).height(),
+                                    layerTitHeight = 43,
+                                    extendHeight = 30,
+                                    newHeight = '';
+                            newHeight = (winHeight - 43 - 30) + 'px';
+                            
                             self.history.list = response.data.rows;
                             self.history.index = layer.open({
                                 type: 1,
                                 title: '历史记录',
                                 skin: 'layui-layer-rim', //加上边框
-                                area : ['750px' , '800px'],
+                                area : ['750px' , newHeight],
                                 content: $("#J_HistoryPop")
                             });
                         }else{
@@ -570,17 +588,20 @@
             },
             save(obj,e,index){
                 var discount_  = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
+                var str = /^[1-9]\d*$/;
+
                 if(parseInt(obj.price) < parseInt(discount_)){
                     layer.msg("优惠价小于等于官方价！",{icon:2})
                     return;
                 }
 
-                if($(".stock_"+index).val()==""||$(".stock_"+index).val()<0){
-                    layer.msg("库存/辆不能为空且大于等于0！",{icon:2})
+                if(!str.test($(".stock_"+index).val())){
+                    layer.msg("库存/辆的个数只能是1~9之间的数字！",{icon:2})
                     return;
                 }
-                if($(".onWay_"+index).val()==""||$(".onWay_"+index).val()<0){
-                    layer.msg("在途/辆不能为空且大于等于0！",{icon:2})
+
+                if(!str.test($(".onWay_"+index).val())){
+                    layer.msg("在途/辆的个数只能是1~9之间的数字！",{icon:2})
                     return;
                 }
 
@@ -748,7 +769,8 @@
                     layer.msg("请选择区域",{icon:2});
                     return;
                 }
-                var arr = [];
+                var arr = [] ,str = /^[1-9]\d*$/;
+
                 for (var i = 0;i<that.temp_arr.length; i++){
                     var query = {};
                     query.carId = that.temp_arr[i].carId;
@@ -756,26 +778,28 @@
                     query.interiorColorId = this.temp_arr[i].interiorColorId;
                     query.price = this.temp_arr[i].price;
                     if(i==0){
-                        if($(".stocks_"+i).eq(0).val() == "" || $(".stocks_"+i).eq(0).val()<0){
-                            layer.msg("库存/辆不能为空且大于等于0",{icon:2});
+
+                        if(!str.test($(".stocks_"+i).eq(0).val())){
+                            layer.msg("第1行库存/辆的个数只能是1~9之间的数字！",{icon:2});
                             return ;
                         }
                         query.stock = $(".stocks_"+i).eq(0).val();
 
-                        if($(".onWays_"+i).eq(0).val() == "" || $(".onWays_"+i).eq(0).val()<0){
-                            layer.msg("在途/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".onWays_"+i).eq(0).val())){
+                            layer.msg("第1行在途/辆的个数只能是1~9之间的数字!",{icon:2});
                             return ;
                         }
                         query.onWay= $(".onWays_"+i).eq(0).val();
+
                     }else{
-                        if($(".stocks_"+i).eq(1).val() == "" || $(".stocks_"+i).eq(1).val()<0){
-                            layer.msg("库存/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".stocks_"+i).eq(1).val())){
+                            layer.msg("第"+(1+i)+"行库存/辆的个数只能是1~9之间的数字！",{icon:2});
                             return ;
                         }
                         query.stock = $(".stocks_"+i).eq(1).val();
 
-                        if($(".onWays_"+i).eq(1).val() == "" || $(".onWays_"+i).eq(1).val()<0){
-                            layer.msg("在途/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".onWays_"+i).eq(1).val())){
+                            layer.msg("第"+(1+i)+"行在途/辆的个数只能是1~9之间的数字!",{icon:2});
                             return ;
                         }
                         query.onWay= $(".onWays_"+i).eq(1).val();
@@ -787,7 +811,7 @@
                     arr.push(query);
                 }
                 var params = {"query":arr};
-                layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
+                layer.confirm('确定该款车<strong style="color:red;">优惠：' + (that.temps.discount!=""?that.temps.discount:0)+ '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
                 }, function (index) {

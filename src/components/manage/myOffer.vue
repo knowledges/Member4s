@@ -149,30 +149,32 @@
     export default {
         route:{
             data({to}){
-                var that = this;
-                that.getCarM(0);
-                /*主营、副营品牌*/
-                $.ajax({
-                    url:config.API_BASE+"/4s/accountmanagement/information",
-                    method:"POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:"json",
-                    data:JSON.stringify({"query":{"uid":config.USERID()}}),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        var list = response.data;
-                        that.brand_name = list.brand_name;
-                        that.brandlist = list.brandlist;
-                    },
-                    error:function (fail) {
-                        /*if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }*/
-                    }
+                this.$nextTick(function () {
+                    var that = this;
+                    that.getCarM(0);
+                    /*主营、副营品牌*/
+                    $.ajax({
+                        url:config.API_BASE+"/4s/accountmanagement/information",
+                        method:"POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType:"json",
+                        data:JSON.stringify({"query":{"uid":config.USERID()}}),
+                        beforeSend:function (request) {
+                            request.setRequestHeader("sessionid",config.SESSIONID());
+                        },
+                        success:function (response) {
+                            var list = response.data;
+                            that.brand_name = list.brand_name;
+                            that.brandlist = list.brandlist;
+                        },
+                        error:function (fail) {
+                            /*if(fail.status == "401"){
+                             sessionStorage.removeItem("SESSIONID");
+                             layer.msg('登录失效，请重新登陆！');
+                             that.$route.router.go("/login");
+                             }*/
+                        }
+                    });
                 });
             }
         },
@@ -254,7 +256,6 @@
                         }
                     }
                 });
-                
         	},
             eaitModels(){
                 var that = this;
@@ -845,6 +846,8 @@
             },
 //          点击外观颜色
 			scrOutColClk(obj,e){
+				$(".inColor .selectall").find("a").addClass("acton");
+                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
 				var brandId = $(".brands dd a.acton").attr("brandid");
                 var carModelId = $(".model dd a.acton").attr("carmodelid");
                 var carId = $(".style dd a.acton").attr("carid");

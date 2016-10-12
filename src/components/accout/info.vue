@@ -43,44 +43,27 @@
             </dl>
         </div>
         <div class="fill_in_info">
+            <validator name="validateinfo">
             <dl class="clearfix">
                 <dt><em class="orange">*</em>联系人：</dt>
-                <dd><input type="text" v-model="user" id="user_" placeholder="请输入联系人名称"></dd>
-                <dd v-if="user_"> <i></i> {{user_msg}} </dd>
+                <dd><input type="text" v-model="user" v-validate:user="['username']" initial="off" id="user_" placeholder="请输入联系人名称"></dd>
+                <dd v-show="$validateinfo.user.username"><i></i>  联系人由1-10个数字、字符、下划线、中文组成</dd>
             </dl>
-            <!--<dl class="clearfix">
-                <dt>性别：</dt>
-                <dd>
-                    <input type="radio" name="gender" value="0">  男
-                    <input type="radio" name="gender" value="1">  女
-                    <input type="radio" name="gender" value="2">  保密
-                </dd>
-            </dl>-->
             <dl class="clearfix">
                 <dt><em class="orange">*</em>手机：</dt>
                 <dd>
-                    <input type="text" v-model="phone" id="phone_" placeholder="请输入手机号">
+                    <input type="text" v-model="phone" v-validate:phone="['tel']" initial="off"  id="phone_" placeholder="请输入手机号">
                     <input type="text" v-model="code">
                     <button class="getCode" v-on:click="getCode">获取验证码</button>
                 </dd>
-                <dd v-if="phone_">
-                    <i></i> {{phone_msg}}
-                </dd>
+                <dd v-show="$validateinfo.phone.tel"><i></i> 手机号格式不正确</dd>
             </dl>
-            <!--<dl class="clearfix">
-                <dt>固话：</dt>
-                <dd>
-                    <input type="text" v-model="telephone" placeholder="025-">
-                </dd>
-            </dl>-->
             <dl class="clearfix">
-                <dt>邮箱：</dt>
+                <dt><em class="orange">*</em>邮箱：</dt>
                 <dd>
-                    <input type="text" v-model="email" id="email" placeholder="请输入邮箱">
+                    <input type="text" v-model="email" v-validate:email="['email']" initial="off" id="email" placeholder="请输入邮箱">
                 </dd>
-                <dd v-if="email_">
-                    <i></i> {{email_msg}}
-                </dd>
+                <dd v-show="$validateinfo.email.email"><i></i>邮箱格式不正确</dd>
             </dl>
             <dl class="clearfix">
                 <dt></dt>
@@ -88,6 +71,7 @@
                     <button v-on:click="save">保存</button> <span><em class="orange">*</em>为必填项</span>
                 </dd>
             </dl>
+            </validator>
         </div>
     </div>
 </template>
@@ -115,13 +99,10 @@
                 code:'',
                 telephone:'',
                 email:'',
-                user_:false,
                 user_msg:"",
-                phone_:false,
                 phone_msg:"",
-                email_:false,
                 email_msg:"",
-                codemd5:''
+                codemd5:'',
             }
         },
         methods:{
@@ -196,121 +177,89 @@
 				
             },
             save(){
-                if(this.user ==""){
-                    this.user_msg="联系人不能为空";
-                    this.user_ = true;
-                    $("#user_").addClass('lost');
-                }else if(this.user.length>10){
-                    this.user_msg="联系人应该在1-10个字符之间";
-                    this.user_ = true;
-                    $("#user_").addClass('lost');
-                }else if(this.phone==""){
-                	this.user_msg="";
-                    this.user_ = false;
-                    $("#user_").removeClass('lost');
-                    this.phone_msg = "手机号不能为空";
-                    this.phone_ = true;
-                    $("#phone_").addClass('lost');
-                }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(this.phone))){
-                    this.phone_msg = "手机号格式不正确";
-                    this.phone_ = true;
-                    $("#phone_").addClass('lost');
-                }else if(this.email != '' && !(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/.test(this.email))){
-                	this.email_msg = "邮箱格式不正确";
-                    this.email_ = true;
-                    $("#email_").addClass('lost');
-                }else if(this.code == ""){
-                	this.phone_msg = "";
-                    this.phone_ = false;
-                    $("#phone_").removeClass('lost');
-                    layer.msg("验证码不能为空");
-                }else if(this.code != ''){
-                	var that = this;
-                	var urlver = config.PHP_API+"/index.php/api/verifyMessages";
-					var code = that.code;
-					var	mobile = that.phone;
-					var	md5code = that.codemd5;
-					var formd = new FormData();
-					formd.append("code",code);
-					formd.append("mobile",mobile);
-					formd.append("md5code",md5code);
-					
-					$.ajax({
-	                    url:urlver,
-	                    type:'POST',
-	                    contentType: false,
-	                    processData: false,
-	                    data:formd,
-		                success:function(response){
-							if(response.code == 0){
-								that.phone_msg = "";
-                    			that.phone_ = false;
-//                  			保存信息
-				                var url = config.API_BASE+"/4s/accountmanagement/updateinformation";
-				                var query = {};
-									query.uid = config.USERID();
-									query.tel = that.phone;
-									query.contacts = that.user;
-									query.email = that.email;
-								var param = { query:query };
-								
-				                $.ajax({
-				                    url:url,
-				                    type:'POST',
-				                    dataType: 'JSON',
-				                    contentType: 'application/json; charset=utf-8',
-				                    data:JSON.stringify(param),
-				                    beforeSend:function (request) {
-					                    request.setRequestHeader("sessionid",config.SESSIONID());
-					                },
-					                success:function(response){
-										if(response.code == 1){
-					                       layer.msg('信息修改成功',{icon:1});
-                                            var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
-                                            debugger;
-                                            sessionid.user_name = that.user;
-                                            sessionid.email = that.email;
-                                            sessionid.tel = that.phone;
-                                            sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));
-					                       setTimeout("window.history.go(0)",1500);
-					                    }else{
-					                       layer.msg('信息修改失败',{icon:2});
-					                    }
-									},
-									error:function(fail){
-										if(fail.status == "401"){
-                                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                                            if(SESSIONID == null){
-                                                that.$route.router.go("/login");
-                                            }else{
-                                                sessionStorage.removeItem("SESSIONID");
-                                                layer.msg('登录失效，请重新登陆！');
-                                                util.login();
+
+                var that = this;
+                that.$validate(true,function () {
+                    if(!that.$validateinfo.invalid){
+                        if(that.code == ""){
+                            that.phone_msg = "";
+                            that.phone_ = false;
+                            $("#phone_").removeClass('lost');
+                            layer.msg("验证码不能为空");
+                        }else if(that.code != ''){
+                            var urlver = config.PHP_API+"/index.php/api/verifyMessages";
+                            var code = that.code;
+                            var	mobile = that.phone;
+                            var	md5code = that.codemd5;
+                            var formd = new FormData();
+                            formd.append("code",code);
+                            formd.append("mobile",mobile);
+                            formd.append("md5code",md5code);
+
+                            $.ajax({
+                                url:urlver,
+                                type:'POST',
+                                contentType: false,
+                                processData: false,
+                                data:formd,
+                                success:function(response){
+                                    if(response.code == 0){
+                                        that.phone_msg = "";
+                                        that.phone_ = false;
+        //                  			保存信息
+                                        var url = config.API_BASE+"/4s/accountmanagement/updateinformation";
+                                        var query = {};
+                                        query.uid = config.USERID();
+                                        query.tel = that.phone;
+                                        query.contacts = that.user;
+                                        query.email = that.email;
+                                        var param = { query:query };
+
+                                        $.ajax({
+                                            url:url,
+                                            type:'POST',
+                                            dataType: 'JSON',
+                                            contentType: 'application/json; charset=utf-8',
+                                            data:JSON.stringify(param),
+                                            beforeSend:function (request) {
+                                                request.setRequestHeader("sessionid",config.SESSIONID());
+                                            },
+                                            success:function(response){
+                                                if(response.code == 1){
+                                                    layer.msg('信息修改成功',{icon:1});
+                                                    var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
+                                                    sessionid.user_name = that.user;
+                                                    sessionid.email = that.email;
+                                                    sessionid.tel = that.phone;
+                                                    sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));
+                                                    setTimeout("window.history.go(0)",1500);
+                                                }else{
+                                                    layer.msg('信息修改失败',{icon:2});
+                                                }
+                                            },
+                                            error:function(fail){
+                                                if(fail.status == "401"){
+                                                    var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                                    if(SESSIONID == null){
+                                                        that.$route.router.go("/login");
+                                                    }else{
+                                                        sessionStorage.removeItem("SESSIONID");
+                                                        layer.msg('登录失效，请重新登陆！');
+                                                        util.login();
+                                                    }
+                                                }
                                             }
-				                        }
-									}
-				                })
-                    			
-                    			
-		                    }else{
-		                        that.phone_msg = "您的验证码输入有误";
-                    			that.phone_ = true;
-		                    }
-						}
-	                });
-                	
-                	
-                }
+                                        })
+                                    }else{
+                                        layer.msg("您的验证码输入有误");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             },
             getinfo(){
-//          	if(config.SESSIONID == ""){
-//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-//					config.SESSIONID  = this.SESSIONID.session.sessionid;
-//					config.USERID  = this.SESSIONID.id;
-//					console.log(config.SESSIONID);
-//					console.log(config.USERID);
-//				}
-				
 				var that = this;
                 var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']}); 
                 var url = config.API_BASE+"/4s/accountmanagement/information";

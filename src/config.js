@@ -16,10 +16,14 @@ export default {
      */
 
     /**
-     *  loading 模板
-     *  引入 util.js import {loader} from '../util/util'
-     *  mask.show() 显示
-     *  mask.hide() 隐藏
+     *  登录失效
+     *  引入 util.js import util from '...../util'
+     *  util.login()
+     */
+
+    /**
+     *  vue-validator 文档
+     *  http://vuejs.github.io/vue-validator/zh-cn/
      */
 
     /**
@@ -46,7 +50,7 @@ export default {
     // PHP_API:"http://test3.gouchehui.com:8082",
 
 
-    ////product
+    //product
     // API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
     // PHP_API:"http://www.gouchehui.com",
 

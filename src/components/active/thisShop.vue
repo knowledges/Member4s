@@ -20,7 +20,7 @@
             <div class="total-num G_fr">共：<span>{{count }}</span>条</div>
         </div>
         <!--:arr_title="arr_title"-->
-        <shop-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize" :arr_items="arr_items"></shop-table>
+        <shop-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize" :arr_items.sync="arr_items"></shop-table>
         <div id="page2" style="margin:20px 0;text-align: center;"></div>
     </div>
 
@@ -34,57 +34,61 @@
     export default {
         route:{
             data(){
-                this.find = this.$route.params.findId != undefined ? this.$route.params.findId : 0;
-                this.getSpecialList(this.find ,1);
-                var that = this;
 
-                $.ajax({
-                    url:config.API_BASE+"/nl/common/provincecity",
-                    method:"POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:"json",
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        that.$set("arr_items",response.data.data);
-                    },
-                    error:function (fail) {
-                        /*if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            that.$route.router.go("/login");
-                        }*/
-                    }
-                });
+                this.$nextTick(function () {
+                    this.find = this.$route.params.findId != undefined ? this.$route.params.findId : 0;
+                    this.getSpecialList(this.find ,1);
+                    var that = this;
 
-                $.ajax({
-                    url:config.API_BASE+"/4s/accountmanagement/information",
-                    method:"POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:"json",
-                    data:JSON.stringify({"query":{"uid":config.USERID()}}),
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        var list = response.data;
-                        that.brand_name = list.brand_name;
-                        that.brandlist = list.brandlist;
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
+                    $.ajax({
+                        url:config.API_BASE+"/nl/common/provincecity",
+                        method:"POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType:"json",
+                        beforeSend:function (request) {
+                            request.setRequestHeader("sessionid",config.SESSIONID());
+                        },
+                        success:function (response) {
+                            that.$set("arr_items",response.data.data);
+                        },
+                        error:function (fail) {
+                            /*if(fail.status == "401"){
+                             sessionStorage.removeItem("SESSIONID");
+                             layer.msg('登录失效，请重新登陆！');
+                             that.$route.router.go("/login");
+                             }*/
+                        }
+                    });
+
+                    $.ajax({
+                        url:config.API_BASE+"/4s/accountmanagement/information",
+                        method:"POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType:"json",
+                        data:JSON.stringify({"query":{"uid":config.USERID()}}),
+                        beforeSend:function (request) {
+                            request.setRequestHeader("sessionid",config.SESSIONID());
+                        },
+                        success:function (response) {
+                            var list = response.data;
+                            that.brand_name = list.brand_name;
+                            that.brandlist = list.brandlist;
+                        },
+                        error:function (fail) {
+                            if(fail.status == "401"){
+                                var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                if(SESSIONID == null){
+                                    that.$route.router.go("/login");
+                                }else{
+                                    sessionStorage.removeItem("SESSIONID");
+                                    layer.msg('登录失效，请重新登陆！');
+                                    util.login();
+                                }
                             }
                         }
-                    }
+                    });
                 });
+
             }
         },
         ready(){
@@ -151,7 +155,6 @@
 
                             setTimeout(function () {
                                 that.$set("arr_items",response.data.rows);
-
                             },500);
 
                             if(response.data.count>that.pagesize){

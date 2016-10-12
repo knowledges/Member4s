@@ -187,7 +187,7 @@
                 <td>{{item.price}}</td>
                 <td width="100">
                     <span class="show_{{$index}}">{{item.discount}}</span>
-                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)" value="{{item.discount}}" style="display: none;">
+                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)"  v-text="item.discount | changeToNumber" value="{{item.discount}}" style="display: none;">
                     <p v-if="items.discount_" class="error ">
                         <i></i>
                         {{items.discount_msg}}
@@ -249,14 +249,14 @@
         <div id="page2"  style="margin:20px 0;text-align: center;"></div>
     </div>
     
-    <history-tpl :history="history"></history-tpl>
-    
+    <history-list :history="history"></history-list>
+
 </template>
 <script>
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
-    import historyTpl from './../historyTpl.vue'
+    import historyList from './historyList.vue'
     export default {
         props:{
             count:Number,
@@ -281,7 +281,7 @@
 //            this.getRelationship();
         },
         components:{
-	        historyTpl
+	        historyList
 	    },
         data(){
             return {
@@ -323,7 +323,7 @@
                     carName: '',
                     exColorName: '',
                     inColorName: '',
-                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
+                    titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '报价 / 元'],
                     list:[]
                 },
                 mask_1:"",
@@ -339,12 +339,12 @@
                     query = {},
                     params = {};
                 console.log(item);
-                query.user_id = config.USERID();
-                query.interior_color_id = item.interiorColorId;
-                query.exterior_color_id= item.exteriorColorId;
+                query.userId = config.USERID();
+                query.interiorColorId = item.interiorColorId;
+                query.exteriorColorId= item.exteriorColorId;
                 query.pagenum = 100;
                 query.page = 1;
-                query.car_id = item.carId;
+                query.carId = item.carId;
                 params = {"query":query};
 
                 self.history.brandName = item.brandName;
@@ -354,7 +354,7 @@
                 self.history.inColorName = item.interiorColorName;
 
                 $.ajax({
-                    url:config.API_BASE+"/4s/activityTrend/list/",
+                    url:config.API_BASE+"/4s/offerTrend/list/",
                     method:"POST",
                     contentType: 'application/json; charset=utf-8',
                     dataType: "json",
@@ -365,12 +365,18 @@
                     success:function (response) {
                         console.log(response);
                         if(response.code === 0){
+                        	var winHeight= $(window).height(),
+                                    layerTitHeight = 43,
+                                    extendHeight = 30,
+                                    newHeight = '';
+                            newHeight = (winHeight - 43 - 30) + 'px';
+
                             self.history.list = response.data.rows;
                             self.history.index = layer.open({
                                 type: 1,
                                 title: '历史记录',
                                 skin: 'layui-layer-rim', //加上边框
-                                area : ['750px' , '800px'],
+                                area : ['750px' , newHeight],
                                 content: $("#J_HistoryPop")
                             });
                         }else{
@@ -720,18 +726,21 @@
             },
             save(obj,e,index){
                 var discount_  =$(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
+                var str = /^[1-9]\d*$/;
                 if(parseInt(obj.price) < parseInt(discount_)){
                     layer.msg("优惠价小于等于官方价！",{icon:2})
                     return;
                 }
-                if($(".stock_"+index).val()==""||$(".stock_"+index).val()<0){
-                    layer.msg("库存/辆不能为空且大于等于0！",{icon:2})
+                if(!str.test($(".stock_"+index).val())){
+                    layer.msg("库存/辆的个数只能是1~9之间的数字！",{icon:2})
                     return;
                 }
-                if($(".onWay_"+index).val()==""||$(".onWay_"+index).val()<0){
-                    layer.msg("在途/辆不能为空且大于等于0！",{icon:2})
+
+                if(!str.test($(".onWay_"+index).val())){
+                    layer.msg("在途/辆的个数只能是1~9之间的数字！",{icon:2})
                     return;
                 }
+
                 if(this.items.areas.length<=0){
                     layer.msg("请选择区域");
                     return;
@@ -913,31 +922,31 @@
                     layer.msg("请选择区域");
                     return;
                 }
-                var arr = [];
+                var arr = [] ,str = /^[1-9]\d*$/;
                 for (var i = 0;i<that.temp_arr.length; i++){
                     var query = {};
                     query.carPriceId = that.temp_arr[i].carPriceId;
                     if(i==0){
-                        if($(".stock_"+i).eq(0).val() == "" || $(".stock_"+i).eq(0).val()<0){
-                            layer.msg("库存/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".stock_"+i).eq(0).val())){
+                            layer.msg("第1行库存/辆的个数只能是1~9之间的数字！",{icon:2});
                             return ;
                         }
                         query.stock = $(".stock_"+i).eq(0).val();
 
-                        if($(".onWay_"+i).eq(0).val() == "" || $(".onWay_"+i).eq(0).val()<0){
-                            layer.msg("在途/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".onWay_"+i).eq(0).val())){
+                            layer.msg("第1行在途/辆的个数只能是1~9之间的数字!",{icon:2});
                             return ;
                         }
                         query.onWay= $(".onWay_"+i).eq(0).val();
                     }else{
-                        if($(".stock_"+i).eq(1).val() == "" || $(".stock_"+i).eq(1).val()<0){
-                            layer.msg("库存/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".stock_"+i).eq(1).val())){
+                            layer.msg("第"+(1+i)+"行库存/辆的个数只能是1~9之间的数字！",{icon:2});
                             return ;
                         }
                         query.stock = $(".stock_"+i).eq(1).val();
 
-                        if($(".onWay_"+i).eq(1).val() == "" || $(".onWay_"+i).eq(1).val()<0){
-                            layer.msg("在途/辆不能为空且大于等于0",{icon:2});
+                        if(!str.test($(".onWay_"+i).eq(1).val())){
+                            layer.msg("第"+(1+i)+"行在途/辆的个数只能是1~9之间的数字!",{icon:2});
                             return ;
                         }
                         query.onWay= $(".onWay_"+i).eq(1).val();
@@ -952,7 +961,7 @@
 
                 var params = {"query":arr};
                 console.log("批量修改:"+JSON.stringify(params));
-                layer.confirm('确定该款车<strong style="color:red;">优惠：' + that.temps.discount + '元</strong>吗？', {
+                layer.confirm('确定该款车<strong style="color:red;">优惠：' + (that.temps.discount!=""?that.temps.discount:0)+ '元</strong>吗？', {
                     title: '提示',
                     btn: ['确定', '取消'] //按钮
                 }, function () {
@@ -970,6 +979,21 @@
                 this.selectedKey = "0";
                 this.city_items = [];
             },
+        },
+        filters:{
+//            changeToNumber: {
+//                // model -> view
+//                // 在更新 `<input>` 元素之前格式化值
+//                read(val) {
+//                    return parseInt(val, 10)
+//                },
+//                // view -> model
+//                // 在写回数据之前格式化值
+//                write(val, oldVal) {
+//                    var number = +val.replace(/[^\d]/g, '')
+//                    return number === '' ? 1 : isNaN(number) ? 1 : parseInt(number, 10)
+//                }
+//            }
         }
     }
 </script>

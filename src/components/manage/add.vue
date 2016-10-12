@@ -79,80 +79,82 @@
     export default {
         route: {
             data({to}){
-                var that = this;
-                /*品牌*/
-                $.ajax({
-                    url: config.API_BASE + "/4s/prefer/preferBrandModelCar",
-                    method: 'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    data:JSON.stringify({"query":{"userId":config.USERID()}}),
-                    beforeSend: function (request) {
-                        request.setRequestHeader("sessionid", config.SESSIONID());
-                    },
-                    success: function (response) {
-                        if (response.code == 0) {
+                this.$nextTick(function () {
+                    var that = this;
+
+                    /*品牌*/
+                    $.ajax({
+                        url: config.API_BASE + "/4s/prefer/preferBrandModelCar",
+                        method: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data:JSON.stringify({"query":{"userId":config.USERID()}}),
+                        beforeSend: function (request) {
+                            request.setRequestHeader("sessionid", config.SESSIONID());
+                        },
+                        success: function (response) {
+                            if (response.code == 0) {
+                                var list = response.data;
+                                that.brands = list.brand;
+                                that.cars = list.car;
+                                that.carModels = list.carModel;
+                                /*
+                                 * v-for 遍历完
+                                 * */
+                                that.$nextTick(function () {
+                                    $(".brands dd").eq(0).find('a').addClass("acton");
+
+                                    that.brandClk({
+                                        "brandId": that.brands[0].brandId,
+                                        "brandName": that.brands[0].brandName
+                                    }, null);
+                                })
+                            }
+                        },
+                        error: function (fail) {
+                            if (fail.status == "401") {
+                                var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                if(SESSIONID == null){
+                                    that.$route.router.go("/login");
+                                }else{
+                                    sessionStorage.removeItem("SESSIONID");
+                                    layer.msg('登录失效，请重新登陆！');
+                                    util.login();
+                                }
+                            }
+                        }
+
+                    });
+
+                    /*主营、副营品牌*/
+                    $.ajax({
+                        url: config.API_BASE + "/4s/accountmanagement/information",
+                        method: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: "json",
+                        data: JSON.stringify({"query": {"uid": config.USERID()}}),
+                        beforeSend: function (request) {
+                            request.setRequestHeader("sessionid", config.SESSIONID());
+                        },
+                        success: function (response) {
                             var list = response.data;
-                            that.brands = list.brand;
-                            that.cars = list.car;
-                            that.carModels = list.carModel;
-                            /*
-                             * v-for 遍历完
-                             * */
-                            that.$nextTick(function () {
-                                $(".brands dd").eq(0).find('a').addClass("acton");
-
-                                that.brandClk({
-                                    "brandId": that.brands[0].brandId,
-                                    "brandName": that.brands[0].brandName
-                                }, null);
-                            })
-                        }
-                    },
-                    error: function (fail) {
-                        if (fail.status == "401") {
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
+                            that.brand_name = list.brand_name;
+                            that.brandlist = list.brandlist;
+                        },
+                        error: function (fail) {
+                            if (fail.status == "401") {
+                                var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                if(SESSIONID == null){
+                                    that.$route.router.go("/login");
+                                }else{
+                                    sessionStorage.removeItem("SESSIONID");
+                                    layer.msg('登录失效，请重新登陆！');
+                                    util.login();
+                                }
                             }
                         }
-                    }
-
+                    });
                 });
-
-                /*主营、副营品牌*/
-                $.ajax({
-                    url: config.API_BASE + "/4s/accountmanagement/information",
-                    method: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: "json",
-                    data: JSON.stringify({"query": {"uid": config.USERID()}}),
-                    beforeSend: function (request) {
-                        request.setRequestHeader("sessionid", config.SESSIONID());
-                    },
-                    success: function (response) {
-                        var list = response.data;
-                        that.brand_name = list.brand_name;
-                        that.brandlist = list.brandlist;
-                    },
-                    error: function (fail) {
-                        if (fail.status == "401") {
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                });
-
             }
         },
         data(){
@@ -178,8 +180,11 @@
         methods:{
 //      	点击品牌
             brandClk(obj,e){
+            	this.count = 0;
                 var brandId = obj.brandId;
                 this.screen_carModels = this.carModels[brandId];
+                this.outColors = "";
+            	this.inColors = "";
                 var _index = 0;
                 this.$nextTick(function () {
                     if(this.screen_carModels!=null) {
@@ -203,6 +208,7 @@
 //			点击外观颜色的全部
 			selectOutColAll(){
 				var that = this;
+				that.count = 0;
 				that.CarAll = true;
 				var brandId = $(".brands dd a.acton").attr("brandid");
 				var carModelId = $(".model dd a.acton").attr("carmodelid");
@@ -216,6 +222,7 @@
 //			点击内饰颜色的全部
 			selectInColAll(){
 				var that = this;
+				that.count = 0;
 				that.CarAll = true;
 				var brandId = $(".brands dd a.acton").attr("brandid");
 				var carModelId = $(".model dd a.acton").attr("carmodelid");
@@ -266,6 +273,7 @@
                 var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000'],time:0});
                 var that = this;
                 var query = {};
+//              debugger;
                 query.pagenum = this.pagesize;
                 query.page = cur;
                 query.userId = config.USERID();
@@ -275,7 +283,7 @@
                 }else{
                 	query.carModelId = newobj.carModelId;  //车型id
                 }
-                if(newobj.carModelId == undefined){
+                if(newobj.carId == undefined){
                 	query.carId = "";      //车款id
                 }else{
                 	query.carId = newobj.carId;      //车款id
@@ -360,6 +368,7 @@
             },
 //          点击车型
             scrModelClk(obj,e){
+            	this.count = 0;
                 var carModelId = obj.carModelId;
                 this.screen_car = this.cars[carModelId];
                 this.outColors = "";
@@ -389,6 +398,7 @@
             },
 //          点击车款
             scrCarClk(obj,e){
+            	this.count = 0;
             	var brandId = $(".brands dd a.acton").attr("brandid");
                 var carModelId = $(".model dd a.acton").attr("carmodelid");
                 var carId = obj.carId ,carName = obj.carName;
@@ -401,10 +411,7 @@
                         }
                         $(".style dd").find('a').removeClass("acton");
                         $(".style dd").eq(_index).find('a').addClass("acton");
-
                     	this.getActivityList(1,{"brandId":brandId,"carModelId":carModelId,"carId":carId});
-                        
-                        
                     });
                 }else{
                     $("#page2").empty();
@@ -418,6 +425,7 @@
             },
             //          点击外观颜色
 			scrOutColClk(obj,e){
+				this.count = 0;
 				var brandId = $(".brands dd a.acton").attr("brandid");
                 var carModelId = $(".model dd a.acton").attr("carmodelid");
                 var carId = $(".style dd a.acton").attr("carid");
@@ -436,6 +444,7 @@
 			},
 //          点击内饰颜色
 			scrInColClk(obj,e){
+				this.count = 0;
 				var brandId = $(".brands dd a.acton").attr("brandid");
                 var carModelId = $(".model dd a.acton").attr("carmodelid");
                 var carId = $(".style dd a.acton").attr("carid");

@@ -333,6 +333,14 @@
             }
         },
         methods:{
+            setInnerHeight(){
+                var winHeight= $(window).height(),
+                        layerTitHeight = 43,
+                        extendHeight = 30,
+                        newHeight = '';
+                newHeight = (winHeight - 43 - 30) + 'px';
+                return newHeight;
+            },
             /*
             *
             * 状态说明
@@ -500,6 +508,7 @@
                 this.temp_items = obj;
                 this.temp_index = _index;
                 var that = this;
+                var h = this.setInnerHeight();
                 layer.confirm('您确定要修改吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index){
@@ -509,7 +518,7 @@
                         type: 1,
                         title: '活动详情修改',
                         skin: 'layui-layer-rim', //加上边框
-                        area : ['660px' , '800px'],
+                        area : ['660px' , h],
                         content: $(".activeinfo"),
                         cancel:function () {
                             /*修改弹框初始化*/

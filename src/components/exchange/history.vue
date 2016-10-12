@@ -1,5 +1,5 @@
 <template>
-    <div class="table-wrap">
+    <div class="table-wrap" id="J_HistoryTable">
         <table>
             <thead>
             <tr>
@@ -35,7 +35,9 @@
             </tr>
             </tbody>
         </table>
+
         <div id="page" style="text-align: center;"  v-else="datapage"></div>
+
     </div>
 </template>
 
@@ -101,14 +103,13 @@
                             groups: 5, //连续显示分页数
                             first: 1, //将首页显示为数字1,。若不显示，设置false即可
                             last: Math.ceil(that.count/query.pagenum), //将尾页显示为总页数。若不显示，设置false即可
-                            jump: function(obj, first){
-                                //回调
-                                //得到了当前页，用于向服务端请求对应数据
+                            position: '#J_HistoryTable', // 翻页后，页面滚动至该选择器的位置
+                            jump: function(obj, first){//回调函数
+                                 //得到了当前页，用于向服务端请求对应数据
                                 var curr = obj.curr;
                                 if(!first){
                                     that.init(curr);
                                 }
-
                                 $(".laypage_btn").unbind("click").on('click',function(){
                                     if($(".laypage_skip").val()>0 && $(".laypage_skip").val()<=Math.ceil(that.count/query.pagenum)){
                                         that.init($(".laypage_skip").val());

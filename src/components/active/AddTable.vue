@@ -60,6 +60,8 @@
                 <dd v-text="items.brandName"></dd>
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
                 <dd v-text="items.carModelName"></dd>
+            </dl>
+            <dl class="clearfix spe">
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                 <dd v-text="items.carName"></dd>
             </dl>
@@ -317,6 +319,14 @@
             }
         },
         methods:{
+            setInnerHeight(){
+                var winHeight= $(window).height(),
+                        layerTitHeight = 43,
+                        extendHeight = 30,
+                        newHeight = '';
+                newHeight = (winHeight - 43 - 30) + 'px';
+                return newHeight;
+            },
             getHistoryList(item){
                 var self = this,
                         query = {},
@@ -347,11 +357,12 @@
                     success:function (response) {
                         if(response.code === 0){
                             self.history.list = response.data.rows;
+                            var h = self.setInnerHeight();
                             self.history.index = layer.open({
                                 type: 1,
                                 title: '历史记录',
                                 skin: 'layui-layer-rim', //加上边框
-                                area : ['750px' , '800px'],
+                                area : ['750px' , h],
                                 content: $("#J_HistoryPop")
                             });
                         }else{
@@ -431,18 +442,18 @@
                 this.items.exterior_color_id = obj.exteriorColorId;
                 this.items.exteriorColorName = obj.exteriorColorName;
                 var that = this;
-                this.mask_2= layer.open({
+                var  h = this.setInnerHeight();
+                this.mask_2 = layer.open({
                     type: 1,
                     title: '活动详情添加',
                     skin: 'layui-layer-rim', //加上边框
-                    area : ['660px' , '800px'],
+                    area : ['660px' , h],
                     content: $(".activeinfo"),
                     cancel:function () {
                         /*修改弹框初始化*/
                         that.removeAll();
                         that.selectedKey = "0";
                         that.city_items = [];
-                        /*   that.items.areas = [];*/
                     }
                 });
             },

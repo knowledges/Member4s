@@ -5,15 +5,30 @@
                 <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
                 <p class="G_fl" v-if="brandlist.length>1">副营品牌：<span v-for="list in brandlist" v-show="list.brand_name != brand_name">{{list.brand_name}}</span></p>
             </div>
-            <div class="details movable-car">
+
+            <div class="details movable-car" id="J_GotoPos">
                 <dl class="brands clearfix">
                     <dt class="G_fl">品牌：</dt>
-                    <dd><a href="#" v-for="item of brands" @click.prevent = "changeBrandIndex($index, 'Brand')"  :title="item.brandName"  :class="$index == defBrandIndex ? 'actived' : ''">{{item.brandName}}</a></dd>
+                    <dd>
+                        <template  v-if="brands.length > 0">
+                        <a href="#" v-for="item of brands" @click.prevent = "changeBrandIndex($index, 'Brand')"  :title="item.brandName"  :class="$index == defBrandIndex ? 'actived' : ''">{{item.brandName}}</a>
+                        </template>
+                        <div v-else class="null">
+                            <h1 class="hd"><i class="icon-null"></i>对不起！暂无任何品牌或正在加载中...</h1>
+                        </div>
+                    </dd>
                 </dl>
 
                 <dl class="model clearfix">
                     <dt class="G_fl">车型：</dt>
-                    <dd><a  href="#" v-for="item in carModels" @click.prevent = "changeCarModelIndex($index, 'CarModel')" :title="item.carModelName"  :class="$index == defCarModelIndex ? 'actived' : ''">{{item.carModelName}}</a></dd>
+                    <dd>
+                        <template  v-if="carModels.length > 0">
+                        <a  href="#" v-for="item in carModels" @click.prevent = "changeCarModelIndex($index, 'CarModel')" :title="item.carModelName"  :class="$index == defCarModelIndex ? 'actived' : ''">{{item.carModelName}}</a>
+                        </template>
+                        <div v-else class="null">
+                            <h1 class="hd"><i class="icon-null"></i>对不起！暂无任何车型或正在加载中...</h1>
+                        </div>
+                    </dd>
                 </dl>
                 <div class="style">
                     <dl class="car clearfix">
@@ -31,7 +46,6 @@
                 </div>
             </div>
         </div>
-
         <add-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize" :arr_items="arr_items"></add-table>
         <div id="page2" style="margin:20px 0;text-align: center;"></div>
     </div>
@@ -156,8 +170,9 @@
                     query.pagenum = this.pagesize;
                     query.page = cur;
                     query.car_id = car_id;
+                    query.user_id = config.USERID();
                 var params = {"query":query};
-
+                console.log(params);
                 $.ajax({
                     url:config.API_BASE+"/4s/activity/list/",
                     method:'POST',
@@ -183,6 +198,7 @@
                                     groups: 7, //连续显示分页数
                                     first: 1, //将首页显示为数字1,。若不显示，设置false即可
                                     last: Math.ceil(that.count/that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
+                                    position: '#J_GotoPos', // 翻页后，页面滚动至该选择器的位置
                                     jump: function(obj, first){
                                         //回调
                                         //得到了当前页，用于向服务端请求对应数据
