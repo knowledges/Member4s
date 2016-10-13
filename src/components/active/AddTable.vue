@@ -100,7 +100,7 @@
                 <dt>销售区域：</dt>
                 <dd>
                     <div class="clearfix sales-area j_salesArea">
-                        <span v-for="city in items.areas" track-by="$index">{{city.sales_area_name}}</span>
+                        <span v-for="city in items._areas" track-by="$index">{{city.sales_area_name}}</span>
                         <a href="javascript:;" @click="selectarea" class="a_style">选择区域</a>
                     </div>
                 </dd>
@@ -122,7 +122,9 @@
 
                         <div class="fileInner">
                             <input type="file"  name="upload-file" id="upload-file" v-on:change="uploadfile($event)">
-                            <div class="imgbox"></div>
+                            <div class="imgbox">
+                                <img :src="items.file_img" class="imghead" alt=""/>
+                            </div>
                         </div>
 
                     <p class="file_value">{{items.file_value}}</p>
@@ -139,91 +141,10 @@
                     <textarea name="desc" v-model="items.desc" cols="64" rows="8" placeholder="填写相关活动说明~"></textarea>
                 </dd>
             </dl>
-            <div class="btn-box">
-                <button @click="save" class="btn-confirm">确定</button>
-                <button @click="cancle" class="btn-cancle">取消</button>
-            </div>
         </div>
     </div>
     <div class="activearea" style="display: none;">
-        <div class="layer_2">
-            <dl class="clearfix">
-                <dt>已选区域：</dt>
-                <dd>
-                    <ul class="filter_li clearfix">
-                        <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
-                        <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['内蒙古自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['辽宁省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['吉林省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['黑龙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['上海市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江苏省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['浙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['安徽省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['福建省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广西壮族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['海南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['重庆市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['四川省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['贵州省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['云南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['西藏自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['陕西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['甘肃省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['青海省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['宁夏回族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['新疆维吾尔自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['香港特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['澳门特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['台湾省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                    </ul>
-                </dd>
-            </dl>
-            <dl class="clearfix optional-area">
-                <dt>可选区域：</dt>
-                <dd>
-                    <div class="line"></div>
-                    <ul class="clearfix">
-                        <li v-on:click="selectAllClk" class="btn-global" id="global">全国</li>
-                    </ul>
-                </dd>
-                <dd>
-                    <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>--- 请选择 ---</option>
-                        <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
-                    </select>
-                </dd>
-                <dd class="city_dd">
-                    <ul v-if="!global" class="clearfix">
-                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
-                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
-                            {{city.city}}
-                        </li>
-                    </ul>
-                    <div class="line"></div>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd>
-                    <div class="btn-box">
-                        <button @click="agree" class="btn-confirm G_btn_a">确定</button>
-                        <button @click="cancle1" class="btn-cancle G_btn_c">取消</button>
-                    </div>
-                </dd>
-            </dl>
-
-        </div>
+        <select-area></select-area>
     </div>
 
     <history-tpl :history="history"></history-tpl>
@@ -237,6 +158,7 @@
     import historyTpl from './../historyTpl.vue'
     import config from './../../config'
     import util from './../../util/util'
+    import SelectArea from './../template/SelecteArea.vue'
     export default {
         props: {
             stats: Number,
@@ -264,9 +186,6 @@
                 direction: 1
             });
         },
-    components:{
-        historyTpl
-    },
         data(){
             return {
                 items:{
@@ -287,6 +206,7 @@
                     number_:false,
                     number_msg:"",
                     areas:[],
+                    _areas:[],
                     selectarea_:false,
                     selectarea_msg:"",
                     file_src:"",
@@ -297,10 +217,6 @@
                     desc:"",
                 },
                 _index:"",
-                selectedKey:"",
-                provinces:"",
-                provincecity:"",
-                clone_provincecity:"",
                 history: {
                     index:0,
                     brandName: '',
@@ -311,19 +227,18 @@
                     titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '活动时间'],
                     list:[]
                 },
-                city_items:[],
-                global:false,
                 mask_1:"",
                 mask_2:"",
                 rem_item:[]
             }
         },
+        components:{
+            historyTpl,
+            SelectArea
+        },
         methods:{
             setInnerHeight(){
                 var winHeight= $(window).height(),
-                        layerTitHeight = 43,
-                        extendHeight = 30,
-                        newHeight = '';
                 newHeight = (winHeight - 43 - 30) + 'px';
                 return newHeight;
             },
@@ -363,7 +278,9 @@
                                 title: '历史记录',
                                 skin: 'layui-layer-rim', //加上边框
                                 area : ['750px' , h],
-                                content: $("#J_HistoryPop")
+                                content: $("#J_HistoryPop"),
+                                success : function(layero, index){
+                                }
                             });
                         }else{
                             layer.msg(request.desc);
@@ -393,70 +310,210 @@
                     $this.removeClass('err');
                 }
             },
-            getRelationship(){
-                var that = this;
-
-                /*获取省市关系*/
-                $.ajax({
-                    url:config.API_BASE+"/nl/common/provincecity",
-                    method:"POST",
-                    contentType:"application/json; charset=utf-8",
-                    datatype:"json",
-                    cache:true,
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        var list = response.data;
-                        that.$set("provinces",list.provinces);
-                        that.$set("provincecity",list.provincecity);
-                        that.$set("clone_provincecity",list.provincecity);
-
-                        that.selectedKey="江苏省";
-                        that.selectedProvinces();
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                });
-            },
             update(obj){
-                this.getRelationship();
-                this.rem_item = obj;
-                this.items.brandName = obj.brandName;
-                this.items.carModelName = obj.carModelName;
-                this.items.car_id = obj.carId;
-                this.items.carName = obj.carName;
-                this.items.price = obj.price;
-                this.items.interior_color_id = obj.interiorColorId;
-                this.items.interiorColorName = obj.interiorColorName;
-                this.items.exterior_color_id = obj.exteriorColorId;
-                this.items.exteriorColorName = obj.exteriorColorName;
-                var that = this;
-                var  h = this.setInnerHeight();
-                this.mask_2 = layer.open({
+                var that = this,
+                        h = that.setInnerHeight();
+
+                if(that.$children[0].provincecity!=undefined){
+                    that.$children[0].getRelationship(null,0);
+                }else{
+                    that.$children[1].getRelationship(null,0);
+                }
+                that.rem_item = obj;
+                that.items.brandName = obj.brandName;
+                that.items.carModelName = obj.carModelName;
+                that.items.car_id = obj.carId;
+                that.items.carName = obj.carName;
+                that.items.price = obj.price;
+                that.items.interior_color_id = obj.interiorColorId;
+                that.items.interiorColorName = obj.interiorColorName;
+                that.items.exterior_color_id = obj.exteriorColorId;
+                that.items.exteriorColorName = obj.exteriorColorName;
+
+                layer.open({
                     type: 1,
                     title: '活动详情添加',
                     skin: 'layui-layer-rim', //加上边框
+                    scrollbar: false,
                     area : ['660px' , h],
+                    btn: ['保存', '取消'],
                     content: $(".activeinfo"),
-                    cancel:function () {
-                        /*修改弹框初始化*/
-                        that.removeAll();
-                        that.selectedKey = "0";
-                        that.city_items = [];
+                    yes: function(index, layero){
+                        var items = that.items;
+                        if(items.special_price == "" ){
+                            items.offer_ = true;
+                            items.offer_msg="特价不能为空";
+                            return false;
+                        }else if(parseInt(items.special_price, 10) > parseInt(items.price, 10)){
+                            items.offer_ = true;
+                            items.offer_msg="特价不可高于市场价";
+                            return false;
+                        }else{
+                            items.offer_ = false;
+                        }
+
+                        if(items.start_date == "" || items.end_date == ""){
+                            items.timer_ = true;
+                            items.timer_msg="开始时间或结束时间不能为空";
+                            return;
+                        }else if(items.start_date>items.end_date){
+                            items.timer_ = true;
+                            items.timer_msg="结束时间不可早于开始时间";
+                            return;
+                        }else{
+                            items.timer_ = false;
+                        }
+
+                        if(items.number == "" || items.number<=0){
+                            items.number_ = true;
+                            items.number_msg = "数量不小于1";
+                            return;
+                        }else{
+                            items.number_ = false;
+                        }
+
+                        if(items.start_date == "" && items.end_date == ""){
+                            items.timer_ = true;
+                            items.timer_msg="结束时间不可早于开始时间";
+                            return;
+                        }else{
+                            items.timer_ = false;
+                        }
+
+                        if($(".j_salesArea > span").length<=0){
+                            items.selectarea_ = true;
+                            items.selectarea_msg = "请选择区域";
+                            return;
+                        }else{
+                            items.selectarea_ = false;
+                        }
+
+                        if(items.file_value == ""){
+                            items.file_ = true;
+                            items.file_msg = "请上传图片";
+                            return false;
+                        }else{
+                            items.file_ = false;
+                        }
+
+                        var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
+
+                        var formd = new FormData();
+                        formd.append("img",$("#upload-file")[0].files[0]);
+                        $.ajax({
+                            type: "POST",
+                            contentType: false,
+                            processData: false,
+                            url: config.PHP_API + "/index.php/api/upload_file",
+                            data: formd,
+                            success: function(data) {
+                                if(data.code==0){
+                                    that.items.file_img = data.img_url;
+                                    var query= {};
+
+                                    query.user_id =  config.USERID();
+                                    query.interior_color_id = that.items.interior_color_id;
+                                    query.exterior_color_id = that.items.exterior_color_id;
+                                    query.car_image = that.items.file_img;
+                                    query.car_id = that.items.car_id;
+                                    query.price = that.items.price;
+                                    query.special_price = that.items.special_price;
+                                    query.start_date = that.items.start_date+" 00:00:01";
+                                    query.end_date = that.items.end_date+" 23:59:58";
+                                    query.number = that.items.number;
+                                    query.status = "";
+                                    query.remark = "";
+                                    query.description = that.items.desc;
+                                    query.createuser =  config.USERID();
+                                    query.areas = that.items._areas;
+
+                                    var params = {"query":query};
+
+                                    $.ajax({
+                                        url:config.API_BASE+"/4s/activity/addCarActivity/",
+                                        method:"POST",
+                                        contentType: 'application/json; charset=utf-8',
+                                        dataType:"json",
+                                        data:JSON.stringify(params),
+                                        beforeSend:function (request) {
+                                            request.setRequestHeader("sessionid",config.SESSIONID());
+                                        },
+                                        success:function (response) {
+                                            if(response.code == 0){
+                                                that.arr_items.$remove(that.rem_item);
+                                                layer.closeAll();
+                                                layer.alert('已提交，正在审核中...<br/> 您可在::本店活动::查看审核状态', {icon: 1,title:'完成修改'});
+                                                that.arr_items.$remove(that.rem_item);
+                                                /*clear*/
+                                                that.clearAllDb();
+                                            }
+                                        },
+                                        error:function (fail) {
+                                            if(fail.status == "401"){
+                                                var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                                if(SESSIONID == null){
+                                                    that.$route.router.go("/login");
+                                                }else{
+                                                    sessionStorage.removeItem("SESSIONID");
+                                                    layer.msg('登录失效，请重新登陆！');
+                                                    util.login();
+                                                }
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                            ,error: function(xhr, type){
+                            }
+                        });
+                    },
+                    btn2: function(index){
+                        that.clearAllDb();
                     }
                 });
             },
+            /*
+            * 清空弹窗中所有数据
+            * @method clearAllDb
+            * @auth 遇。
+            * */
+            clearAllDb(){
+                var that = this ,_idx = 1;
+                that.items.brandName = "";
+                that.items.carModelName = "";
+                that.items.carName = ""
+                that.items.interiorColorName = "";
+                that.items.exteriorColorName="";
+                that.items.price=""
+                that.items.special_price="";
+                that.items.offer_ = false;
+                that.items.offer_msg = "";
+                that.items.start_date = "";
+                that.items.end_date = "";
+                that.items.timer_ = false;
+                that.items.timer_msg = "";
+                that.items.number = 1;
+                that.items.number_ = false;
+                that.items.number_msg = "";
+                that.items._areas = [];
+                that.items.selectarea_ = false;
+                that.items.selectarea_msg = "";
+                that.items.file_src = "";
+                that.items.file_img = "";
+                that.items.file_value = "";
+                that.items.file_ = false;
+                that.items.file_msg = "";
+                that.items.desc = "";
+                if(that.$children[0].provincecity!=undefined){
+                    _idx = 0;
+                }
+                that.$children[_idx].removeAll();
+                that.$children[_idx].selectedKey = "0";
+                that.$children[_idx].city_items = [];
+            },
+            /**
+             * 初始化选择地区
+             * */
             selectarea(){
                 this.mask_1 = layer.open({
                     type: 1,
@@ -466,6 +523,9 @@
                     content: $(".activearea")
                 });
             },
+            /**
+             * 点击type='file' 上传图片
+             * */
             uploadfile(e){
                 var _this = this;
                 var reader = new FileReader();
@@ -479,22 +539,24 @@
                     }else {
                         var MAXWIDTH  = 580;
                         var MAXHEIGHT = 230;
-                        var img, imgBox = $(that).closest('.fileInner').find('.imgbox');
-
-                        imgBox.html('<img class="imghead">');
-                        img = imgBox.find('.imghead').get(0);
-
-                        img.onload = function(){
-                            var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
-                            img.width  =  rect.width;
-                            img.height =  rect.height;
-                            img.style.marginTop = rect.top+'px';
-                        }
+//                        var img, imgBox = $(that).closest('.fileInner').find('.imgbox');
+//
+//                        imgBox.html('<img class="imghead">');
+//                        img = imgBox.find('.imghead').get(0);
+//
+//                        img.onload = function(){
+//                            var rect = _this.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+//                            img.width  =  rect.width;
+//                            img.height =  rect.height;
+//                            img.style.marginTop = rect.top+'px';
+//                        }
 
                         this.items.file_value = that.files[0].name;
+
                         reader.onload = function(evt){
-                            img.src = evt.target.result;
+                            //img.src = evt.target.result;
                             _this.items.file_img = evt.target.result;
+
                         }
                         reader.readAsDataURL(that.files[0]);
                         that.files = null;
@@ -525,279 +587,9 @@
                 param.left = Math.round((maxWidth - param.width) / 2);
                 param.top = Math.round((maxHeight - param.height) / 2);
                 return param;
-            },
-            save(){
-                var items = this.items;
-                if(items.special_price == "" ){
-                    items.offer_ = true;
-                    items.offer_msg="特价不能为空";
-                    return false;
-                }else if(parseInt(items.special_price, 10) > parseInt(items.price, 10)){
-                    items.offer_ = true;
-                    items.offer_msg="特价不可高于市场价";
-                    return false;
-                }else{
-                    items.offer_ = false;
-                }
-
-                if(items.start_date == "" || items.end_date == ""){
-                    items.timer_ = true;
-                    items.timer_msg="开始时间或结束时间不能为空";
-                    return;
-                }else if(items.start_date>items.end_date){
-                    items.timer_ = true;
-                    items.timer_msg="结束时间不可早于开始时间";
-                    return;
-                }else{
-                    items.timer_ = false;
-                }
-
-                if(items.number == "" || items.number<=0){
-                    items.number_ = true;
-                    items.number_msg = "数量不小于1";
-                    return;
-                }else{
-                    items.number_ = false;
-                }
-
-                if(items.start_date == "" && items.end_date == ""){
-                    items.timer_ = true;
-                    items.timer_msg="结束时间不可早于开始时间";
-                    return;
-                }else{
-                    items.timer_ = false;
-                }
-
-                if($(".j_salesArea > span").length<=0){
-                    items.selectarea_ = true;
-                    items.selectarea_msg = "请选择区域";
-                    return;
-                }else{
-                    items.selectarea_ = false;
-                }
-
-                if(items.file_value == ""){
-                    items.file_ = true;
-                    items.file_msg = "请上传图片";
-                    return false;
-                }else{
-                    items.file_ = false;
-                }
-
-            var that = this;
-
-            var ii = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
-           /* var ii = layer.load(1, {
-                    shade : [0.5,'#000']
-                });*/
-            var formd = new FormData();
-            formd.append("img",$("#upload-file")[0].files[0]);
-            $.ajax({
-                    type: "POST",
-                    contentType: false,
-                    processData: false,
-                    url: config.PHP_API + "/index.php/api/upload_file",
-                    data:formd,
-                    success: function(data) {
-                        if(data.code==0){
-                            that.items.file_img=data.img_url;
-                            var query={};
-                            query.user_id =  config.USERID();
-                            query.interior_color_id = that.items.interior_color_id;
-                            query.exterior_color_id = that.items.exterior_color_id;
-                            query.car_image = that.items.file_img;
-                            query.car_id = that.items.car_id;
-                            query.price = that.items.price;
-                            query.special_price = that.items.special_price;
-                            query.start_date = that.items.start_date+" 00:00:01";
-                            query.end_date = that.items.end_date+" 23:59:58";
-                            query.number = that.items.number;
-                            query.status = "";
-                            query.remark = "";
-                            query.description = that.items.desc;
-                            query.createuser =  config.USERID();
-                            query.areas = that.items.areas;
-
-                            var params = {"query":query};
-
-                            $.ajax({
-                                url:config.API_BASE+"/4s/activity/addCarActivity/",
-                                method:"POST",
-                                contentType: 'application/json; charset=utf-8',
-                                dataType:"json",
-                                data:JSON.stringify(params),
-                                beforeSend:function (request) {
-                                    request.setRequestHeader("sessionid",config.SESSIONID());
-                                },
-                                success:function (response) {
-                                    if(response.code == 0){
-                                        layer.alert('已提交，正在审核中...<br/> 您可在本店活动查看审核状态', {icon: 1,title:'完成修改'});
-                                        that.arr_items.$remove(that.rem_item);
-                                        layer.close(that.mask_2);
-                                        /*clear*/
-                                        that.special_price="";
-                                        that.offer_=false;
-                                        that.offer_msg="";
-                                        that.start_date="";
-                                        that.end_date="";
-                                        that.timer_=false;
-                                        that.timer_msg="";
-                                        that.number="";
-                                        that.number_=false;
-                                        that.number_msg="";
-                                        that.areas=[];
-                                        that.selectarea_=false;
-                                        that.selectarea_msg="";
-                                        that.file_src="";
-                                        that.file_img="";
-                                        that.file_value="";
-                                        that.file_=false;
-                                        that.file_msg="";
-                                        that.desc="";
-
-                                        /*修改弹框初始化*/
-                                        that.removeAll();
-                                        that.selectedKey = "0";
-                                        that.city_items = [];
-                                    }
-                                },
-                                error:function (fail) {
-                                    if(fail.status == "401"){
-                                        var SESSIONID = sessionStorage.getItem("SESSIONID");
-                                        if(SESSIONID == null){
-                                            that.$route.router.go("/login");
-                                        }else{
-                                            sessionStorage.removeItem("SESSIONID");
-                                            layer.msg('登录失效，请重新登陆！');
-                                            util.login();
-                                        }
-                                    }
-                                }
-                            })
-                        }else{
-
-                        }
-                        layer.close(ii);
-                    }
-                    ,error: function(xhr, type){
-                    }
-                });
-
-            },
-            cancle(){
-                layer.close(this.mask_2);
-                /*修改弹框初始化*/
-                this.removeAll();
-                this.selectedKey = "0";
-                this.city_items = [];
-                /*   that.items.areas = [];*/
-            },
-            cityClk(obj,_index){
-//               /*点击下标是否第一个*/
-                if(_index == 0){
-//                    /*判断是直辖市*/
-                    if(this.city_items.length>1){
-
-                        for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
-                        }
-
-                    }
-                    obj.selected = true;
-                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
-                }else{
-
-                    if(obj.selected == undefined || obj.selected == "undefined"){
-                        this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
-                        this.city_items[0].total =this.city_items[0].total-1;
-                        if(this.city_items[0].total == 1){
-                            /*total 先不设置*/
-                            this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
-
-                            for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
-                            }
-
-                        }
-                    }
-
-                }
-            },
-            selectedProvinces(){
-                this.city_items = this.provincecity[this.selectedKey];
-
-                if(this.city_items.length>1){
-
-                    if(this.city_items[0].insert == undefined){
-                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
-
-                    }
-                    var total = this.city_items.length;
-
-                    for(var i = 1; i<this.city_items.length;i++){
-                        /*剔除已选择过的*/
-                        if(this.city_items[i].selected == true){
-                            total =total-1;
-                        }
-                    }
-
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
-                }
-            },
-            removeCity(obj){
-                /*判断是否是直辖市*/
-                if(obj.city == obj.province){
-
-                    if(this.provincecity[obj.city].length>1){
-                        /*total*/
-                        obj.total = this.provincecity[obj.city].length;
-                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
-                            if(i==0){
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
-                            }else{
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
-                            }
-
-                        }
-                    }else{
-                        obj.selected = 'undefined';
-                    }
-
-                }else{
-                    obj.selected = 'undefined';
-                }
-            },
-            agree(){
-                layer.close(this.mask_1);
-                var list = $(".filter_li li");
-                this.items.areas = [];
-                for(var i = 0 ; i< list.length;i++){
-                    if(list.eq(i).text()=="全国"){
-                        this.items.areas[0] = {"sales_area_name":"全国","sales_area_level":"1"}
-                    }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
-                        this.items.areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"2"})
-                    }else{
-                        this.items.areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"3"})
-                    }
-                }
-            },
-            cancle1(){
-                layer.close(this.mask_1);
-            },
-            selectAllClk(){
-                this.getRelationship();
-                this.global = true;
-                $("#selectedKey").find("option[value=0]").attr({"selected":true});
-                $("#selectedKey").attr({"disabled":true});
-                $("#global").addClass("selected");
-            },
-            removeAll(){
-                $("#selectedKey").removeAttr("disabled");
-                $("#global").removeClass("selected");
-                this.global = false;
             }
         },
-    filters:{
+        filters:{
         /*
         * 自定义过滤器
         *
@@ -829,8 +621,6 @@
             }
         }
     }
-
-
     }
 </script>
 
@@ -1028,7 +818,11 @@
     }
     .activeinfo .imgbox{
         margin-top: 10px;
-        border: 1px dotted #bfbfbf;
+    }
+    .activeinfo .imgbox img{
+        max-width: 580px;
+        max-height: 270px;
+        border: 2px dotted #bfbfbf;
     }
     .activeinfo .file_value{
         margin: 10px 0;

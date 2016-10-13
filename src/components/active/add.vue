@@ -1,12 +1,12 @@
 <template>
     <div class="wrap"  transition="fade">
-        <div class="top-bar">
+        <div class="top-bar"  id="J_GotoPos">
             <div class="brand-list clearfix">
                 <p class="G_fl">主营品牌：<span>{{brand_name}}</span></p>
                 <p class="G_fl" v-if="brandlist.length>1">副营品牌：<span v-for="list in brandlist" v-show="list.brand_name != brand_name">{{list.brand_name}}</span></p>
             </div>
 
-            <div class="details movable-car" id="J_GotoPos">
+            <div class="details movable-car">
                 <dl class="brands clearfix">
                     <dt class="G_fl">品牌：</dt>
                     <dd>
@@ -172,7 +172,6 @@
                     query.car_id = car_id;
                     query.user_id = config.USERID();
                 var params = {"query":query};
-                console.log(params);
                 $.ajax({
                     url:config.API_BASE+"/4s/activity/list/",
                     method:'POST',

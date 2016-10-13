@@ -16,7 +16,7 @@
                 <dt class="G_fl">车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
                 <div class="detailsCon">
                 <dd class="selectall"><a v-on:click="selectModelAll" class="style-box acton brandslink">全部<b></b></a></dd>
-                <dd v-for="model in screen_carModels" v-if="BrandAll">
+                <dd v-for="model in screen_carModels" v-show="BrandAll">
                     <a v-on:click="scrModelClk(model,$event,null)" carModelId="{{model.carModelId}}" class="style-box brandslink" title="{{model.carModelName}}">{{model.carModelName}}<b></b></a>
                 </dd>
                 <dd>
@@ -30,7 +30,7 @@
                     <dt class="G_fl">车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                     <div class="detailsCon">
                     <dd class="selectall"><a v-on:click="selectStyleAll" class="style-box acton carlink">全部<b></b></a></dd>
-                    <dd v-for="car in screen_car" v-if="ModelAll"><a v-on:click="scrCarClk(car,$event,null)" class="style-box carlink" carId="{{car.carId}}" title="{{car.carName}}">{{car.carName}}<b></b></a></dd>
+                    <dd v-for="car in screen_car" v-show="ModelAll"><a v-on:click="scrCarClk(car,$event,null)" class="style-box carlink" carId="{{car.carId}}" title="{{car.carName}}">{{car.carName}}<b></b></a></dd>
                     <dd><span v-on:click="eaitCars" class="eait"> <i></i> 编辑车款</span></dd>
                     </div>
                 </dl>
@@ -41,7 +41,7 @@
                     <dt class="G_fl">外观颜色：</dt>
                     <div class="detailsCon">
                     <dd class="selectall"><a v-on:click="selectOutColAll" class="style-box acton colorlink">全部<b></b></a></dd>
-                    <dd v-for="outColor in outColors" v-if="CarAll">
+                    <dd v-for="outColor in outColors" v-show="CarAll">
                     	<a v-on:click="scrOutColClk(outColor,$event)" class="style-box colorlink" outColorId="{{outColor.id}}" title="{{outColor.colorName}}">
                     		<div class="carColor" v-bind:style="{'background':outColor.colorValue.split(' ')[0]}">
                     			<span v-if="outColor.colorValue.split(' ').length>1" v-bind:style="{'background':outColor.colorValue.split(' ')[1]}"></span>
@@ -59,7 +59,7 @@
                     <dt class="G_fl">内饰颜色：</dt>
                     <div class="detailsCon">
                     <dd class="selectall"><a v-on:click="selectInColAll" class="style-box acton colorlink">全部<b></b></a></dd>
-                    <dd v-for="inColor in inColors" v-if="CarAll">
+                    <dd v-for="inColor in inColors" v-show="CarAll">
                     	<a v-on:click="scrInColClk(inColor,$event)" class="style-box colorlink" inColorId="{{inColor.id}}" title="{{inColor.colorName}}">
                     		<div class="carColor" v-bind:style="{'background':inColor.colorValue.split(' ')[0]}">
                     			<span v-if="inColor.colorValue.split(' ').length>1" v-bind:style="{'background':inColor.colorValue.split(' ')[1]}"></span>

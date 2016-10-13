@@ -187,7 +187,7 @@
                 <td>{{item.price}}</td>
                 <td width="100">
                     <span class="show_{{$index}}">{{item.discount}}</span>
-                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)"  v-text="item.discount | changeToNumber" value="{{item.discount}}" style="display: none;">
+                    <input type="number" class="update_{{$index}} discount_{{$index}}" v-on:keyup="calc(item,$index)" v-on:click="calc(item,$index)" value="{{item.discount}}" style="display: none;">
                     <p v-if="items.discount_" class="error ">
                         <i></i>
                         {{items.discount_msg}}
@@ -980,21 +980,6 @@
                 this.city_items = [];
             },
         },
-        filters:{
-//            changeToNumber: {
-//                // model -> view
-//                // 在更新 `<input>` 元素之前格式化值
-//                read(val) {
-//                    return parseInt(val, 10)
-//                },
-//                // view -> model
-//                // 在写回数据之前格式化值
-//                write(val, oldVal) {
-//                    var number = +val.replace(/[^\d]/g, '')
-//                    return number === '' ? 1 : isNaN(number) ? 1 : parseInt(number, 10)
-//                }
-//            }
-        }
     }
 </script>
 <style scoped>

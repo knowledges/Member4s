@@ -2,7 +2,7 @@
     <div class="layer_2">
         <dl class="clearfix">
             <dt>已选区域：</dt>
-            <dd style="display: inline-block;width: 490px;height: 100%;min-height: 45px;border-bottom: 1px solid #ccc;">
+            <dd>
                 <ul class="filter_li">
                     <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
                     <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
@@ -45,26 +45,21 @@
         <dl class="clearfix">
             <dt>可选区域：</dt>
             <dd>
-                <ul>
+                <div class="line"></div>
+                <ul class="clearfix">
                     <li v-on:click="selectAllClk" id="global">全国</li>
                 </ul>
             </dd>
-        </dl>
-        <dl class="clearfix">
-            <dt></dt>
             <dd>
                 <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                    <option value="0" selected>==请选择==</option>
+                    <option value="0" selected>--- 请选择 ---</option>
                     <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
                 </select>
             </dd>
-        </dl>
-        <dl class="clearfix">
-            <dt></dt>
-            <dd style="width: 490px;height: 100%;" class="city_dd">
-                <ul v-if="!global">
-                    <li v-for="city in city_items" v-on:click="cityClk(city,$index)"
-                        class="city_li" :class="{'selected':city.selected==true}">
+            <dd class="city_dd">
+                <ul v-if="!global" class="clearfix">
+                    <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
+                        class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
                         {{city.city}}
                     </li>
                 </ul>
@@ -73,8 +68,9 @@
         <dl class="clearfix">
             <dt></dt>
             <dd>
-                <button v-on:click="agree">确定</button>
-                <button v-on:click="cancle1">取消</button>
+                <div class="line"></div>
+                <button class="agree" v-on:click="areaAgree">确定</button>
+                <button class="cancle" v-on:click="areaCancle">取消</button>
             </dd>
         </dl>
     </div>
@@ -86,91 +82,144 @@
         line-height: 28px;
         font-size: 14px;
         padding: 0 10px;
-        margin-left: 10px;
         outline: none;
     }
     .selected{
         color: #fa8c35!important;
-        border: 2px solid #fa8c35!important;;
+        border: 1px solid #fa8c35!important;;
     }
-    div.layer_2  dl dt {
+    .layer_2  dl dt {
         display: inline-block;
         width: 80px;
         text-align: right;
     }
-
-    div.layer_2 dl dd {
-        margin-left: 2px;
-        text-align: left;
-    }
-
-    div.layer_2 dl dd i {
+    .layer_2  dl dt {
         display: inline-block;
-        width: 20px;
-        height: 20px;
-        vertical-align: sub;
-        position: absolute;
-        right: -10px;
-        top:-10px;
-        background: url('/assets/img/close_1.png') no-repeat;
-        background-position: 0 0!important;
+        width: 80px;
+        text-align: right;
     }
-    div.layer_2 dl dd em{
-        position: absolute;
-        right: 8px;
-        top: 0;
-        color: #999;
+    .layer_2{
+        padding-top: 15px;
     }
-    div.layer_2 dl dd ul li {
+    .layer_2 dl{
+        margin-bottom: 10px;
+    }
+    .layer_2 dl dt{
         float: left;
-        margin:5px 10px!important;
-        position: relative;
-        border: 2px solid #ccc;
-        background:#FFF;
-        color: #ccc;
-        display: inline-block;
+        width: 100px;
+        text-align: right;
+        height: 28px;
+        line-height: 28px;
+    }
+    .layer_2 dl dd{
+        margin-left: 110px;
+    }
+    .layer_2 .city_dd{
+        margin-top: 20px;
+    }
+    .layer_2 dd li{
+        float: left;
+        display: inline;
+        line-height: 24px;
         padding: 0 10px;
-        height: 30px;
-        font-size: 16px;
-        line-height: 30px;
+        position: relative;
+        border: 1px solid #5f5c5c;
+        background:#FFF;
+        color: #5f5c5c;
         text-align: center;
         cursor: pointer;
+        margin-bottom: 13px;
+        margin-right: 13px;
     }
-    div.layer_2 dl dd button {
-        padding: 5px 60px;
-        margin: 20px 15px;
-        font-size: 16px;
-        background: #fa8c35;
-        color: #FFF;
+    .layer_2 ul li i{
+        display: block;
+        width: 19px;
+        height: 19px;
+        position: absolute;
+        right: -9px;
+        top: -9px;
+        background: url('../../assets/img/close_1.png') no-repeat;
+        background-position: 0 0!important;
+    }
+    .layer_2 .optional-area dl{
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+    }
+    .layer_2 ul .no-slt{
+        background-color: #F9F9F9;
+        color: #C2C2C2;
+        border: 1px solid #C2C2C2;
+        cursor: not-allowed;
+    }
+    .layer_2 select{
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px;
+        border-color: #5f5c5c;
+        outline: none;
+    }
+    .layer_2 .btn-global{
+        padding: 0 30px;
+    }
+    .layer_2 .line{
+        height: 1px;
+        line-height: 1px;
+        font-size: 0;
+        background: #ddd;
+        margin-bottom: 10px;
+    }
+    .layer_2 .btn-box button{
+        margin: 0 10px;
+    }
+    button{
+        padding: 0 10px 0 10px;
+        white-space: nowrap;
+        display: inline-block;
+        border-radius: 2px;
+        height: 26px;
+        line-height: 26px;
+        text-decoration: none;
+        font-size: 14px;
+        min-width: 40px;
+        text-align: center;
+        outline: none;
         border: none;
         cursor: pointer;
+        background: #fa8c35;
+        color: #FFF;
     }
-    div.layer_2 dl dd button:last-child{
+    .cancle{
         background: #ccc;
     }
-    div.layer_2 dl dd button:last-child:hover{
+    .cancle:hover{
         background: #666;
     }
 </style>
 <script>
+    import $ from 'jquery'
+    import config from './../../config'
+    import util from './../../util/util'
     export  default{
         data(){
             return {
+                global:false,
                 provinces:"",
                 provincecity:"",
-                clone_provincecity:"",
-                mask_1:"",
-                mask_3:"",
                 selectedKey:"",
-                global:false,
                 city_items:[]
             }
         },
         methods:{
-            getRelationship(){
+            /**
+             * 获取省市关系
+             * obj 当前选择对象中的地区
+             * statue:0 添加【特价车、报价】中的地区加载后的操作
+             *       1 修改【特价车、报价】中的地区加载后的操作
+             * */
+            getRelationship(obj,statue){
                 var that = this;
-
-                /*获取省市关系*/
                 $.ajax({
                     url:config.API_BASE+"/nl/common/provincecity",
                     method:"POST",
@@ -184,33 +233,142 @@
                         var list = response.data;
                         that.$set("provinces",list.provinces);
                         that.$set("provincecity",list.provincecity);
-                        that.$set("clone_provincecity",list.provincecity);
-
-                        that.selectedKey="江苏省";
-                        that.selectedProvinces();
-
+                        if(statue != undefined && statue == 1){
+                            if(obj !== null){
+                                that.getSaleAreaByArray(obj);
+                            }
+                        }else if(statue == 0){
+                            that.selectedKey="江苏省";
+                            that.selectedProvinces();
+                        }
                     },
                     error:function (fail) {
                         if(fail.status == "401"){
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if(SESSIONID == null){
+                                that.$route.router.go("/login");
+                            }else{
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
                 });
             },
+            /**
+             * 根据选择地区显示到弹出框中
+             * */
+            getSaleAreaByArray(obj){
+                var that = this;
+                that.rem_item = obj;
+                that.$parent.items.areas = [];
+                that.$parent.items._areas = [];
+                that.$parent.items.id = obj.id;
+                that.$parent.items.brandName = obj.brand_name;
+                that.$parent.items.carModelName = obj.car_model_name;
+                that.$parent.items.car_id = obj.car_id;
+                that.$parent.items.carName = obj.car_name;
+                that.$parent.items.price = obj.auth_price;
+                that.$parent.items.special_price = obj.special_price;
+                that.$parent.items.interior_color_id = obj.interior_color_id;
+                that.$parent.items.interiorColorName = obj.interior_color_name;
+                that.$parent.items.exterior_color_id = obj.exterior_color_id;
+                that.$parent.items.exteriorColorName = obj.exterior_color_name;
+                that.$parent.items.number = obj.number;
+                that.$parent.items.start_date = obj.start_date;
+                that.$parent.items.end_date = obj.end_date;
+                that.$parent.items.file_img = obj.car_image;
+                that.$parent.items.desc = obj.description;
+                var str = obj.sales_area;
+                var list = str.substring(1,str.length-1).split(",");
+
+                for(var i = 0 ; i< list.length;i++){
+                    if(list[i].trim()=="全国"){
+                        that.$parent.items.areas.push({"sales_area_name":"全国","sales_area_level":"1"})
+                        that.$parent.items._areas.push({"sales_area_name":"全国","sales_area_level":"1"})
+                        that.global = true;
+                        $("#selectedKey").attr({"disabled":true});
+                        $("#global").addClass("selected");
+                    }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
+                        that.$parent.items.areas.push({"sales_area_name":list[i],"sales_area_level":"2"});
+                        that.$parent.items._areas.push({"sales_area_name":list[i],"sales_area_level":"2"});
+                        var arr = that.provincecity[list[i].trim()];
+                        if(arr.length > 1){
+                            /* 把省插入到第一的位置 */
+                            arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
+                            for(var j =0 ;j <arr.length;j++){
+                                if(j == 0){
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true,"insert":true});
+                                }else{
+                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
+                                }
+                            }
+                        }else{
+                            arr[0].selected = true;
+                            that.provincecity[list[i].trim()].$set(0,{province:arr[0].province,city:arr[0].city,selected:true,insert:true});
+                        }
+                    }else{
+                        that.$parent.items.areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
+                        that.$parent.items._areas.push({"sales_area_name":list[i].trim(),"sales_area_level":"3"})
+                        $.map(that.provincecity,function (val,key) {
+                            for(var j = 0;j<val.length;j++){
+                                if(list[i].trim() == val[j].city){
+                                    val[j].selected = true;
+                                    that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
+                                }
+                            }
+                        })
+                    }
+                }
+            },
+            /**
+            * 移除全国，打开selected 事件，显示地区
+            * */
             removeAll(){
                 $("#selectedKey").removeAttr("disabled");
                 $("#global").removeClass("selected");
                 this.global = false;
             },
+            /**
+             * 取消选中的省、市
+             * */
+            removeCity(obj){
+                /*判断是否是直辖市*/
+                if(obj.city == obj.province){
+
+                    if(this.provincecity[obj.city].length>1){
+                        /*total*/
+                        obj.total = this.provincecity[obj.city].length;
+                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
+                            if(i==0){
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
+                            }else{
+                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
+                            }
+
+                        }
+                    }else{
+                        obj.selected = 'undefined';
+                    }
+
+                }else{
+                    obj.selected = 'undefined';
+                }
+            },
+            /**
+             * 选中全国，关闭selected 事件，隐藏地区
+             * */
             selectAllClk(){
-                this.getRelationship(null);
+                this.getRelationship(null,0);
                 this.global = true;
                 $("#selectedKey").find("option[value=0]").attr({"selected":true});
                 $("#selectedKey").attr({"disabled":true});
                 $("#global").addClass("selected");
             },
+            /**
+             * 省市切换
+             * */
             selectedProvinces(){
                 this.city_items = this.provincecity[this.selectedKey];
 
@@ -230,6 +388,9 @@
                     this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
                 }
             },
+            /**
+             * 选中省市
+             * */
             cityClk(obj,_index){
 //               /*点击下标是否第一个*/
                 if(_index == 0){
@@ -237,7 +398,7 @@
                     if(this.city_items.length>1){
 
                         for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                         }
 
                     }
@@ -253,7 +414,7 @@
                             this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
 
                             for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
+                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false, nosel: true});
                             }
 
                         }
@@ -261,22 +422,33 @@
 
                 }
             },
-            agree(){
-                layer.close(this.mask_1);
+            /**
+             * 提交
+             * */
+            areaAgree(){
+                layer.close(this.$parent.mask_1);
                 var list = $(".filter_li li");
-                this.items.areas = [];
+                this.$parent.items.areas = [];
+                this.$parent.items._areas = [];
                 for(var i = 0 ; i< list.length;i++){
                     if(list.eq(i).text()=="全国"){
-                        this.items.areas[0] = {"salesAreaName":"全国","salesAreaLevel":"1"}
+                        this.$parent.items.areas[0] = {"salesAreaName":"全国","salesAreaLevel":"1"};
+                        this.$parent.items._areas[0] = {"sales_area_name":"全国","sales_area_level":"1"};
                     }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"2"})
+                        this.$parent.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"2"});
+                        this.$parent.items._areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"2"});
                     }else{
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"3"})
+                        this.$parent.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"3"})
+                        this.$parent.items._areas.push({"sales_area_name":list.eq(i).text(),"sales_area_level":"3"})
                     }
                 }
+                console.log("父类："+JSON.stringify(this.$parent.items.areas));
             },
-            cancle1(){
-                layer.close(this.mask_1);
+            /**
+             * 取消
+             * */
+            areaCancle(){
+                layer.close(this.$parent.mask_1);
             },
         }
     }

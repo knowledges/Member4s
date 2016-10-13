@@ -96,81 +96,7 @@
     </div>
 
     <div class="activearea" style="display: none;">
-        <div class="layer_2">
-            <dl class="clearfix">
-                <dt>已选区域：</dt>
-                <dd>
-                    <ul class="filter_li">
-                        <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
-                        <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['内蒙古自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['辽宁省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['吉林省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['黑龙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['上海市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江苏省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['浙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['安徽省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['福建省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广西壮族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['海南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['重庆市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['四川省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['贵州省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['云南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['西藏自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['陕西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['甘肃省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['青海省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['宁夏回族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['新疆维吾尔自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['香港特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['澳门特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['台湾省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                    </ul>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt>可选区域：</dt>
-                <dd>
-                    <div class="line"></div>
-                    <ul class="clearfix">
-                        <li v-on:click="selectAllClk" id="global">全国</li>
-                    </ul>
-                </dd>
-                <dd>
-                    <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>--- 请选择 ---</option>
-                        <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
-                    </select>
-                </dd>
-                <dd class="city_dd">
-                    <ul v-if="!global" class="clearfix">
-                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
-                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
-                            {{city.city}}
-                        </li>
-                    </ul>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd>
-                    <div class="line"></div>
-                    <button v-on:click="agree">确定</button>
-                    <button v-on:click="cancle1">取消</button>
-                </dd>
-            </dl>
-        </div>
+        <select-area></select-area>
     </div>
 
     <div class="batchAdd" style="display: none;">
@@ -246,15 +172,14 @@
 
     </div>
     
-    <!--<history-tpl :history="history"></history-tpl>-->
     <history-list :history="history"></history-list>
 </template>
 <script >
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
-//  import historyTpl from './../historyTpl.vue'
 	import historyList from './historyList.vue'
+    import SelectArea from './../template/SelecteArea.vue'
     export default {
         props:{
             count:{
@@ -265,13 +190,10 @@
                 default: ()=>[]
             }
         },
-        ready(){
-            this.$nextTick(function () {
-                console.log("子類渲染了嗎");
-            })
-        },
+        ready(){},
         components:{
-	        historyList
+	        historyList,
+            SelectArea
 	    },
         data(){
             return {
@@ -279,6 +201,7 @@
                 checkedIndex:[],
                 items:{
                     areas:[],
+                    _areas:[],
                     discount:"",
                     discount_:false,
                     discount_msg:"",
@@ -315,23 +238,26 @@
                     titleList:['创建时间', '官方价 / 元', '优惠价 / 元', '报价 / 元'],
                     list:[]
                 },
-                provinces:"",
-                provincecity:"",
-                clone_provincecity:"",
                 mask_1:"",
                 mask_3:"",
-                selectedKey:"",
-                global:false,
-                checkedAll:false,
-                checkedIndex:[],
-                city_items:[],
-                mask_add:"",
             }
         },
         methods:{
-            /*验证*/
-            discountInvalid(){
-                layer.msg("请输入正确的数值类型");
+            /**
+             * _idx:根据组件的个数来下下面 if else 的条件的。
+             * 目前默认为两个组件
+             * */
+            clearChildDb(){
+                var that = this;
+
+                var _idx = 1;
+                if(that.$children[0].provincecity!=undefined){
+                    _idx = 0;
+                }
+                that.$children[_idx].removeAll();
+                that.$children[_idx].selectedKey = "0";
+                that.$children[_idx].city_items = [];
+                that.items.areas = [];
             },
 //      	新改的历史
         	getHistoryList(item){
@@ -339,12 +265,6 @@
                     query = {},
                     params = {};
                 console.log(item);
-//              query.user_id = config.USERID();
-//              query.interior_color_id = item.interiorColorId;
-//              query.exterior_color_id= item.exteriorColorId;
-//              query.pagenum = 100;
-//              query.page = 1;
-//              query.car_id = item.carId;
 				query.userId = config.USERID();
                 query.interiorColorId = item.interiorColorId;
                 query.exteriorColorId= item.exteriorColorId;
@@ -372,9 +292,6 @@
                         console.log(response);
                         if(response.code === 0){
                         	var winHeight= $(window).height(),
-                                    layerTitHeight = 43,
-                                    extendHeight = 30,
-                                    newHeight = '';
                             newHeight = (winHeight - 43 - 30) + 'px';
                             
                             self.history.list = response.data.rows;
@@ -398,44 +315,9 @@
                 });
 
             },
-        	
-            getRelationship(){
-                var that = this;
-
-                /*获取省市关系*/
-                $.ajax({
-                    url:config.API_BASE+"/nl/common/provincecity",
-                    method:"POST",
-                    contentType:"application/json; charset=utf-8",
-                    datatype:"json",
-                    cache:true,
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        var list = response.data;
-                        that.$set("provinces",list.provinces);
-                        that.$set("provincecity",list.provincecity);
-                        that.$set("clone_provincecity",list.provincecity);
-
-                        that.selectedKey="江苏省";
-                        that.selectedProvinces();
-
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                });
-            },
+            /**
+             * 优惠价计算
+             * */
             calc(item,index){
                 setTimeout(function () {
                     var num = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
@@ -443,12 +325,18 @@
                     $(".lowPrice_"+index).val(val);
                 },500);
             },
+            /**
+             * 报价=实际价格-优惠价
+             * */
             batchCalc(item){
                 var that = this;
                 setTimeout(function (){
                     that.temps.lowPrice = item.price - that.temps.discount;
                 },500)
             },
+            /**
+             * 初始化批量添加弹框
+             * */
             batchUpdate(){
                 var that = this;
                 layer.confirm('您确定要批量添加吗？', {
@@ -463,11 +351,7 @@
                             area : ['800px' , '400px'],
                             content: $(".batchAdd"),
                             cancel:function () {
-                                /*修改弹框初始化*/
-                                that.removeAll();
-                                that.selectedKey = "0";
-                                that.city_items = [];
-                                that.items.areas = [];
+                                that.clearChildDb();
                             }
                         });
 
@@ -484,16 +368,24 @@
                         that.temps.brandName = that.temp_arr[0].brandName;
                         that.temps.carModelName = that.temp_arr[0].carModelName;
                         that.temps.carName = that.temp_arr[0].carName;
-                        that.getRelationship();
-//                        console.log(JSON.stringify(that.temp_arr));
-
+                        /**
+                         * _idx:根据组件的个数来下下面 if else 的条件的。
+                         * 目前默认为两个组件
+                         * */
+                        if(that.$children[0].provincecity!=undefined){
+                            that.$children[0].getRelationship(null,0);
+                        }else{
+                            that.$children[1].getRelationship(null,0);
+                        }
                     }else{
                         layer.msg("请选择批量修改内容");
                     }
                 }, function(){});
             },
+            /**
+             * 全选
+             * */
             allChecked(){
-
                 if(!$("#all").attr("checked")){
                     this.checkedIndex = [];
                     $(".all").removeAttr("checked");
@@ -506,6 +398,9 @@
                     $(".all").removeAttr("checked");
                 }
             },
+            /**
+             * 初始化选中地区弹框
+             * */
             selectarea(obj){
                 /*把选择对象放到零时变量中*/
                 this.mask_1 = layer.open({
@@ -528,7 +423,15 @@
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
-                    that.getRelationship();
+                    /**
+                     * _idx:根据组件的个数来下下面 if else 的条件的。
+                     * 目前默认为两个组件
+                     * */
+                    if(that.$children[0].provincecity!=undefined){
+                        that.$children[0].getRelationship(null,0);
+                    }else{
+                        that.$children[1].getRelationship(null,0);
+                    }
                     $(".update_"+_index).show();
                     $(".show_"+_index).hide();
                     $("input[type='checkbox']").attr("disabled","true");
@@ -536,10 +439,11 @@
                     $(e.target).removeAttr("disabled");
                 }, function(){});
             },
-            /*修改或者批量修改我的报价*/
+            /**
+             * 修改或者批量修改我的报价
+             * */
             updateMethos(params,num,obj){
                 var ii = layer.msg('保存中......', {icon: 16,shade : [0.5,'#000'],time:0});
-                console.log("開始");
                 var that = this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchAddCarPrice",
@@ -586,6 +490,9 @@
                     }
                 });
             },
+            /**
+             * 添加
+             * */
             save(obj,e,index){
                 var discount_  = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
                 var str = /^[1-9]\d*$/;
@@ -632,132 +539,26 @@
                 }, function (index) {
                     layer.close(index);
                     that.updateMethos(params,1,that.temp_items);
-                    /*修改弹框初始化*/
-                    that.removeAll();
-                    that.selectedKey = "0";
-                    that.city_items = [];
-                    that.items.areas = [];
+                    that.clearChildDb();
                 }, function () {
                     $(".update_"+index).hide();
                     $(".show_"+index).show();
                     $(".update,input[type='checkbox']").removeAttr("disabled");
                 });
 
-//                this.arr_items.$remove(this.temp_items);
             },
+            /**
+             * 取消添加
+             * */
             cancle(_index){
                 $(".update_"+_index).hide();
                 $(".show_"+_index).show();
                 $(".update,input[type='checkbox']").removeAttr("disabled");
-
-                /*修改弹框初始化*/
-                this.removeAll();
-                this.selectedKey = "0";
-                this.city_items = [];
-                this.items.areas = [];
+                this.clearChildDb();
             },
-            removeAll(){
-                $("#selectedKey").removeAttr("disabled");
-                $("#global").removeClass("selected");
-                this.global = false;
-            },
-            removeCity(obj){
-                /*判断是否是直辖市*/
-                if(obj.city == obj.province){
-
-                    if(this.provincecity[obj.city].length>1){
-                        /*total*/
-                        obj.total = this.provincecity[obj.city].length;
-                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
-                            if(i==0){
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
-                            }else{
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
-                            }
-
-                        }
-                    }else{
-                        obj.selected = 'undefined';
-                    }
-
-                }else{
-                    obj.selected = 'undefined';
-                }
-            },
-            cityClk(obj,_index){
-//               /*点击下标是否第一个*/
-                if(_index == 0){
-//                    /*判断是直辖市*/
-                    if(this.city_items.length>1){
-
-                        for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
-                        }
-
-                    }
-                    obj.selected = true;
-                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
-                }else{
-
-                    if(obj.selected == undefined || obj.selected == "undefined"){
-                        this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
-                        this.city_items[0].total =this.city_items[0].total-1;
-                        if(this.city_items[0].total == 1){
-                            /*total 先不设置*/
-                            this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
-
-                            for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
-                            }
-
-                        }
-                    }
-
-                }
-            },
-            selectAllClk(){
-                this.getRelationship(null);
-                this.global = true;
-                $("#selectedKey").find("option[value=0]").attr({"selected":true});
-                $("#selectedKey").attr({"disabled":true});
-                $("#global").addClass("selected");
-            },
-            selectedProvinces(){
-                this.city_items = this.provincecity[this.selectedKey];
-
-                if(this.city_items!=undefined && this.city_items.length>1){
-
-                    if(this.city_items[0].insert == undefined){
-                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
-                    }
-                    var total = this.city_items.length;
-                    for(var i = 1; i<this.city_items.length;i++){
-                        /*剔除已选择过的*/
-                        if(this.city_items[i].selected == true){
-                            total =total-1;
-                        }
-                    }
-
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
-                }
-            },
-            agree(){
-                layer.close(this.mask_1);
-                var list = $(".filter_li li");
-                this.items.areas = [];
-                for(var i = 0 ; i< list.length;i++){
-                    if(list.eq(i).text()=="全国"){
-                        this.items.areas[0] = {"salesAreaName":"全国","salesAreaLevel":"1"}
-                    }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"2"})
-                    }else{
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"3"})
-                    }
-                }
-            },
-            cancle1(){
-                layer.close(this.mask_1);
-            },
+            /**
+             * 批量添加
+             * */
             save2(){
                 var that = this;
                 if(parseInt(that.temp_arr[0].price) < parseInt(this.temps.discount)){
@@ -817,36 +618,16 @@
                 }, function (index) {
                     layer.close(index);
                     that.updateMethos(params,2,null);
-                  /*  /!*修改弹框初始化*!/
-                    that.removeAll();
-                    that.selectedKey = "0";
-                    that.city_items = [];
-                    that.items.areas = [];*/
-                }, function () {
-                    /*window.history.go(0);*/
-                });
+                }, function () { });
             },
+            /**
+             * 取消批量添加
+             * */
             cancle2(){
-                layer.close(this.mask_3);
+                layer.closeAll();
                 /*修改弹框初始化*/
-                this.removeAll();
-                this.selectedKey = "0";
-                this.city_items = [];
-                this.items.areas = [];
+                this.clearChildDb();
             },
-        },
-        watch:{
-            'checkedIndex':{
-                handler: function (val, oldVal) {
-                    if(this.checkedIndex.length == this.arr_items.length){
-                        this.checked = true;
-                    }else{
-                        this.checked = false;
-                    }
-                },
-                //监听数组不用添加
-                deep: true
-            }
         }
     }
 </script>

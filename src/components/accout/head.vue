@@ -111,7 +111,8 @@
                     method:'POST',
                     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                     dataType:"json",
-					data:JSON.stringify({base64:base64,user_id:user_id}),
+//					data:JSON.stringify({base64:base64,user_id:user_id}),
+					data:{base64:base64,user_id:user_id},
 	                success:function(response){
 						console.log("我进来过：");
 					    if(response.code == 0){
@@ -121,6 +122,9 @@
 			                $('.small').attr("src",img);
 			                $(".productImg img").attr("src",img);
 			                layer.msg('头像设置成功', {icon: 1});
+			                var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
+                            sessionid.head_url = img;
+			                sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));
 	                    }else{
 	                        console.log(response.desc);
 	                    }

@@ -111,7 +111,7 @@
         computed: {
             sum: function() {
                 var obj = this.arr_active;
-               this.istrue = $.isEmptyObject(obj);
+                this.istrue = $.isEmptyObject(obj);
                 return ;
             }
         },
