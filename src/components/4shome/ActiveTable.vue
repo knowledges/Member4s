@@ -75,12 +75,10 @@
                         <p v-if="arr_active.status==6">审核失败</p>
                     </td>
                     <td>
-                        <a v-if="arr_active.status==3" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">停售</a>
-                        <a v-if="arr_active.status==4" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">在售</a>
-                        <a v-if="arr_active.status==2 || arr_active.status==4 || arr_active.status==6" v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">修改</a>
-                        <!--<a v-if="arr_active.status==2 || arr_active.status==5 " v-bind:href="'/u/active/thisShop/find/'+arr_active.id">删除</a>-->
-                        <a v-if="arr_active.status==2 || arr_active.status==5 " v-link="{path:'/u/active/thisShop/find/'+arr_active.id}">删除</a>
-                        <!--<a v-link="{path:'/u/active/thisShop/1'}">历史</a>-->
+                        <a v-if="arr_active.status==3" v-link="{path:'/u/active/thisShop/find/0'}">停售</a>
+                        <a v-if="arr_active.status==4" v-link="{path:'/u/active/thisShop/find/0'}">在售</a>
+                        <a v-if="arr_active.status==2 || arr_active.status==4 || arr_active.status==6" v-link="{path:'/u/active/thisShop/find/0'}">修改</a>
+                        <a v-if="arr_active.status==2 || arr_active.status==5 " v-link="{path:'/u/active/thisShop/find/0'}">删除</a>
                     </td>
                 </tr>
             </tbody>

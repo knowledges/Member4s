@@ -111,11 +111,9 @@
             <dl class="clearfix">
                 <dt>活动时间：</dt>
                 <dd>
-                    <input type="text" id="start-date" v-model="items.start_date" readonly class="select-date"
-                           placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="start-date" v-model="items.start_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                     至
-                    <input type="text" id="end-date" class="end-date" v-model="items.end_date" readonly
-                           class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="end-date" v-model="items.end_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                 </dd>
                 <dd v-if="items.timer_" class="error"><i></i>{{items.timer_msg}}</dd>
             </dl>
@@ -168,21 +166,15 @@
                     <textarea name="desc" v-model="items.desc" cols="64" rows="8" placeholder="填写相关活动说明~"></textarea>
                 </dd>
             </dl>
-            <div class="btn-box">
-                <button @click="save" class="btn-confirm">确定</button>
-                <button @click="cancle" class="btn-cancle">取消</button>
-            </div>
 
         </div>
     </div>
     <div class="activearea" style="display: none;">
-        <select-area :action="action"></select-area>
+        <select-area></select-area>
     </div>
 </template>
 
 <script scoped>
-    import sub_zebra from './../../assets/js/sub_zebra.js'
-    import Zebra_DatePicker from './../../assets/js/zebra_datepicker.src.js'
     import $ from 'jquery'
     import config from './../../config'
     import util from './../../util/util'
@@ -204,22 +196,34 @@
             }
         },
         ready(){
-            $('#start-date').Zebra_DatePicker({
-                direction: true,
-                pair: $('#end-date'),
-                format: 'Y-m-d',
-                onSelect: function () {
-                    $("#end-date").val("");
+            var start = {
+                elem: '#start-date',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: laydate.now(), //设定最小日期为当前日期
+                max: '2099-06-16 23:59:59', //最大日期
+                istime: true,
+                istoday: false,
+                choose: function(datas){
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
                 }
-            });
-
-            $('#end-date').Zebra_DatePicker({
-                direction: 1
-            });
+            };
+            var end = {
+                elem: '#end-date',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: laydate.now(),
+                max: '2099-06-16 23:59:59',
+                istime: true,
+                istoday: false,
+                choose: function(datas){
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            laydate(start);
+            laydate(end);
         },
         data(){
             return {
-                action: 1,// 0 是新增，1是修改，移除全国新增和修改展示不同的效果
                 items: {
                     brandName: "",
                     carModelName: "",
@@ -249,12 +253,6 @@
                     desc: ""
                 },
                 _index: "",
-                /* selectedKey:"",
-                 provinces:"",
-                 provincecity:"",
-                 clone_provincecity:"",
-                 city_items:[],
-                 global:false,*/
                 mask_1: "",
                 mask_2: "",
                 rem_item: [],
@@ -364,8 +362,6 @@
              * */
             update(obj, _index){
                 this.temp_items = obj;
-                debugger;
-                console.log("this.car_image:"+obj.car_image);
                 this.temp_index = _index;
                 var that = this;
                 var h = this.setInnerHeight();
@@ -506,6 +502,8 @@
             },
             save(){
                 var items = this.items;
+                items.start_date = $("#start-date").val();
+                items.end_date = $("#end-date").val();
                 if (items.special_price == "") {
                     items.offer_ = true;
                     items.offer_msg = "特价不能为空";
@@ -601,8 +599,8 @@
                 query.car_id = that.items.car_id;
                 query.price = that.items.price;
                 query.special_price = that.items.special_price;
-                query.start_date = dataFilter(that.items.start_date) + " 00:00:01";
-                query.end_date = dataFilter(that.items.end_date) + " 23:59:58";
+                query.start_date = that.items.start_date;
+                query.end_date = that.items.end_date;
                 query.number = that.items.number;
                 query.status = "";
                 query.remark = "";
@@ -648,9 +646,9 @@
                                 "description": that.items.desc,
                                 "end_date": that.items.end_date,
                                 "exterior_color_id": that.items.exterior_color_id,
-                                "exterior_color_name": that.items.exterior_color_name,
+                                "exterior_color_name": that.items.exteriorColorName,
                                 "interior_color_id": that.items.interior_color_id,
-                                "interior_color_name": that.items.interior_color_name,
+                                "interior_color_name": that.items.interiorColorName,
                                 "number": that.items.number,
                                 "sales_area": arr,
                                 "special_price": that.items.special_price,
@@ -699,7 +697,6 @@
 </script>
 
 <style scoped>
-    @import "./../../assets/css/datepicker.css";
 
     .status_suc {
         color: #00c100;

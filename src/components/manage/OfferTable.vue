@@ -1,81 +1,7 @@
 <template>
 
     <div class="activearea" style="display: none;">
-        <div class="layer_2">
-            <dl class="clearfix">
-                <dt>已选区域：</dt>
-                <dd>
-                    <ul class="filter_li">
-                        <li class="selected" v-if="global">全国<i v-on:click="removeAll"></i></li>
-                        <li class="selected" v-for="city in provincecity['北京市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['天津市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['内蒙古自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['辽宁省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['吉林省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['黑龙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['上海市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江苏省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['浙江省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['安徽省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['福建省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['江西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['山东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['河南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖北省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['湖南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广东省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['广西壮族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['海南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['重庆市'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['四川省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['贵州省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['云南省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['西藏自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['陕西省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['甘肃省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['青海省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['宁夏回族自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['新疆维吾尔自治区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['香港特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['澳门特别行政区'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                        <li class="selected" v-for="city in provincecity['台湾省'] | filterBy 'true' in 'selected'" track-by="$index">{{city.city}}<i v-on:click="removeCity(city)"></i></li>
-                    </ul>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt>可选区域：</dt>
-                <dd>
-                    <div class="line"></div>
-                    <ul class="clearfix">
-                        <li v-on:click="selectAllClk" id="global">全国</li>
-                    </ul>
-                </dd>
-                <dd>
-                    <select v-model="selectedKey" id="selectedKey" v-on:change="selectedProvinces">
-                        <option value="0" selected>--- 请选择 ---</option>
-                        <option v-for="province in provinces" v-bind:value="province">{{province}}</option>
-                    </select>
-                </dd>
-                <dd class="city_dd">
-                    <ul v-if="!global" class="clearfix">
-                        <li v-for="city in city_items" v-on:click="cityClk(city, $index)"
-                            class="city_li" :class="{'selected':city.selected==true, 'no-slt': city.nosel == true}">
-                            {{city.city}}
-                        </li>
-                    </ul>
-                </dd>
-            </dl>
-            <dl class="clearfix">
-                <dt></dt>
-                <dd>
-                    <div class="line"></div>
-                    <button v-on:click="agree">确定</button>
-                    <button v-on:click="cancle1">取消</button>
-                </dd>
-            </dl>
-        </div>
+        <select-area></select-area>
     </div>
 
     <div class="batchAdd" style="display: none;">
@@ -121,8 +47,9 @@
                         <input type="text" v-model="temps.lowPrice" readonly value="{{temp.lowPrice}}">
                     </td>
                     <td rowspan="{{temp_arr.length}}">
+
                         <p>
-                            <span v-for="city in items.areas" class="cityStyle" track-by="$index">{{city.salesAreaName}}</span>
+                            <span v-for="city in items._areas" class="cityStyle" track-by="$index">{{city.sales_area_name}}</span>
                         </p>
                         <a href="javascript:;;" class="selected" v-on:click="selectarea(temp)">请选择</a>
                     </td>
@@ -140,13 +67,6 @@
                 </tbody>
             </table>
 
-            <dl class="clearfix" style="display: inline-block; margin-left: 20%;">
-                <dt></dt>
-                <dd >
-                    <button v-on:click="save2">保存</button>
-                    <button v-on:click="cancle2">取消</button>
-                </dd>
-            </dl>
         </div>
 
     </div>
@@ -220,11 +140,11 @@
                 <td>
                     <p class="show_{{$index}}">{{item.saleArea}}</p>
                     <p class="update_{{$index}}" style="display: none;">
-                        <span v-for="city in items.areas" class="cityStyle" track-by="$index">{{city.salesAreaName}}</span>
+                        <span v-for="city in items._areas" class="cityStyle" track-by="$index">{{city.sales_area_name}}</span>
                     </p>
                     <p class="update_{{$index}}" style="display: none;"><a class="selected" v-on:click="selectarea(item)">请选择</a></p>
                 </td>
-                <td>
+                <td class="opare">
                     <div class="show_{{$index}}">
                         <button v-on:click="update(item,$event,$index)" class="update" style="cursor: pointer;border: none; background: #FFF;">修改</button>
                         <!--<p><a v-link="{path:'/u/manage/myOffer/find/0/'+item.carId+'/'+item.exteriorColorId+'/'+item.interiorColorId+'/info'}"  style="cursor: pointer;">历史</a></p>-->
@@ -257,9 +177,12 @@
     import config from './../../config'
     import util from './../../util/util'
     import historyList from './historyList.vue'
+    import SelectArea from './../template/SelecteArea.vue'
     export default {
         props:{
             count:Number,
+            chkcmid: String,
+            chkcid: String,
             provinces:{
                 type: Array,
                 default: ()=>[]
@@ -281,15 +204,14 @@
 //            this.getRelationship();
         },
         components:{
-	        historyList
+	        historyList,
+            SelectArea
 	    },
         data(){
             return {
-                selectedKey:"",
-                global:false,
-                city_items:[],
                 items:{
                     areas:[],
+                    _areas:[],
                     discount:"",
                     discount_:false,
                     discount_msg:"",
@@ -333,6 +255,27 @@
             }
         },
         methods:{
+            /**
+             * _idx:根据组件的个数来下下面 if else 的条件的。
+             * 目前默认为两个组件
+             * */
+            clearChildDb(){
+                var that = this;
+
+                var _idx = 1;
+                if (that.$children[0].provincecity != undefined) {
+                    _idx = 0;
+                }
+                that.$children[_idx].removeAll();
+                that.$children[_idx].selectedKey = "0";
+                that.$children[_idx].city_items = [];
+                that.items._areas = [];
+            },
+            setInnerHeight(){
+                var winHeight= $(window).height(),
+                        newHeight = (winHeight - 43 - 30) + 'px';
+                return newHeight;
+            },
 //      	新改的历史
 			getHistoryList(item){
                 var self = this,
@@ -363,7 +306,6 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
-                        console.log(response);
                         if(response.code === 0){
                         	var winHeight= $(window).height(),
                                     layerTitHeight = 43,
@@ -393,42 +335,6 @@
 
             },
         	
-            getRelationship(obj){
-                var that = this;
-
-                /*获取省市关系*/
-                $.ajax({
-                    url:config.API_BASE+"/nl/common/provincecity",
-                    method:"POST",
-                    contentType:"application/json; charset=utf-8",
-                    datatype:"json",
-                    cache:true,
-                    beforeSend:function (request) {
-                        request.setRequestHeader("sessionid",config.SESSIONID());
-                    },
-                    success:function (response) {
-                        var list = response.data;
-                        that.$set("provinces",list.provinces);
-                        that.$set("provincecity",list.provincecity);
-                        that.$set("clone_provincecity",list.provincecity);
-                        if(obj!=null){
-                            that.getSaleAreaByArray(obj);
-                        }
-                    },
-                    error:function (fail) {
-                        if(fail.status == "401"){
-                            var SESSIONID = sessionStorage.getItem("SESSIONID");
-                            if(SESSIONID == null){
-                                that.$route.router.go("/login");
-                            }else{
-                                sessionStorage.removeItem("SESSIONID");
-                                layer.msg('登录失效，请重新登陆！');
-                                util.login();
-                            }
-                        }
-                    }
-                });
-            },
             calc(item,index){
                 setTimeout(function () {
                     var num = $(".discount_"+index).val()!=""?$(".discount_"+index).val():0;
@@ -452,32 +358,103 @@
             /*批量修改*/
             batchUpdate(){
 
-                if($(".model .acton").attr("carmodelid")==undefined){
+                if(this.chkcmid === ''){
                     layer.msg("请选择一款车型");
                     return;
                 }
-                if($(".style .acton").attr("carid")==undefined){
+                if(this.chkcid === ''){
                     layer.msg("请选择车款类型");
                     return;
                 }
                 var that = this;
-                layer.confirm('您确定要批量修改吗？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index){
-                    layer.close(index);
-
+                
+                    var h = that.setInnerHeight();
                     if(that.checkedIndex.length>0){
-                        that.mask_3 = layer.open({
+
+                        layer.open({
                             type: 1,
                             title: '批量修改',
                             skin: 'layui-layer-rim', //加上边框
-                            area : ['800px' , '400px'],
+                            scrollbar: false,
+                            area : ['800px', '500px'],
+                            btn: ['保存', '取消'],
                             content: $(".batchAdd"),
-                            cancel:function () {
-                                /*修改弹框初始化*/
-                                that.removeAll();
-                                that.selectedKey = "0";
-                                that.city_items = [];
+                            success: function($layer, index){
+//                                var winHeight = $(window).height(),
+//                                        faultTolerant = 10,
+//                                        topBottomMargin = 50,
+//                                        layerHeight = $layer.height() + faultTolerant;
+//                                if(layerHeight > winHeight){
+//                                    $layer.style(index, {
+//                                        height: (winHeight - topBottomMargin) + 'px',
+//                                        top: '25px'
+//                                    });
+//                                }
+                        },
+                            yes: function(index, layero){
+                                if(parseInt(that.temp_arr[0].price) < parseInt(that.temps.discount)){
+                                    layer.msg("优惠价小于等于官方价！",{icon:2})
+                                    return;
+                                }
+                                if(that.items._areas.length<=0){
+                                    layer.msg("请选择区域");
+                                    return;
+                                }
+                                var arr = [] ,str = /^[1-9]\d*$/;
+                                for (var i = 0;i<that.temp_arr.length; i++){
+                                    var query = {};
+                                    query.carPriceId = that.temp_arr[i].carPriceId;
+                                    if(i==0){
+                                        if(!str.test($(".stock_"+i).eq(0).val())){
+                                            layer.msg("第1行库存/辆的个数只能是1~9之间的数字！",{icon:2});
+                                            return ;
+                                        }
+                                        query.stock = $(".stock_"+i).eq(0).val();
+
+                                        if(!str.test($(".onWay_"+i).eq(0).val())){
+                                            layer.msg("第1行在途/辆的个数只能是1~9之间的数字!",{icon:2});
+                                            return ;
+                                        }
+                                        query.onWay= $(".onWay_"+i).eq(0).val();
+                                    }else{
+                                        if(!str.test($(".stock_"+i).eq(1).val())){
+                                            layer.msg("第"+(1+i)+"行库存/辆的个数只能是1~9之间的数字！",{icon:2});
+                                            return ;
+                                        }
+                                        query.stock = $(".stock_"+i).eq(1).val();
+
+                                        if(!str.test($(".onWay_"+i).eq(1).val())){
+                                            layer.msg("第"+(1+i)+"行在途/辆的个数只能是1~9之间的数字!",{icon:2});
+                                            return ;
+                                        }
+                                        query.onWay= $(".onWay_"+i).eq(1).val();
+                                    }
+                                    query.discount = that.temps.discount;
+                                    query.lowPrice = that.temps.lowPrice;
+                                    query.createUser = config.USERID();
+
+                                    var list = JSON.stringify(that.items.areas);
+                                    var salesAreaName = list.replace(/sales_area_name/g,"salesAreaName");
+                                    var salesAreaLevel = salesAreaName.replace(/sales_area_level/g,"salesAreaLevel");
+                                    that.items.areas = JSON.parse(salesAreaLevel);
+                                    query.areas = that.items.areas;
+                                    query.carId = that.temps.carId;
+                                    arr.push(query);
+                                }
+
+                                var params = {"query":arr};
+                                layer.confirm('确定该款车<strong style="color:red;">优惠：' + (that.temps.discount!=""?that.temps.discount:0)+ '元</strong>吗？', {
+                                    title: '提示',
+                                    btn: ['确定', '取消'] //按钮
+                                }, function () {
+                                    that.updateMethos(params,2);
+                                }, function () {
+                                    /*window.history.go(0);*/
+                                });
+
+                            },
+                            btn2: function(index){
+                               that.clearChildDb();
                             }
                         });
 
@@ -494,11 +471,20 @@
                         that.temps.brandName = that.temp_arr[0].brandName;
                         that.temps.carModelName = that.temp_arr[0].carModelName;
                         that.temps.carName = that.temp_arr[0].carName;
-                        that.getRelationship(that.temp_arr[0]);
+                        /**
+                         * _idx:根据组件的个数来下下面 if else 的条件的。
+                         * 目前默认为两个组件
+                         * */
+                        if (that.$children[0].provincecity != undefined) {
+                            that.$children[0].getRelationship(that.temp_arr[0], 1);
+                        } else {
+                            that.$children[1].getRelationship(that.temp_arr[0], 1);
+                        }
+//                        that.getRelationship(that.temp_arr[0]);
                     }else{
                         layer.msg("请选择批量修改内容");
                     }
-                }, function(){});
+
             },
             /*批量删除*/
             batchDel(){
@@ -544,54 +530,6 @@
                     content: $(".activearea")
                 });
             },
-            getSaleAreaByArray(obj){
-                var that = this;
-                that.items.areas=[];
-                /*把区域数组遍历到对象中，然后双向绑定；把效果展示在区域弹出框中*/
-                var str = obj.saleArea;
-                var list = str.substring(1,str.length-1).split(",");
-                for(var i = 0 ; i< list.length;i++){
-                    if(list[i].trim()=="全国"){
-                        that.items.areas.push({"salesAreaName":"全国","salesAreaLevel":"1"});
-                        that.global = true;
-                        $("#selectedKey").attr({"disabled":true});
-                        $("#global").addClass("selected");
-                    }else if(list[i].trim().indexOf("省")>=0 || list[i].trim().indexOf("特别行政区")>=0  || list[i].trim()=="北京市" || list[i].trim()=="天津市" || list[i].trim()=="上海市" || list[i].trim()=="重庆市"){
-                        that.items.areas.push({"salesAreaName":list[i],"salesAreaLevel":"2"})
-                        var arr = that.provincecity[list[i].trim()];
-                        if(arr.length>1){
-                            /*把省插入到第一的位置*/
-                            arr.splice(0,0,{"province":list[i].trim(),"city":list[i].trim(),"insert":true})
-
-                            for(var j =0 ;j <arr.length;j++){
-                                if(j == 0){
-                                    /*赋值总数去掉省*/
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,total:that.provincecity[list[i].trim()].length-1,selected:true,"insert":true});
-                                }else{
-                                    that.provincecity[list[i].trim()].$set(j,{province:arr[j].province,city:arr[j].city,selected:false});
-                                }
-                            }
-                        }else{
-                            arr[0].selected = true;
-                            that.provincecity[list[i].trim()].$set(0,{province:arr[0].province,city:arr[0].city,selected:true,insert:true});
-                        }
-
-                    }else{
-                        if(list[i].trim()!=""){
-                            that.items.areas.push({"salesAreaName":list[i].trim(),"salesAreaLevel":"3"})
-                            $.map(that.provincecity,function (val,key) {
-                                for(var j = 0;j<val.length;j++){
-                                    if(list[i].trim() == val[j].city){
-                                        val[j].selected = true;
-                                        that.provincecity[key].$set(j,{province:val[j].province,city:val[j].city,selected:true})
-                                    }
-                                }
-                            })
-                        }
-
-                    }
-                }
-            },
             update(obj,e,_index){
                 var that = this;
                 this.temp_items = [];
@@ -601,7 +539,16 @@
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
-                    that.getRelationship(obj);
+//                    that.getRelationship(obj);
+                    /**
+                     * _idx:根据组件的个数来下下面 if else 的条件的。
+                     * 目前默认为两个组件
+                     * */
+                    if (that.$children[0].provincecity != undefined) {
+                        that.$children[0].getRelationship(obj, 1);
+                    } else {
+                        that.$children[1].getRelationship(obj, 1);
+                    }
                     $(".update").attr("disabled",true);
                     $(e.target).removeAttr("disabled");
                     $("input[type='checkbox']").attr("disabled","true");
@@ -625,7 +572,7 @@
                     },
                     success:function (response) {
                         if(response.code == 0){
-                            that.items.areas = [];
+                            that.items._areas = [];
                             that.items.discount="";
                             that.items.discount_=false;
                             that.items.discount_msg="";
@@ -789,10 +736,7 @@
                     $(".show_"+index).show();
                     $(".update,input[type='checkbox']").removeAttr("disabled");
 
-                    /*修改弹框初始化*/
-                    that.removeAll();
-                    that.selectedKey = "0";
-                    that.city_items = [];
+                    that.clearChildDb();
 
                 }, function(){
                     $(".update_"+index).hide();
@@ -804,180 +748,7 @@
                 $(".update_"+_index).hide();
                 $(".show_"+_index).show();
                 $(".update,input[type='checkbox']").removeAttr("disabled");
-                /*修改弹框初始化*/
-                this.removeAll();
-                this.selectedKey = "0";
-                this.city_items = [];
-            },
-            selectAllClk(){
-                this.getRelationship(null);
-                this.global = true;
-                $("#selectedKey").find("option[value=0]").attr({"selected":true});
-                $("#selectedKey").attr({"disabled":true});
-                $("#global").addClass("selected");
-            },
-            removeAll(){
-                $("#selectedKey").removeAttr("disabled");
-                $("#global").removeClass("selected");
-                this.global = false;
-            },
-            selectedProvinces(){
-                this.city_items = this.provincecity[this.selectedKey];
-
-                if(this.city_items!=undefined && this.city_items.length>1){
-
-                    if(this.city_items[0].insert == undefined){
-                        this.city_items.splice(0,0,{"province":this.selectedKey,"city":this.selectedKey,"insert":true});
-                    }
-
-                    var total = this.city_items.length;
-                    for(var i = 1; i<this.city_items.length;i++){
-                        /*剔除已选择过的*/
-                        if(this.city_items[i].selected == true){
-                            total =total-1;
-                        }
-                    }
-
-                    this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,selected:this.city_items[0].selected,total:total,"insert":true});
-                }
-            },
-            cityClk(obj,_index){
-//               /*点击下标是否第一个*/
-                if(_index == 0){
-//                    /*判断是直辖市*/
-                    if(this.city_items.length>1){
-
-                        for(var i =1 ;i < this.city_items.length;i++){
-                            this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
-                        }
-
-                    }
-                    obj.selected = true;
-                    this.city_items.$set(_index,{province:obj.province,city:obj.city,total:obj.total,selected:true,insert:true});
-                }else{
-
-                    if(obj.selected == undefined || obj.selected == "undefined"){
-                        this.city_items.$set(_index,{province:obj.province,city:obj.city,selected:true});
-                        this.city_items[0].total =this.city_items[0].total-1;
-                        if(this.city_items[0].total == 1){
-                            /*total 先不设置*/
-                            this.city_items.$set(0,{province:this.city_items[0].province,city:this.city_items[0].city,total:this.city_items[0].total,selected:true})
-
-                            for(var i = 1; i<this.city_items.length;i++){
-                                this.city_items.$set(i,{province:this.city_items[i].province,city:this.city_items[i].city,selected:false});
-                            }
-
-                        }
-                    }
-
-                }
-            },
-            removeCity(obj){
-                /*判断是否是直辖市*/
-                if(obj.city == obj.province){
-
-                    if(this.provincecity[obj.city].length>1){
-                        /*total*/
-                        obj.total = this.provincecity[obj.city].length;
-                        for(var i = 0; i<this.provincecity[obj.city].length;i++){
-                            if(i==0){
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,total:obj.total,selected:'undefined',insert:true})
-                            }else{
-                                this.provincecity[obj.city].$set(i,{province:this.provincecity[obj.city][i].province,city:this.provincecity[obj.city][i].city,selected:'undefined'})
-                            }
-
-                        }
-                    }else{
-                        obj.selected = 'undefined';
-                    }
-
-                }else{
-                    obj.selected = 'undefined';
-                }
-            },
-            agree(){
-                layer.close(this.mask_1);
-                var list = $(".filter_li li");
-                this.items.areas = [];
-                for(var i = 0 ; i< list.length;i++){
-                    if(list.eq(i).text()=="全国"){
-                        this.items.areas[0] = {"salesAreaName":"全国","salesAreaLevel":"1"}
-                    }else if(list.eq(i).text().indexOf("省")>=0 || list.eq(i).text().indexOf("特别行政区")>=0  || list.eq(i).text()=="北京市" || list.eq(i).text()=="天津市" || list.eq(i).text()=="上海市" || list.eq(i).text()=="重庆市"){
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"2"})
-                    }else{
-                        this.items.areas.push({"salesAreaName":list.eq(i).text(),"salesAreaLevel":"3"})
-                    }
-                }
-            },
-            cancle1(){
-                layer.close(this.mask_1);
-            },
-            save2(){
-                var that = this;
-                if(parseInt(that.temp_arr[0].price) < parseInt(this.temps.discount)){
-                    layer.msg("优惠价小于等于官方价！",{icon:2})
-                    return;
-                }
-                if(this.items.areas.length<=0){
-                    layer.msg("请选择区域");
-                    return;
-                }
-                var arr = [] ,str = /^[1-9]\d*$/;
-                for (var i = 0;i<that.temp_arr.length; i++){
-                    var query = {};
-                    query.carPriceId = that.temp_arr[i].carPriceId;
-                    if(i==0){
-                        if(!str.test($(".stock_"+i).eq(0).val())){
-                            layer.msg("第1行库存/辆的个数只能是1~9之间的数字！",{icon:2});
-                            return ;
-                        }
-                        query.stock = $(".stock_"+i).eq(0).val();
-
-                        if(!str.test($(".onWay_"+i).eq(0).val())){
-                            layer.msg("第1行在途/辆的个数只能是1~9之间的数字!",{icon:2});
-                            return ;
-                        }
-                        query.onWay= $(".onWay_"+i).eq(0).val();
-                    }else{
-                        if(!str.test($(".stock_"+i).eq(1).val())){
-                            layer.msg("第"+(1+i)+"行库存/辆的个数只能是1~9之间的数字！",{icon:2});
-                            return ;
-                        }
-                        query.stock = $(".stock_"+i).eq(1).val();
-
-                        if(!str.test($(".onWay_"+i).eq(1).val())){
-                            layer.msg("第"+(1+i)+"行在途/辆的个数只能是1~9之间的数字!",{icon:2});
-                            return ;
-                        }
-                        query.onWay= $(".onWay_"+i).eq(1).val();
-                    }
-                    query.discount = this.temps.discount;
-                    query.lowPrice = this.temps.lowPrice;
-                    query.createUser = config.USERID();
-                    query.areas = this.items.areas;
-                    query.carId = this.temps.carId;
-                    arr.push(query);
-                }
-
-                var params = {"query":arr};
-                console.log("批量修改:"+JSON.stringify(params));
-                layer.confirm('确定该款车<strong style="color:red;">优惠：' + (that.temps.discount!=""?that.temps.discount:0)+ '元</strong>吗？', {
-                    title: '提示',
-                    btn: ['确定', '取消'] //按钮
-                }, function () {
-                    that.updateMethos(params,2);
-                }, function () {
-                    /*window.history.go(0);*/
-                });
-
-
-            },
-            cancle2(){
-                layer.close(this.mask_3);
-                /*修改弹框初始化*/
-                this.removeAll();
-                this.selectedKey = "0";
-                this.city_items = [];
+                this.clearChildDb()
             },
         },
     }
@@ -1035,8 +806,11 @@
         color:#333;
     }
     .table-box table td{
-        height:70px;
+        padding: 10px;
         text-align:center;
+    }
+    .table-box table .opare{
+        line-height: 28px;
     }
     .table-box table tr:hover{
         background:#fff5ef;
@@ -1361,9 +1135,12 @@
         width: 80px;
     }
     .cityStyle{
-        display: inline-block;
-        padding: 0 10px;
-        margin-right: 10px;
+        display: block;
+        width:80px;
+        height:26px;
+        line-height: 26px;
+        overflow: hidden;
+        text-overflow: ellipsis;
         background: #e8e8e8;
         margin-bottom: 10px;
     }

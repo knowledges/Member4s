@@ -52,11 +52,6 @@
                             that.$set("arr_items",response.data.data);
                         },
                         error:function (fail) {
-                            /*if(fail.status == "401"){
-                             sessionStorage.removeItem("SESSIONID");
-                             layer.msg('登录失效，请重新登陆！');
-                             that.$route.router.go("/login");
-                             }*/
                         }
                     });
 

@@ -85,9 +85,9 @@
             <dl class="clearfix">
                 <dt>活动时间：</dt>
                 <dd>
-                    <input type="text" id="start-date" v-model="items.start_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="start-date" v-model="items.start_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                     至
-                    <input type="text" id="end-date" class="end-date" v-model="items.end_date" readonly class="select-date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="end-date" v-model="items.end_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                 </dd>
                 <dd v-if="items.timer_" class="error"> <i></i>{{items.timer_msg}}</dd>
             </dl>
@@ -152,8 +152,6 @@
 </template>
 
 <script>
-    import sub_zebra from './../../assets/js/sub_zebra.js'
-    import Zebra_DatePicker from './../../assets/js/zebra_datepicker.src.js'
     import $ from 'jquery'
     import historyTpl from './../historyTpl.vue'
     import config from './../../config'
@@ -172,19 +170,31 @@
             }
         },
         ready(){
-
-            $('#start-date').Zebra_DatePicker({
-                direction: true,
-                pair: $('#end-date'),
-                format: 'Y-m-d',
-                onSelect:function(){
-                    $("#end-date").val("");
+            var start = {
+                elem: '#start-date',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: laydate.now(), //设定最小日期为当前日期
+                max: '2099-06-16 23:59:59', //最大日期
+                istime: true,
+                istoday: false,
+                choose: function(datas){
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
                 }
-            });
-
-            $('#end-date').Zebra_DatePicker({
-                direction: 1
-            });
+            };
+            var end = {
+                elem: '#end-date',
+                format: 'YYYY-MM-DD hh:mm:ss',
+                min: laydate.now(),
+                max: '2099-06-16 23:59:59',
+                istime: true,
+                istoday: false,
+                choose: function(datas){
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            laydate(start);
+            laydate(end);
         },
         data(){
             return {
@@ -329,7 +339,6 @@
                 that.items.interiorColorName = obj.interiorColorName;
                 that.items.exterior_color_id = obj.exteriorColorId;
                 that.items.exteriorColorName = obj.exteriorColorName;
-
                 layer.open({
                     type: 1,
                     title: '活动详情添加',
@@ -340,6 +349,8 @@
                     content: $(".activeinfo"),
                     yes: function(index, layero){
                         var items = that.items;
+                        items.start_date = $("#start-date").val();
+                        items.end_date = $("#end-date").val();
                         if(items.special_price == "" ){
                             items.offer_ = true;
                             items.offer_msg="特价不能为空";
@@ -351,7 +362,6 @@
                         }else{
                             items.offer_ = false;
                         }
-
                         if(items.start_date == "" || items.end_date == ""){
                             items.timer_ = true;
                             items.timer_msg="开始时间或结束时间不能为空";
@@ -372,13 +382,13 @@
                             items.number_ = false;
                         }
 
-                        if(items.start_date == "" && items.end_date == ""){
+                       /* if(items.start_date == "" && items.end_date == ""){
                             items.timer_ = true;
                             items.timer_msg="结束时间不可早于开始时间";
                             return;
                         }else{
                             items.timer_ = false;
-                        }
+                        }*/
 
                         if($(".j_salesArea > span").length<=0){
                             items.selectarea_ = true;
@@ -418,8 +428,8 @@
                                     query.car_id = that.items.car_id;
                                     query.price = that.items.price;
                                     query.special_price = that.items.special_price;
-                                    query.start_date = that.items.start_date+" 00:00:01";
-                                    query.end_date = that.items.end_date+" 23:59:58";
+                                    query.start_date = $("#start-date").val();
+                                    query.end_date = that.items.end_date;
                                     query.number = that.items.number;
                                     query.status = "";
                                     query.remark = "";
@@ -625,7 +635,6 @@
 </script>
 
 <style scoped>
-    @import "./../../assets/css/datepicker.css";
     /* Button group */
     .G_btn_a,.G_btn_b,.G_btn_c,.G_btn_d,.G_btn_e{padding:0 10px 0 10px;white-space:nowrap;display:inline-block; border-radius:2px; height:26px;line-height:26px; *line-height:26px; text-decoration:none; font-size:14px; min-width:40px; text-align:center; outline:none; border: none;cursor:pointer;}
     .G_btn_a:hover,.G_btn_b:hover,.G_btn_c:hover,.G_btn_d:hover,.G_btn_e:hover{text-decoration:none;}

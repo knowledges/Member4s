@@ -30,22 +30,22 @@ Vue.http.options.root = '/data/'
 //Validator
 Vue.use(VueValidator)
 
-//Ö»ÄÜÊäÈëÊı×Ö
+//åªèƒ½è¾“å…¥æ•°å­—
 Vue.validator('integer',function (val) {
   return /^[1-9]\d*$/.test(val);
 })
 
-//ÓÉÊı×Ö¡¢26¸öÓ¢ÎÄ×ÖÄ¸»òÏÂ»®ÏßºÍÖĞÎÄ×é³ÉµÄ×Ö·û´®
+//ç”±æ•°å­—ã€26ä¸ªè‹±æ–‡å­—æ¯æˆ–ä¸‹åˆ’çº¿å’Œä¸­æ–‡ç»„æˆçš„å­—ç¬¦ä¸²
 Vue.validator('username',function (val) {
   return /^[A-Za-z0-9_\-\u4e00-\u9fa5]{1,10}$/.test(val);
 })
 
-//ÊÖ»úºÅ
+//æ‰‹æœºå·
 Vue.validator('tel',function (val) {
   return /^1[3|4|5|7|8]\d{9}$/.test(val)
 })
 
-//ÓÊÏä
+//é‚®ç®±
 Vue.validator('email',function (val) {
   return /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(val)
 })

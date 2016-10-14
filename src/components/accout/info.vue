@@ -15,7 +15,7 @@
             </dl>
             <dl class="clearfix">
                 <dt>副营品牌：</dt>
-                <dd v-for="subitem in infolist.brandlist" v-if="subitem.brand_name != infolist.brand_name"><span>{{subitem.brand_name}}</span></dd>
+                <dd v-for="subitem in infolist.brandlist" v-show="subitem.brand_name != infolist.brand_name"><span>{{subitem.brand_name}}</span></dd>
             </dl>
             <dl class="clearfix" v-if="infolist.my_num">
                 <dt>邀请码：</dt>
@@ -83,7 +83,6 @@
     
     export default{
     	ready(){
-//  		this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
         	this.getinfo();
     	},
     	props:{
@@ -114,67 +113,56 @@
 				var formd = new FormData();
 				formd.append("mobile",mobile);
 				formd.append("tpl_id",tpl_id);
-//				debugger;
-				if(that.phone==""){
-                    that.phone_msg = "手机号不能为空";
-                    that.phone_ = true;
-                    $("#phone_").addClass('lost');
-                }else if(!(/^1[3|4|5|7|8]\d{9}$/.test(that.phone))){
-                    that.phone_msg = "手机号格式不正确";
-                    that.phone_ = true;
-                    $("#phone_").addClass('lost');
-                }else{
-                	that.phone_msg = "";
-                    that.phone_ = false;
-                    $("#phone_").removeClass('lost');
-                    
-                	$.ajax({
-	                    url:url,
-	                    type:'POST',
-	                    contentType: false,
-	                    processData: false,
-	                    data:formd,
-		                success:function(response){
-							if(response.code == 0){
-								that.codemd5 = '';
-								that.codemd5 = response.md5code;
-								layer.msg('验证码发送成功',{icon:1});
-								var seed = 60,_timer = null;
-				                $(".getCode").attr("disabled",true);
-				                $(".getCode").css({"border":"1px solid #ccc","color":"#666","cursor":"not-allowed"});
-				                function tips() {
-				                    if(seed<=0){
-				                        $(".getCode").html("获取验证码");
-				                        seed = 60;
-				                        clearInterval(_timer);
-				                        $(".getCode").attr("disabled",false);
-				                        $(".getCode").css({"border":"1px solid #ff791f","color":"#ff791f","cursor":"pointer"});
-				                        return ;
-				                    }
-				                    seed -- ;
-				                    $(".getCode").html(seed+"S&nbsp;&nbsp;后重试");
-				                }
-				                _timer = setInterval(tips,1001);
-		                    }else{
-		                        console.log(response.desc);
-		                    }
-						},
-						error:function(fail){
-							if(fail.status == "401"){
-                                var SESSIONID = sessionStorage.getItem("SESSIONID");
-                                if(SESSIONID == null){
-                                    that.$route.router.go("/login");
+                that.$validate('phone',function () {
+                    console.log(!that.$validateinfo.phone.tel);
+                    if(!that.$validateinfo.phone.tel){
+                        $.ajax({
+                            url:url,
+                            type:'POST',
+                            contentType: false,
+                            processData: false,
+                            data:formd,
+                            success:function(response){
+                                if(response.code == 0){
+                                    that.codemd5 = '';
+                                    that.codemd5 = response.md5code;
+                                    layer.msg('验证码发送成功',{icon:1});
+                                    var seed = 60,_timer = null;
+                                    $(".getCode").attr("disabled",true);
+                                    $(".getCode").css({"border":"1px solid #ccc","color":"#666","cursor":"not-allowed"});
+                                    function tips() {
+                                        if(seed<=0){
+                                            $(".getCode").html("获取验证码");
+                                            seed = 60;
+                                            clearInterval(_timer);
+                                            $(".getCode").attr("disabled",false);
+                                            $(".getCode").css({"border":"1px solid #ff791f","color":"#ff791f","cursor":"pointer"});
+                                            return ;
+                                        }
+                                        seed -- ;
+                                        $(".getCode").html(seed+"S&nbsp;&nbsp;后重试");
+                                    }
+                                    _timer = setInterval(tips,1001);
                                 }else{
-                                    sessionStorage.removeItem("SESSIONID");
-                                    layer.msg('登录失效，请重新登陆！');
-                                    util.login();
+                                    console.log(response.desc);
                                 }
-	                        }
-						}
-	                });
-                }
-				
-				
+                            },
+                            error:function(fail){
+                                if(fail.status == "401"){
+                                    var SESSIONID = sessionStorage.getItem("SESSIONID");
+                                    if(SESSIONID == null){
+                                        that.$route.router.go("/login");
+                                    }else{
+                                        sessionStorage.removeItem("SESSIONID");
+                                        layer.msg('登录失效，请重新登陆！');
+                                        util.login();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+
             },
             save(){
 
@@ -228,7 +216,6 @@
                                                 if(response.code == 1){
                                                     layer.msg('信息修改成功',{icon:1});
                                                     var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
-                                                    sessionid.user_name = that.user;
                                                     sessionid.email = that.email;
                                                     sessionid.tel = that.phone;
                                                     sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));

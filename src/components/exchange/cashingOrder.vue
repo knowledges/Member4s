@@ -709,7 +709,7 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
                                 if(response.code == 0){
                                     that.codemd5 = '';
                                     that.codemd5 = response.md5code;
-                                    layer.msg('验证码发送成功',{icon:1});
+                                    layer.msg('验证码发送成功');
                                     var seed = 60,
                                             _timer = null;
                                     $btn.attr("disabled",true);

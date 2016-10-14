@@ -280,7 +280,8 @@
                 that.$parent.items.end_date = obj.end_date;
                 that.$parent.items.file_img = obj.car_image;
                 that.$parent.items.desc = obj.description;
-                var str = obj.sales_area;
+                debugger;
+                var str = obj.sales_area || obj.saleArea ;
                 var list = str.substring(1,str.length-1).split(",");
 
                 for(var i = 0 ; i< list.length;i++){
@@ -321,6 +322,9 @@
                         })
                     }
                 }
+                console.log("父类："+JSON.stringify(this.$parent.items.areas));
+                console.log("父类："+JSON.stringify(this.$parent.items._areas));
+
             },
             /**
             * 移除全国，打开selected 事件，显示地区
