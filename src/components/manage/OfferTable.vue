@@ -370,7 +370,6 @@
                 
                     var h = that.setInnerHeight();
                     if(that.checkedIndex.length>0){
-
                         layer.open({
                             type: 1,
                             title: '批量修改',
@@ -503,7 +502,9 @@
 
                     var params = {"query":arr};
                     that.delMethod(params);
-                    window.history.go(0);
+//                    that.$parent.getActivityList(0);
+                    layer.closeAll();
+//                  window.history.go(0);
                 }, function(){});
             },
             /*全选*/
@@ -571,6 +572,7 @@
                         request.setRequestHeader("sessionid",config.SESSIONID());
                     },
                     success:function (response) {
+                        debugger;
                         if(response.code == 0){
                             that.items._areas = [];
                             that.items.discount="";
@@ -589,7 +591,9 @@
                             layer.msg("修改成功");
                             if(num==2){
                                 setTimeout(function(){
-                                    window.history.go(0);
+                                    that.$parent.getActivityList(1);
+                                    layer.closeAll();
+//                                    window.history.go(0);
                                 },1000);
 
                             }
@@ -622,13 +626,13 @@
                     that.count--;
                 }, function(){});
             },
-            batchDel(){
+           /* batchDel(){
                 var that = this;
                 layer.confirm('您确定要批量删除吗？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index){
                     layer.close(index);
-                    /*删除*/
+                    /!*删除*!/
                     var arr = [];
                     for(var i=0 ;i<that.checkedIndex.length;i++){
                         var obj = {};
@@ -638,11 +642,14 @@
 
                     var params = {"query":arr};
                     that.delMethod(params);
-                    window.history.go(0);
+                    that.$parent.getActivityList(0);
+                    layer.closeAll();
+//                    window.history.go(0);
                 }, function(){});
-            },
+            },*/
             /*删除或者删除修改我的报价*/
             delMethod(params){  //删除方法
+                var that= this;
                 $.ajax({
                     url:config.API_BASE+"/4s/offer/batchDeleteCarPrice",
                     method:"POST",
@@ -655,6 +662,7 @@
                     success:function (response) {
                         if(response.code == 0){
                             layer.msg('删除成功', {icon: 1});
+                            that.$parent.getActivityList(1);
                         }
                     },
                     error:function (fail) {
@@ -701,7 +709,12 @@
                 query.discount =discount_;
                 query.lowPrice =$(".lowPrice_"+index).val()!=""?$(".lowPrice_"+index).val():0;
                 query.createUser = config.USERID();
+                var list = JSON.stringify(this.items.areas);
+                var salesAreaName = list.replace(/sales_area_name/g,"salesAreaName");
+                var salesAreaLevel = salesAreaName.replace(/sales_area_level/g,"salesAreaLevel");
+                this.items.areas = JSON.parse(salesAreaLevel);
                 query.areas = this.items.areas;
+
                 var arr = [];
                 arr[0] = query;
                 var params = {"query":arr};
@@ -713,15 +726,15 @@
                     that.updateMethos(params,1);
 
                     var areas = [];
-                    for(var i = 0 ; i< that.items.areas.length;i++) {
-                        if(that.items.areas.length == 1){
-                            areas.push("["+that.items.areas[i].salesAreaName+"]");
-                        }else if(that.items.areas.length>1 && i == 0){
-                            areas.push("["+that.items.areas[i].salesAreaName);
-                        }else if (i==that.items.areas.length-1){
-                            areas.push(that.items.areas[i].salesAreaName+"]");
+                    for(var i = 0 ; i< that.items._areas.length;i++) {
+                        if(that.items._areas.length == 1){
+                            areas.push("["+that.items._areas[i].sales_area_name+"]");
+                        }else if(that.items._areas.length>1 && i == 0){
+                            areas.push("["+that.items._areas[i].sales_area_name);
+                        }else if (i==that.items._areas.length-1){
+                            areas.push(that.items._areas[i].sales_area_name+"]");
                         }else {
-                            areas.push(that.items.areas[i].salesAreaName);
+                            areas.push(that.items._areas[i].sales_area_name);
                         }
                     }
 
@@ -886,9 +899,7 @@
         text-align: center;
     }
     table a.selected{
-        display: inline-block;
-        padding: 2px 8px;
-        color: #FFF;
+        display: block;
         broder:1px solid #fe791e;
         color: #fe791e;
         background: #ffe4d2;
@@ -896,8 +907,7 @@
     }
 
     table a.save{
-        display: inline-block;
-        padding: 2px 8px;
+        display: block;
         color: #FFF;
         border: none;
         background: #f98c37;
@@ -906,11 +916,11 @@
     table a.save:hover{
         border: none;
         background: #f26108;
+        text-decoration: none;
     }
     table a.cancle{
         margin-top: 5px;
-        display: inline-block;
-        padding: 2px 8px;
+        display: block;
         color: #FFF;
         border: none;
         background: #cccccc;
@@ -919,6 +929,7 @@
     table a.cancle:hover{
         border: none;
         background: #999999;
+        text-decoration: none;
     }
 
     table p i {

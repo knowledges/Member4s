@@ -13,6 +13,7 @@
         </div>
     </div>
 </template>
+
 <style>
     .main-container{
         padding: 20px;

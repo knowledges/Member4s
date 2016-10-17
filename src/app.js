@@ -8,6 +8,7 @@ import VueValidator from 'vue-validator'
 import * as filters from './filters'
 import app from './main'
 
+
 // Router
 Vue.use(VueRouter)
 
@@ -33,6 +34,15 @@ Vue.use(VueValidator)
 //只能输入数字
 Vue.validator('integer',function (val) {
   return /^[1-9]\d*$/.test(val);
+})
+
+//验证项不能为空
+Vue.validator('noempty',function (val) {
+  var reg = /^\s*$/g, isFlag = true;
+  if(val == "" || reg.test(val)){
+    isFlag = false;
+  }
+  return  isFlag;
 })
 
 //由数字、26个英文字母或下划线和中文组成的字符串

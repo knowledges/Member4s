@@ -42,8 +42,8 @@ export default {
      */
 
     //test
-    API_BASE:"http://192.168.13.111/YchLrestServer/api",
-    PHP_API:"http://test3.gouchehui.com:8082",
+    // API_BASE:"http://192.168.13.111/YchLrestServer/api",
+    // PHP_API:"http://test3.gouchehui.com:8082",
 
     //test hanwq
     // API_BASE:"http://192.168.13.250:3000/api",
@@ -51,8 +51,8 @@ export default {
 
 
     //product
-    // API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
-    // PHP_API:"http://www.gouchehui.com",
+    API_BASE:"http://api.gouchehui.com/YchLrestServer/api",
+    PHP_API:"http://www.gouchehui.com",
 
 
     // API_BASE:"http://api.gouchehui.com/YchLrestServer/api",

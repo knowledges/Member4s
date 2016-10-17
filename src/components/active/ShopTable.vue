@@ -111,9 +111,11 @@
             <dl class="clearfix">
                 <dt>活动时间：</dt>
                 <dd>
-                    <input type="text" class="laydate-icon" id="start-date" v-model="items.start_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="start-date" v-model="items.start_date"
+                           placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                     至
-                    <input type="text" class="laydate-icon" id="end-date" v-model="items.end_date" placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
+                    <input type="text" class="laydate-icon" id="end-date" v-model="items.end_date"
+                           placeholder="年/月/日&nbsp;&nbsp;&nbsp;时/分">
                 </dd>
                 <dd v-if="items.timer_" class="error"><i></i>{{items.timer_msg}}</dd>
             </dl>
@@ -203,7 +205,7 @@
                 max: '2099-06-16 23:59:59', //最大日期
                 istime: true,
                 istoday: false,
-                choose: function(datas){
+                choose: function (datas) {
                     end.min = datas; //开始日选好后，重置结束日的最小日期
                     end.start = datas //将结束日的初始值设定为开始日
                 }
@@ -215,7 +217,7 @@
                 max: '2099-06-16 23:59:59',
                 istime: true,
                 istoday: false,
-                choose: function(datas){
+                choose: function (datas) {
                     start.max = datas; //结束日选好后，重置开始日的最大日期
                 }
             };

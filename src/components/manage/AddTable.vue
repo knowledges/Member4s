@@ -286,7 +286,6 @@
             var self = this,
                     query = {},
                     params = {};
-            console.log(item);
             query.userId = config.USERID();
             query.interiorColorId = item.interiorColorId;
             query.exteriorColorId = item.exteriorColorId;
@@ -311,7 +310,6 @@
                     request.setRequestHeader("sessionid", config.SESSIONID());
                 },
                 success: function (response) {
-                    console.log(response);
                     if (response.code === 0) {
                         var winHeight = $(window).height(),
                                 newHeight = (winHeight - 43 - 30) + 'px';
@@ -567,7 +565,6 @@
                 },
                 success: function (response) {
                     if (response.code == 0) {
-                        console.log("結束");
                         layer.msg("添加成功......");
                         layer.close(this.mask_3);
                         layer.close(ii);
@@ -579,11 +576,14 @@
                         } else {
                             setTimeout(function () {
                                 that.checkedIndex = [];
-                                window.history.go(0);
+                                that.$parent.getActivityList(1,that.$parent.temp_obj);
+                                layer.closeAll();
+                                that.items.areas = [];
+                                that.checkedIndex=[];
+                                $(".add input").val("");
                             }, 800)
                         }
                     } else {
-                        console.log("失敗");
                         layer.close(ii);
                     }
                 },

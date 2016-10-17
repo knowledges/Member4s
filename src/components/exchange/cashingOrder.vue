@@ -90,7 +90,7 @@
         </dl>
         <dl>
             <dt>验证码</dt>
-            <dd><input type="text" class="code"  v-model="code" placeholder="请输入验证码" maxlength="6"/><button class="send-code">获取验证码</button></dd>
+            <dd><input type="text" class="code" @keyup.enter="ajaxSubmit"  v-model="code" placeholder="请输入验证码" maxlength="6"/><button class="send-code">获取验证码</button></dd>
         </dl>
         <p class="tips"><i class="icon-null"></i>如果手机号有变动，请与对应的公关人员联系！</p>
         <div class="btn-box">
@@ -536,6 +536,7 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
         var that = this;
         that.good = that.goods[this.find];
         this.verificationTel = this.SESSIONID.tel;
+        document.title = "积分兑换";
     }
     },
     ready(){
@@ -784,6 +785,12 @@ S7SO4wyAtQC2AHgSwD0AngXAAngQwGQAcwEM2K0MFdXwAJKVIvKyALlaEW4YbQFge2DBT6aLUdPG494C
                 success:function(response){
                     if(response.data[0] == 1){
                         layer.closeAll();
+                        var sessionid = JSON.parse(sessionStorage.getItem("SESSIONID"));
+                        var find = that.good.integral;
+                        sessionid.total_jifen -= find;
+                        sessionStorage.setItem("SESSIONID",JSON.stringify(sessionid));
+                        that.$root.$children[0].$children[1].init();
+
                         that.$route.router.go("/u/exchange/cashing/order/succ");
                     }else{
                         layer.closeAll();

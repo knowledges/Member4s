@@ -147,268 +147,269 @@
 
         route: {
             data({to})
-    {
-        this.$nextTick(function () {
-            var that = this;
-            that.getCarM(0);
-            /*主营、副营品牌*/
-            $.ajax({
-                url: config.API_BASE + "/4s/accountmanagement/information",
-                method: "POST",
-                contentType: 'application/json; charset=utf-8',
-                dataType: "json",
-                data: JSON.stringify({"query": {"uid": config.USERID()}}),
-                beforeSend: function (request) {
-                    request.setRequestHeader("sessionid", config.SESSIONID());
-                },
-                success: function (response) {
-                    var list = response.data;
-                    that.brand_name = list.brand_name;
-                    that.brandlist = list.brandlist;
-                },
-                error: function (fail) {
-                    /*if(fail.status == "401"){
-                     sessionStorage.removeItem("SESSIONID");
-                     layer.msg('登录失效，请重新登陆！');
-                     that.$route.router.go("/login");
-                     }*/
+            {
+                this.$nextTick(function () {
+                    var that = this;
+                    that.getCarM(0);
+                    /*主营、副营品牌*/
+                    $.ajax({
+                        url: config.API_BASE + "/4s/accountmanagement/information",
+                        method: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: "json",
+                        data: JSON.stringify({"query": {"uid": config.USERID()}}),
+                        beforeSend: function (request) {
+                            request.setRequestHeader("sessionid", config.SESSIONID());
+                        },
+                        success: function (response) {
+                            var list = response.data;
+                            that.brand_name = list.brand_name;
+                            that.brandlist = list.brandlist;
+                        },
+                        error: function (fail) {
+                            /*if(fail.status == "401"){
+                             sessionStorage.removeItem("SESSIONID");
+                             layer.msg('登录失效，请重新登陆！');
+                             that.$route.router.go("/login");
+                             }*/
 
-                }
-            });
-        });
-    }
-    },
-    data()
-    {
-        return {
-            brands: [], //品牌列表
-            carModels: [], //车型列表
-            cars: [], //车款列表
-            checkedBrandId: "", //选中品牌id
-            checkedCarModelId: "", //选中车型id
-            checkedCarId: "",//选中车款id
-            checkedOutColorId: '',//选中外观颜色id
-            checkedOutColorArr: [], //已选外饰颜色数组
-            checkedInColorArr: [], //已选内饰颜色数组
-            checkedInColorId: '',//选中内饰颜色id
-            dynamicCarLists: [], //指定品牌-车型下的车款
-            dynamicCarModelLists: [], //指定品牌下的车型
-            dynamicOutColorLists: [], //{动态}指定车款下的外观颜色列表
-            dynamicInColorLists: [], //{动态}指定车款下的内饰颜色列表
-            brand_name: "", //主营品牌
-            brandlist: [], //副品牌
-            isMulExColor: true, //外饰是否可多选，true: 可多选、false:不可多选
-            isMulInColor: true, //内饰是否可多选，true: 可多选、false:不可多选
-            cur: 1,
-            count: 0,
-            pagesize: 10,
-            arr_items: []
-        }
-    }
-    ,
-    components: {
-        OfferTable
-    }
-    ,
-    methods: {
-        inArray(needle, array, bool)
-        {
-            if (typeof needle == "string" || typeof needle == "number") {
-                for (var i in array) {
-                    if (needle === array[i]) {
-                        if (bool) {
-                            return i;
                         }
-                        return true;
-                    }
-                }
-                return false;
+                    });
+                });
+            }
+        },
+        data()
+        {
+            return {
+                brands: [], //品牌列表
+                carModels: [], //车型列表
+                cars: [], //车款列表
+                checkedBrandId: "", //选中品牌id
+                checkedCarModelId: "", //选中车型id
+                checkedCarId: "",//选中车款id
+                checkedOutColorId: '',//选中外观颜色id
+                checkedOutColorArr: [], //已选外饰颜色数组
+                checkedInColorArr: [], //已选内饰颜色数组
+                checkedInColorId: '',//选中内饰颜色id
+                dynamicCarLists: [], //指定品牌-车型下的车款
+                dynamicCarModelLists: [], //指定品牌下的车型
+                dynamicOutColorLists: [], //{动态}指定车款下的外观颜色列表
+                dynamicInColorLists: [], //{动态}指定车款下的内饰颜色列表
+                brand_name: "", //主营品牌
+                brandlist: [], //副品牌
+                isMulExColor: true, //外饰是否可多选，true: 可多选、false:不可多选
+                isMulInColor: true, //内饰是否可多选，true: 可多选、false:不可多选
+                cur: 1,
+                count: 0,
+                pagesize: 10,
+                arr_items: [],
+                temp_obj : {},
             }
         }
-    ,
-        /*
-         * 获取地址列表
-         * @method showlist
-         * @param {Number} 品牌下标
-         * @Interface 返回数据类型，{code：1， data:{brand:{Array}, car: {Object}, carModel:{Object}}, desc:''}
-         * */
-        getCarM(num)
-        {
-            var that = this;
-            /*品牌*/
-            $.ajax({
-                url: config.API_BASE + "/4s/prefer/findMyBrandModelCar",
-                method: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify({"query": {"userId": config.USERID()}}),
-                beforeSend: function (request) {
-                    request.setRequestHeader("sessionid", config.SESSIONID());
-                },
-                success: function (response) {
-                    if (response.code == 0) {
-                        var list = response.data;
-                        that.brands = list.brand;
-                        that.cars = list.car;
-                        that.carModels = list.carModel;
-                        /*
-                         * v-for 遍历完
-                         * */
-                        that.$nextTick(function () {
-                            that.brandLoad({
-                                "brandId": that.brands[num].brandId,
-                                "brandName": that.brands[num].brandName
-                            });
-                        })
-
-                    }
-                },
-                error: function (fail) {
-                    if (fail.status == "401") {
-                        var SESSIONID = sessionStorage.getItem("SESSIONID");
-                        if (SESSIONID == null) {
-                            that.$route.router.go("/login");
-                        } else {
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+        ,
+        components: {
+            OfferTable
+        }
+        ,
+        methods: {
+            inArray(needle, array, bool)
+            {
+                if (typeof needle == "string" || typeof needle == "number") {
+                    for (var i in array) {
+                        if (needle === array[i]) {
+                            if (bool) {
+                                return i;
+                            }
+                            return true;
                         }
                     }
+                    return false;
                 }
-            });
+            }
+            ,
+            /*
+             * 获取地址列表
+             * @method showlist
+             * @param {Number} 品牌下标
+             * @Interface 返回数据类型，{code：1， data:{brand:{Array}, car: {Object}, carModel:{Object}}, desc:''}
+             * */
+            getCarM(num)
+            {
+                var that = this;
+                /*品牌*/
+                $.ajax({
+                    url: config.API_BASE + "/4s/prefer/findMyBrandModelCar",
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({"query": {"userId": config.USERID()}}),
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        if (response.code == 0) {
+                            var list = response.data;
+                            that.brands = list.brand;
+                            that.cars = list.car;
+                            that.carModels = list.carModel;
+                            /*
+                             * v-for 遍历完
+                             * */
+                            that.$nextTick(function () {
+                                that.brandLoad({
+                                    "brandId": that.brands[num].brandId,
+                                    "brandName": that.brands[num].brandName
+                                });
+                            })
 
-        }
-    ,
-        /*
-         * 选中全部, 如果是车款的全选，打开内外饰的多选开关
-         * @method choiceAll
-         * @param {String} 类型字符串，如：CarModel:车型、ExColor：外观颜色
-         * */
-        choiceAll(name)
-        {
-            var typesArr = ['CarModel', 'Car', "OutColor", "InColor"],
-                    dyIndex,
-                    index,
-                    i,
-                    len;
-            if (name === "OutColor" || name === "InColor") {
-                this["checked" + name + "Id"] = '';
-                this["checked" + name + "Arr"] = [];
-
+                        }
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if (SESSIONID == null) {
+                                that.$route.router.go("/login");
+                            } else {
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
+                        }
+                    }
+                });
 
             }
+            ,
+            /*
+             * 选中全部, 如果是车款的全选，打开内外饰的多选开关
+             * @method choiceAll
+             * @param {String} 类型字符串，如：CarModel:车型、ExColor：外观颜色
+             * */
+            choiceAll(name)
+            {
+                var typesArr = ['CarModel', 'Car', "OutColor", "InColor"],
+                        dyIndex,
+                        index,
+                        i,
+                        len;
+                if (name === "OutColor" || name === "InColor") {
+                    this["checked" + name + "Id"] = '';
+                    this["checked" + name + "Arr"] = [];
+
+
+                }
 //<<<<<<< .mine
 //
 //                for(index; index < len; index++){
 //                    this["checked" + typesArr[index] + "Id"] = '';
 //=======
-            else {
-                for (i = 0, len = typesArr.length; i < len; i++) {
-                    typesArr[i] === name && (dyIndex = i + 1, index = i);
-                }
-                for (index; index < len; index++) {
-                    this["checked" + typesArr[index] + "Id"] = '';
-                }
-                for (dyIndex; dyIndex < len; dyIndex++) {
-                    this["dynamic" + typesArr[dyIndex] + "Lists"] = [];
-                }
+                else {
+                    for (i = 0, len = typesArr.length; i < len; i++) {
+                        typesArr[i] === name && (dyIndex = i + 1, index = i);
+                    }
+                    for (index; index < len; index++) {
+                        this["checked" + typesArr[index] + "Id"] = '';
+                    }
+                    for (dyIndex; dyIndex < len; dyIndex++) {
+                        this["dynamic" + typesArr[dyIndex] + "Lists"] = [];
+                    }
 //>>>>>>> .r7967
+                }
+                //this.isMulInColor = true;
+                //this.isMulExColor = true;
+                this.getActivityList(1);
             }
-            //this.isMulInColor = true;
-            //this.isMulExColor = true;
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 默认加载第一个品牌
-         * @method showlist
-         * @param {Object} 选中品牌数据对象，如{"brandId": 1,"brandName": "宝马"}
-         * */
-        brandLoad(obj)
-        {
-            this.checkedBrandId = obj.brandId;
-            this.dynamicCarModelLists = this.carModels[obj.brandId];
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 选择品牌
-         * @method choiceBrand
-         * @param {Object} 选中品牌数据对象
-         * */
-        choiceBrand(obj)
-        {
-            this.checkedBrandId = obj.brandId;
-            this.checkedCarModelId = "";
-            this.checkedCarId = "";
-            this.checkedOutColorId = '';
-            this.checkedInColorId = '';
-            this.dynamicCarLists = [];
-            this.dynamicCarModelLists = this.carModels[obj.brandId];
-            this.dynamicOutColorLists = [];
-            this.checkedInColorArr = [];
-            this.checkedOutColorArr = [];
-            this.dynamicInColorLists = [];
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 选择车型
-         * @method choiceCarModel
-         * @param {Object} 选中车型数据对象
-         * */
-        choiceCarModel(obj)
-        {
-            this.checkedCarModelId = obj.carModelId;
-            this.checkedCarId = "";
-            this.checkedOutColorId = '';
-            this.checkedInColorId = '';
-            this.dynamicOutColorLists = [];
-            this.dynamicInColorLists = [];
-            this.checkedInColorArr = [];
-            this.checkedOutColorArr = [];
-            this.dynamicCarLists = this.cars[obj.carModelId];
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 选择车款, 打开内外颜色的多选开关
-         * @method choiceCar
-         * @param {Object} 选中车型数据对象
-         * */
-        choiceCar(obj)
-        {
-            this.checkedCarId = obj.carId;
-            //this.isMulInColor = true; //取消内饰颜色的多选
-            //this.isMulExColor = true; //取消内饰颜色的多选
-            this.checkedOutColorId = '';
-            this.checkedInColorId = '';
-            this.dynamicOutColorLists = [];
-            this.dynamicInColorLists = [];
-            this.checkedInColorArr = [];
-            this.checkedOutColorArr = [];
+            ,
+            /*
+             * 默认加载第一个品牌
+             * @method showlist
+             * @param {Object} 选中品牌数据对象，如{"brandId": 1,"brandName": "宝马"}
+             * */
+            brandLoad(obj)
+            {
+                this.checkedBrandId = obj.brandId;
+                this.dynamicCarModelLists = this.carModels[obj.brandId];
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 选择品牌
+             * @method choiceBrand
+             * @param {Object} 选中品牌数据对象
+             * */
+            choiceBrand(obj)
+            {
+                this.checkedBrandId = obj.brandId;
+                this.checkedCarModelId = "";
+                this.checkedCarId = "";
+                this.checkedOutColorId = '';
+                this.checkedInColorId = '';
+                this.dynamicCarLists = [];
+                this.dynamicCarModelLists = this.carModels[obj.brandId];
+                this.dynamicOutColorLists = [];
+                this.checkedInColorArr = [];
+                this.checkedOutColorArr = [];
+                this.dynamicInColorLists = [];
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 选择车型
+             * @method choiceCarModel
+             * @param {Object} 选中车型数据对象
+             * */
+            choiceCarModel(obj)
+            {
+                this.checkedCarModelId = obj.carModelId;
+                this.checkedCarId = "";
+                this.checkedOutColorId = '';
+                this.checkedInColorId = '';
+                this.dynamicOutColorLists = [];
+                this.dynamicInColorLists = [];
+                this.checkedInColorArr = [];
+                this.checkedOutColorArr = [];
+                this.dynamicCarLists = this.cars[obj.carModelId];
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 选择车款, 打开内外颜色的多选开关
+             * @method choiceCar
+             * @param {Object} 选中车型数据对象
+             * */
+            choiceCar(obj)
+            {
+                this.checkedCarId = obj.carId;
+                //this.isMulInColor = true; //取消内饰颜色的多选
+                //this.isMulExColor = true; //取消内饰颜色的多选
+                this.checkedOutColorId = '';
+                this.checkedInColorId = '';
+                this.dynamicOutColorLists = [];
+                this.dynamicInColorLists = [];
+                this.checkedInColorArr = [];
+                this.checkedOutColorArr = [];
 
-            this.getColor(obj.carId);
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 外观颜色单选 (暂不使用)
-         * @method ChoiceExColor
-         * @param {Object} 选中颜色数据对象
-         * */
-        choiceExColor(obj)
-        {
-            this.checkedOutColorId = obj.id;
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 外观颜色多选
-         * @method mulChoiceExColor
-         * @param {Object} 选中颜色数据对象
-         * */
-        /* 预留右键反选功能 */
+                this.getColor(obj.carId);
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 外观颜色单选 (暂不使用)
+             * @method ChoiceExColor
+             * @param {Object} 选中颜色数据对象
+             * */
+            choiceExColor(obj)
+            {
+                this.checkedOutColorId = obj.id;
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 外观颜色多选
+             * @method mulChoiceExColor
+             * @param {Object} 选中颜色数据对象
+             * */
+            /* 预留右键反选功能 */
 //            $curEl.on("contextmenu", function(e){
 //                return false;
 //            });
@@ -417,192 +418,191 @@
 //            }else if(event.which === 3){ //鼠标右键点击
 //
 //            }
-        mulChoiceExColor(obj)
-        {
-            var newStr = '';
+            mulChoiceExColor(obj)
+            {
+                var newStr = '';
 
-            if (this.inArray(obj.id, this.checkedOutColorArr)) {
-                this.checkedOutColorArr.$remove(obj.id);
-            } else {
-                this.checkedOutColorArr.push(obj.id);
-            }
-
-            if (this.checkedOutColorArr.length > 0) {
-                for (var i = 0, len = this.checkedOutColorArr.length; i < len; i++) {
-                    newStr += ",'" + this.checkedOutColorArr[i] + "'";
+                if (this.inArray(obj.id, this.checkedOutColorArr)) {
+                    this.checkedOutColorArr.$remove(obj.id);
+                } else {
+                    this.checkedOutColorArr.push(obj.id);
                 }
-                this.checkedOutColorId = newStr.substr(1);
-            } else {
-                this.checkedOutColorId = '';
-            }
 
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 内饰颜色单选 (暂不使用)
-         * @method mulChoiceExColor
-         * @param {Object} 选中颜色数据对象
-         * */
-        choiceInColor(obj)
-        {
-            this.checkedInColorId = obj.id;
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 内饰颜色多选
-         * @method mulChoiceExColor
-         * @param {Object} 选中颜色数据对象
-         * */
-        mulChoiceInColor(obj)
-        {
-            var newStr = '';
-            if (this.inArray(obj.id, this.checkedInColorArr)) {
-                this.checkedInColorArr.$remove(obj.id);
-            } else {
-                this.checkedInColorArr.push(obj.id);
-            }
-
-            if (this.checkedInColorArr.length > 0) {
-                for (var i = 0, len = this.checkedInColorArr.length; i < len; i++) {
-                    newStr += ",'" + this.checkedInColorArr[i] + "'";
-                }
-                this.checkedInColorId = newStr.substr(1);
-            } else {
-                this.checkedInColorId = '';
-            }
-            //var inColorArr = [];
-
-            //inColorArr = (this.checkedInColorId.split(',')).shift();
-            //this.isMulExColor = false; //取消外观颜色的多选
-            this.getActivityList(1);
-        }
-    ,
-        /*
-         * 根据车款id，获取内外饰颜色
-         * @method getColor
-         * @param {Object} 车款id
-         * */
-        getColor(carId)
-        {
-            var that = this;
-            var query = {};
-            query.userId = config.USERID();
-            query.carId = carId;
-            var params = {"query": query};
-            $.ajax({
-                url: config.API_BASE + "/4s/prefer/findMyCarColorByCarId",
-                method: "POST",
-                contentType: 'application/json; charset=utf-8',
-                dataType: "json",
-                data: JSON.stringify(params),
-                beforeSend: function (request) {
-                    request.setRequestHeader("sessionid", config.SESSIONID());
-                },
-                success: function (response) {
-                    if (response.code == 0) {
-                        that.dynamicOutColorLists = response.data.exteriorColorList;
-                        that.dynamicInColorLists = response.data.interiorColorList;
+                if (this.checkedOutColorArr.length > 0) {
+                    for (var i = 0, len = this.checkedOutColorArr.length; i < len; i++) {
+                        newStr += ",'" + this.checkedOutColorArr[i] + "'";
                     }
-                },
-                error: function (fail) {
-                    if (fail.status == "401") {
-                        var SESSIONID = sessionStorage.getItem("SESSIONID");
-                        if (SESSIONID == null) {
-                            that.$route.router.go("/login");
-                        } else {
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                    this.checkedOutColorId = newStr.substr(1);
+                } else {
+                    this.checkedOutColorId = '';
+                }
+
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 内饰颜色单选 (暂不使用)
+             * @method mulChoiceExColor
+             * @param {Object} 选中颜色数据对象
+             * */
+            choiceInColor(obj)
+            {
+                this.checkedInColorId = obj.id;
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 内饰颜色多选
+             * @method mulChoiceExColor
+             * @param {Object} 选中颜色数据对象
+             * */
+            mulChoiceInColor(obj)
+            {
+                var newStr = '';
+                if (this.inArray(obj.id, this.checkedInColorArr)) {
+                    this.checkedInColorArr.$remove(obj.id);
+                } else {
+                    this.checkedInColorArr.push(obj.id);
+                }
+
+                if (this.checkedInColorArr.length > 0) {
+                    for (var i = 0, len = this.checkedInColorArr.length; i < len; i++) {
+                        newStr += ",'" + this.checkedInColorArr[i] + "'";
+                    }
+                    this.checkedInColorId = newStr.substr(1);
+                } else {
+                    this.checkedInColorId = '';
+                }
+                //var inColorArr = [];
+
+                //inColorArr = (this.checkedInColorId.split(',')).shift();
+                //this.isMulExColor = false; //取消外观颜色的多选
+                this.getActivityList(1);
+            }
+            ,
+            /*
+             * 根据车款id，获取内外饰颜色
+             * @method getColor
+             * @param {Object} 车款id
+             * */
+            getColor(carId)
+            {
+                var that = this;
+                var query = {};
+                query.userId = config.USERID();
+                query.carId = carId;
+                var params = {"query": query};
+                $.ajax({
+                    url: config.API_BASE + "/4s/prefer/findMyCarColorByCarId",
+                    method: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        if (response.code == 0) {
+                            that.dynamicOutColorLists = response.data.exteriorColorList;
+                            that.dynamicInColorLists = response.data.interiorColorList;
+                        }
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if (SESSIONID == null) {
+                                that.$route.router.go("/login");
+                            } else {
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
-                }
-            });
-        }
-    ,
-        /*分页*/
-        getActivityList(cur)
-        {
-            var ii = layer.msg('加载中', {icon: 16, shade: [0.5, '#000']});
-            var that = this;
-            var query = {};
+                });
+            }
+            ,
+            /*分页*/
+            getActivityList(cur)
+            {
+                var ii = layer.msg('加载中', {icon: 16, shade: [0.5, '#000']});
+                var that = this;
+                var query = {};
 
-            query.pagenum = this.pagesize;
-            query.page = cur;
-            query.userId = config.USERID();
-            query.brandId = that.checkedBrandId;      //品牌id
-            query.carModelId = that.checkedCarModelId;      //车型id
-            query.carId = that.checkedCarId;
-            query.exteriorColorId = (that.checkedOutColorId);
-            query.interiorColorId = (that.checkedInColorId);
-            var params = {"query": query};
+                query.pagenum = this.pagesize;
+                query.page = cur;
+                query.userId = config.USERID();
+                query.brandId = that.checkedBrandId;      //品牌id
+                query.carModelId = that.checkedCarModelId;      //车型id
+                query.carId = that.checkedCarId;
+                query.exteriorColorId = (that.checkedOutColorId);
+                query.interiorColorId = (that.checkedInColorId);
+                var params = {"query": query};
 
-            $.ajax({
-                url: config.API_BASE + "/4s/offer/findMyOfferlist",
-                method: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                data: JSON.stringify(params),
-                beforeSend: function (request) {
-                    request.setRequestHeader("sessionid", config.SESSIONID());
-                },
-                success: function (response) {
-                    if (response.code == 0) {
-                        that.count = response.data.count;
-                        that.$set("arr_items", response.data.rows);
-                        if (response.data.count > that.pagesize) {
-                            laypage({
-                                cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
-                                pages: Math.ceil(that.count / that.pagesize), //总页数
-                                curr: cur || 1,
-                                skip: true, //是否开启跳页
-                                skin: '#ff9205;',
-                                groups: 7, //连续显示分页数
-                                position: '#J_GotoPos', // 翻页后，页面滚动至该选择器的位置
-                                first: 1, //将首页显示为数字1,。若不显示，设置false即可
-                                last: Math.ceil(that.count / that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
-                                jump: function (obj, first) {
-                                    //回调
-                                    //得到了当前页，用于向服务端请求对应数据
-                                    var curr = obj.curr;
-                                    if (!first) {
-                                        that.getActivityList(curr);
-                                    }
-                                    $(".laypage_btn").unbind("click").on('click', function () {
-                                        if ($(".laypage_skip").val() > 0 && $(".laypage_skip").val() <= Math.ceil(that.count / that.pagesize)) {
-                                            that.getActivityList($(".laypage_skip").val(), newobj);
-                                        } else {
-                                            layer.msg('请输入正确的跳转页码');
+                $.ajax({
+                    url: config.API_BASE + "/4s/offer/findMyOfferlist",
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify(params),
+                    beforeSend: function (request) {
+                        request.setRequestHeader("sessionid", config.SESSIONID());
+                    },
+                    success: function (response) {
+                        if (response.code == 0) {
+                            that.count = response.data.count;
+                            that.$set("arr_items", response.data.rows);
+                            if (response.data.count > that.pagesize) {
+                                laypage({
+                                    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+                                    pages: Math.ceil(that.count / that.pagesize), //总页数
+                                    curr: cur || 1,
+                                    skip: true, //是否开启跳页
+                                    skin: '#ff9205;',
+                                    groups: 7, //连续显示分页数
+                                    first: 1, //将首页显示为数字1,。若不显示，设置false即可
+                                    last: Math.ceil(that.count / that.pagesize), //将尾页显示为总页数。若不显示，设置false即可
+                                    jump: function (obj, first) {
+                                        //回调
+                                        //得到了当前页，用于向服务端请求对应数据
+                                        var curr = obj.curr;
+                                        if (!first) {
+                                            that.getActivityList(curr);
                                         }
-                                    })
-                                }
+                                        $(".laypage_btn").unbind("click").on('click', function () {
+                                            if ($(".laypage_skip").val() > 0 && $(".laypage_skip").val() <= Math.ceil(that.count / that.pagesize)) {
+                                                that.getActivityList($(".laypage_skip").val(), newobj);
+                                            } else {
+                                                layer.msg('请输入正确的跳转页码');
+                                            }
+                                        })
+                                    }
+                                });
+                            } else {
+                                $("#page2").empty();
+                            }
+                            that.$nextTick(function () {
+                                this.$children[0]._data.checkedIndex = [];
+                                this.$children[0]._data.checkedAll = false;
                             });
-                        } else {
-                            $("#page2").empty();
                         }
-                        that.$nextTick(function () {
-                            this.$children[0]._data.checkedIndex = [];
-                            this.$children[0]._data.checkedAll = false;
-                        });
-                    }
-                    layer.close(ii);
-                },
-                error: function (fail) {
-                    if (fail.status == "401") {
-                        var SESSIONID = sessionStorage.getItem("SESSIONID");
-                        if (SESSIONID == null) {
-                            that.$route.router.go("/login");
-                        } else {
-                            sessionStorage.removeItem("SESSIONID");
-                            layer.msg('登录失效，请重新登陆！');
-                            util.login();
+                        layer.close(ii);
+                    },
+                    error: function (fail) {
+                        if (fail.status == "401") {
+                            var SESSIONID = sessionStorage.getItem("SESSIONID");
+                            if (SESSIONID == null) {
+                                that.$route.router.go("/login");
+                            } else {
+                                sessionStorage.removeItem("SESSIONID");
+                                layer.msg('登录失效，请重新登陆！');
+                                util.login();
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
-    }
     }
 </script>
 

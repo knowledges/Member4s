@@ -120,9 +120,9 @@
             <dl>
                 <dt>详细地址 <em>*</em></dt>
                 <dd>
-                    <textarea v-model="addrInfo.detailedAddress" initial="off" v-validate:detailed-address = "['username']"  class="detailed-address" autocomplete="off" name="addressDetail" id="J_Street" aria-label="详细地址" placeholder="建议您如实填写详细收货地址，例如街道名称，门牌号码，楼层和房间号等信息"></textarea>
+                    <textarea v-model="addrInfo.detailedAddress" initial="off" v-validate:detailed-address = "['noempty']"  class="detailed-address" autocomplete="off" name="addressDetail" id="J_Street" aria-label="详细地址" placeholder="建议您如实填写详细收货地址，例如街道名称，门牌号码，楼层和房间号等信息"></textarea>
                 </dd>
-                <dd  v-show="$validateaddr.detailedAddress.username">
+                <dd  v-show="$validateaddr.detailedAddress.noempty">
                     <div class="msg-box">
                         <div class="msg msg-error show" id="J_MsgDivision">
                             <i></i>
