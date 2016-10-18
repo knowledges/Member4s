@@ -1,8 +1,4 @@
 <template>
-	<!--<div id="orderSearch">
-		<input type="text" placeholder="请输入关键字" v-model="ordertext" />
-		<button class="G_f14" v-on:click="showdata">订单搜索</button>
-	</div>-->
     <div class="orderList">
     	<div class="orderListCon">
     		<div class="order-top">
@@ -54,8 +50,6 @@
                 var query = {};
 					query.id_4s = config.USERID();
 					query.status = [8];
-//					query.id_4s = "223";
-//					query.status = [8];
 	                query.pagenum = 5;
 	                query.page = cur;
 					query.keyword = that.ordertext;
@@ -73,8 +67,6 @@
 	                },
 	                success:function(response){
 						if(response.code == 0){
-//	                        layer.close(lay);
-//	                        that.orderdata = response.data.rows;
 							that.$set("orderdata",response.data.rows);
 	                        that.count = response.data.count;
 	                        if( that.count == 0){
@@ -113,7 +105,6 @@
 	                        }
 					        
 	                    }else{
-//	                        layer.close(lay);
 	                        that.datano = true;
 	                        layer.msg(response.desc);
 	                    }

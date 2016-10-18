@@ -1,8 +1,4 @@
 <template>
-	<!--<div id="orderSearch">
-		<input type="text" placeholder="请输入关键字" v-model="ordertext" />
-		<button class="G_f14" v-on:click="showdata">订单搜索</button>
-	</div>-->
     <div class="orderList">
     	<div class="orderListCon">
     		<div class="order-top">
@@ -46,7 +42,9 @@
             ListTop
         },
         methods:{
-//          列表数据展示
+			/**
+			 * 列表数据展示
+			 * */
 			showdata(cur){
 				var that = this;
 //              var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
@@ -54,8 +52,6 @@
                 var query = {};
 					query.id_4s = config.USERID();
 					query.status = [1,3,4,5];
-//					query.id_4s = "223";
-//					query.status = [1];
 	                query.pagenum = 5;
 	                query.page = cur;
 					query.keyword = that.ordertext;
@@ -66,15 +62,12 @@
                     type:'POST',
                     dataType: 'JSON',
                     contentType: 'application/json; charset=utf-8',
-//                  data:JSON.stringify({"query":{"id_4s":id_4s,"status":[0,1,2],"pagenum":pagenum,"createtime":createtime,"keyword":keyword}}),
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
 	                    request.setRequestHeader("sessionid",config.SESSIONID());
 	                },
 	                success:function(response){
 						if(response.code == 0){
-//	                        layer.close(lay);
-//	                        that.orderdata = response.data.rows;
 							that.$set("orderdata",response.data.rows);
 	                        that.count = response.data.count;
 	                        if( that.count == 0){
@@ -113,7 +106,6 @@
 	                        }
 					        
 	                    }else{
-//	                        layer.close(lay);
 	                        that.datano = true;
 	                        layer.msg(response.desc);
 	                    }
@@ -134,7 +126,6 @@
                 })
                
 			}
-//			列表数据展示
         }
     }
 </script>

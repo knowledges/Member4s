@@ -257,7 +257,8 @@
                 });
             },
             /**
-             * 根据选择地区显示到弹出框中
+             * 将已知地区显示到弹出框中
+             * sales_area 和salesArea  兼容定义变量不统一问题
              * */
             getSaleAreaByArray(obj){
                 var that = this;
@@ -280,7 +281,7 @@
                 that.$parent.items.end_date = obj.end_date;
                 that.$parent.items.file_img = obj.car_image;
                 that.$parent.items.desc = obj.description;
-                debugger;
+
                 var str = obj.sales_area || obj.saleArea ;
                 var list = str.substring(1,str.length-1).split(",");
 
@@ -428,6 +429,7 @@
             },
             /**
              * 提交
+             * 兼容 变量不统一问题
              * */
             areaAgree(){
                 layer.close(this.$parent.mask_1);

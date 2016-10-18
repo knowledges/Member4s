@@ -32,11 +32,6 @@
         route:{
             data({to,next}){
                 next();
-//                var sessionid = sessionStorage.getItem("SESSIONID") ;
-//                if(sessionid=="" || sessionid==null){
-//                    layer.msg('登录消失，请重新登陆！');
-//                    this.$route.router.go("/")
-//                }
             }
         },
         ready () {

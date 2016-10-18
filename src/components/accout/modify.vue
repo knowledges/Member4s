@@ -67,7 +67,6 @@
              *密码安全程度
              *return ：全部为字母或者数字,或者密码长度小于
              *return : 字母数字组成，或者字母特殊字符，或者数字和特殊字符
-             *
              *return : 字母和数字和特殊字符
              * /[a-zA-Z]+/.test(string) && /[0-9]+/.test(string) && /\W+\D+/.test(string)
              */
@@ -101,14 +100,7 @@
                 },500);
             },
             savePwd(){
-//          	if(config.SESSIONID == ""){
-//					this.SESSIONID = JSON.parse(sessionStorage.getItem("SESSIONID"));
-//					config.SESSIONID  = this.SESSIONID.session.sessionid;
-//					config.USERID  = this.SESSIONID.id;
-//					console.log(config.SESSIONID);
-//					console.log(config.USERID);
-//				}
-            	
+
                 if(this.password =="" ){
                     this.cur_match = true;
                     this.cur_msg = "当前密码不能为空";
@@ -180,7 +172,6 @@
 	                	query.id = config.USERID();
 	                	query.password = that.password;
 	                	query.newpassword = that.newpassword;
-//						query.id = "186";
 					var param = { query:query };
                     $.ajax({
 	                    url:url,
@@ -289,9 +280,6 @@
         border: none;
         cursor: pointer;
     }
-   /* .UC_main_r div dl dd button:last-child{
-        background: #ccc;
-    }*/
     .fill_in_info  dl:last-child{
         padding: 20px 0 40px 0;
     }

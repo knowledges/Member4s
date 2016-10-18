@@ -9,10 +9,7 @@ export default {
 
     /**
      *  引入了 Layer Ui 里，
-     *  里面有 弹出提示、弹出一个页面层
-     *  查看 api : http://layer.layui.com/hello.html
-     *   分页
-     *   查看 api http://laypage.layui.com/doc.html  使用查看 cloneStore.vue
+     *  http://www.layui.com/doc/modules/laydate.html#use
      */
 
     /**

@@ -17,7 +17,6 @@
 	    	</div>
 	    	<div class="order-nodata" v-if="datasearch">
 	    		<h4><i class="order-nobg"></i>抱歉，暂无搜索结果！</h4>
-	    		<!--<p>您可再次输入关键词搜索 或 返回"<a v-link="{ path:'/u/order/all'}">所有订单</a>" 列表页手动查找</p>-->
 	    		<p>您可再次输入关键词搜索 或 返回"<a v-on:click="alink">所有订单</a>" 列表页手动查找</p>
 	    	</div>
     	</div>
@@ -64,7 +63,10 @@
         			this.showdata(1);
         		}
         	},
-//          列表数据展示
+			/**
+			 *  列表数据展示
+			 *  cur{number} :当前对象
+			 * */
 			showdata(cur){
 				var that = this;
 //              var lay = layer.msg('加载中', {icon: 16,shade : [0.5,'#000']});
@@ -72,8 +74,6 @@
                 var query = {};
 					query.id_4s = config.USERID();
 					query.status = [1,3,4,5,6,7,8];
-//					query.id_4s = "223";
-//					query.status = [0,1,2];
 	                query.pagenum = 5;
 	                query.page = cur;
 					query.keyword = that.ordertext;
@@ -83,15 +83,12 @@
                     type:'POST',
                     dataType: 'JSON',
                     contentType: 'application/json; charset=utf-8',
-//                  data:JSON.stringify({"query":{"id_4s":id_4s,"status":[0,1,2],"pagenum":pagenum,"createtime":createtime,"keyword":keyword}}),
                     data:JSON.stringify(param),
                     beforeSend:function (request) {
 	                    request.setRequestHeader("sessionid",config.SESSIONID());
 	                },
 	                success:function(response){
 						if(response.code == 0){
-//	                        layer.close(lay);
-//	                        that.orderdata = response.data.rows;
 							that.$set("orderdata",response.data.rows);
 	                        that.count = response.data.count;
 	                        if( that.count == 0){
@@ -138,11 +135,9 @@
 	                        }
 					        
 	                    }else{
-//	                        layer.close(lay);
 	                        that.datano = true;
 	                        layer.msg(response.desc);
 	                    }
-//	                    that.ordertext  = "";
 					},
 					error:function(fail){
 						if(fail.status == "401"){

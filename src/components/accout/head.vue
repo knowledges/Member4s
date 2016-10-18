@@ -69,6 +69,9 @@
             }
         },
         methods:{
+            /**
+             * file change 事件
+             * */
             btnUploadFile(e){
                 var _this = this;
                 var reader = new FileReader();
@@ -92,29 +95,22 @@
                     that.files = {};
                 }
             },
+            /**
+             * 添加头像*/
             btnCrop(){
                 var that = this;
                 var img = that.cropper.getDataURL();
 				var url2 = config.PHP_API+"/index.php/api/uploadBase64";
 				var base64 = img;
 				var user_id = config.USERID();
-                console.log("url2=",url2);
-//                $.ajax({
-//                    url:config.API_BASE+"/4s/home/index",
-//                    method:"POST",
-//                    contentType: 'application/json; charset=utf-8',
-//                    dataType:"json",
-//                    data:JSON.stringify(params),
 
                 $.ajax({
                     url:url2,
                     method:'POST',
                     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                     dataType:"json",
-//					data:JSON.stringify({base64:base64,user_id:user_id}),
 					data:{base64:base64,user_id:user_id},
 	                success:function(response){
-						console.log("我进来过：");
 					    if(response.code == 0){
 							$('.large,.medium,.small').attr("src","");
 			                $('.large').attr("src",img);

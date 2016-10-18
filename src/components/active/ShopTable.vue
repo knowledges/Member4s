@@ -198,6 +198,7 @@
             }
         },
         ready(){
+            var that = this;
             var start = {
                 elem: '#start-date',
                 format: 'YYYY-MM-DD hh:mm:ss',
@@ -208,6 +209,7 @@
                 choose: function (datas) {
                     end.min = datas; //开始日选好后，重置结束日的最小日期
                     end.start = datas //将结束日的初始值设定为开始日
+                    that.items.start_date = datas;
                 }
             };
             var end = {
@@ -219,6 +221,7 @@
                 istoday: false,
                 choose: function (datas) {
                     start.max = datas; //结束日选好后，重置开始日的最大日期
+                    that.items.end_date = datas;
                 }
             };
             laydate(start);
@@ -255,7 +258,6 @@
                     desc: ""
                 },
                 _index: "",
-                mask_1: "",
                 mask_2: "",
                 rem_item: [],
                 temp_items: {},
@@ -437,7 +439,7 @@
                 });
             },
             selectarea(){
-                this.mask_1 = layer.open({
+                layer.open({
                     type: 1,
                     title: '选择区域',
                     skin: 'layui-layer-rim', //加上边框
@@ -504,8 +506,6 @@
             },
             save(){
                 var items = this.items;
-                items.start_date = $("#start-date").val();
-                items.end_date = $("#end-date").val();
                 if (items.special_price == "") {
                     items.offer_ = true;
                     items.offer_msg = "特价不能为空";
@@ -583,12 +583,6 @@
                     layer.close(ii);
                 }
             },
-            cancle(){
-                layer.close(this.mask_2);
-                /*修改弹框初始化*/
-                this.clearChildDb();
-                /*   that.items._areas = [];*/
-            },
             updataActive(){
                 var that = this;
                 console.log(that.items.file_img);
@@ -612,14 +606,6 @@
 
                 var params = {"query": query};
 
-                function dataFilter(time) {
-                    var date = new Date(time);
-                    var year = date.getFullYear();
-                    var month = date.getMonth() + 1;
-                    var day = date.getDate();
-                    return year + "-" + month + "-" + day;
-                }
-
                 $.ajax({
                     url: config.API_BASE + "/4s/activity/updateCarActivity/",
                     method: "POST",
@@ -632,8 +618,6 @@
                     success: function (response) {
                         if (response.code == 0) {
                             layer.alert('已提交，正在审核中...<br/> 您可在本页面查看审核状态', {icon: 1, title: '完成修改'});
-                            layer.close(that.mask_2);
-
                             var arr = [];
                             for (var i = 0; i < that.items._areas.length; i++) {
                                 arr.push(that.items._areas[i].sales_area_name);
@@ -681,7 +665,10 @@
                             /*修改弹框初始化*/
                             that.clearChildDb();
 
-                            layer.closeAll();
+                            setTimeout(function () {
+                                layer.closeAll();
+                            },1000);
+
                         }
                     },
                     error: function (fail) {

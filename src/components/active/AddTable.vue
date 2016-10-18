@@ -170,6 +170,8 @@
             }
         },
         ready(){
+            var that = this;
+
             var start = {
                 elem: '#start-date',
                 format: 'YYYY-MM-DD hh:mm:ss',
@@ -180,6 +182,7 @@
                 choose: function(datas){
                     end.min = datas; //开始日选好后，重置结束日的最小日期
                     end.start = datas //将结束日的初始值设定为开始日
+                    that.items.start_date = datas;
                 }
             };
             var end = {
@@ -191,6 +194,7 @@
                 istoday: false,
                 choose: function(datas){
                     start.max = datas; //结束日选好后，重置开始日的最大日期
+                    that.items.end_date = datas;
                 }
             };
             laydate(start);
@@ -349,8 +353,6 @@
                     content: $(".activeinfo"),
                     yes: function(index, layero){
                         var items = that.items;
-                        items.start_date = $("#start-date").val();
-                        items.end_date = $("#end-date").val();
                         if(items.special_price == "" ){
                             items.offer_ = true;
                             items.offer_msg="特价不能为空";
@@ -381,14 +383,6 @@
                         }else{
                             items.number_ = false;
                         }
-
-                       /* if(items.start_date == "" && items.end_date == ""){
-                            items.timer_ = true;
-                            items.timer_msg="结束时间不可早于开始时间";
-                            return;
-                        }else{
-                            items.timer_ = false;
-                        }*/
 
                         if($(".j_salesArea > span").length<=0){
                             items.selectarea_ = true;

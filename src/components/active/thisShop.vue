@@ -19,7 +19,6 @@
             </div>
             <div class="total-num G_fr">共：<span>{{count }}</span>条</div>
         </div>
-        <!--:arr_title="arr_title"-->
         <shop-table :stats="stats" :judge="judge" :idx="idx" :explain="explain" :pagesize="pagesize" :arr_items.sync="arr_items"></shop-table>
         <div id="page2" style="margin:20px 0;text-align: center;"></div>
     </div>
@@ -98,7 +97,6 @@
                 judge:true,
                 idx:'4',
                 explain:"如您对官方价有疑问，请致电400-138-0808。",
-//                arr_title:[],
                 arr_items:[],
                 cur: 1,
                 count: 0,
@@ -120,9 +118,6 @@
                     arr[0]=parseInt(status);
                 }
                 var ii = layer.msg('加载中 ...', {icon: 16,shade : [0.5,'#000']});
-                /*var ii = layer.load(1, {
-                    shade : [0.5,'#000'] //0.1透明度的白色背景
-                });*/
                 var that = this;
                 var url=  config.API_BASE +"/4s/special/list";
                 var query={};
