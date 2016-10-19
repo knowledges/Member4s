@@ -26,6 +26,10 @@ routerConfig(router)
 Vue.use(VueResource)
 //
 Vue.http.options.root = '/data/'
+// 不加跨域xhr会发起options请求
+// Vue.http.options.headers = {
+//   'Content-Type': 'application/json; charset=utf-8;'
+// }
 // Vue.http.options.emulateJSON = true
 
 //Validator

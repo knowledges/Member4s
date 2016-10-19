@@ -13,36 +13,45 @@
             <dl class="brands clearfix">
                 <dt class="G_fl">品&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牌：</dt>
                 <div class="detailsCon">
-                    <dd v-for="brand in brands">
-                        <a v-on:click="brandClk(brand,$event,null)"
-                           brandId="{{brand.brandId}}" class="style-box brandslink"
-                           title="{{brand.brandName}}">{{brand.brandName}}<b></b></a>
+                    <template v-if="brands.length>0">
+                        <dd v-for="brand in brands">
+                            <a v-on:click="brandClk(brand,$event,null)" :class="brandId == brand.brandId ? 'acton' :'' "
+                               brandId="{{brand.brandId}}" class="style-box brandslink"
+                               title="{{brand.brandName}}">{{brand.brandName}}<b></b></a>
+                        </dd>
+                    </template>
+                    <dd v-else>
+                        对不起，您暂无任何品牌！
                     </dd>
                 </div>
             </dl>
-
             <dl class="model clearfix">
                 <dt class="G_fl">车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
                 <div class="detailsCon">
-                    <dd v-for="model in screen_carModels" v-show="BrandAll">
-                        <a v-on:click="scrModelClk(model,$event,null)" carModelId="{{model.carModelId}}"
-                           class="style-box brandslink" title="{{model.carModelName}}">{{model.carModelName}}<b></b></a>
-                    </dd>
+                    <template v-if="screen_carModels.length>0">
+                        <dd v-for="model in screen_carModels">
+                            <a v-on:click="scrModelClk(model,$event,null)" carModelId="{{model.carModelId}}"  :class="carModelId == model.carModelId ? 'acton' :'' "
+                               class="style-box brandslink" title="{{model.carModelName}}">{{model.carModelName}}<b></b></a>
+                        </dd>
+                    </template>
+                    <dd v-else>对不起，您暂无任何车型！</dd>
                     <dd>
                         <span v-on:click="eaitModels" class="eait"> <i></i> 编辑车型</span>
                     </dd>
                 </div>
             </dl>
-
             <div class="style clearfix">
                 <dl class="car clearfix">
                     <dt class="G_fl">车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                     <div class="detailsCon">
-                        <dd v-for="car in screen_car" v-show="ModelAll"><a v-on:click="scrCarClk(car,$event,null)"
-                                                                           class="style-box carlink"
-                                                                           carId="{{car.carId}}"
-                                                                           title="{{car.carName}}">{{car.carName}}<b></b></a>
-                        </dd>
+                        <template v-if="screen_car.length>0"  >
+                            <dd v-for="car in screen_car">
+                                <a v-on:click="scrCarClk(car,$event,null)" :class="carId == car.carId ?　 'acton' :'' " class="style-box carlink"  carId="{{car.carId}}" title="{{car.carName}}">
+                                    {{car.carName}}<b></b>
+                                </a>
+                            </dd>
+                        </template>
+                        <dd v-else>对不起，您暂无任何车款！</dd>
                         <dd><span v-on:click="eaitCars" class="eait"> <i></i> 编辑车款</span></dd>
                     </div>
                 </dl>
@@ -53,21 +62,23 @@
                     <dt class="G_fl">外观颜色：</dt>
                     <div class="detailsCon">
                         <dd class="selectall">
-                            <a @click="choiceAll('OutColor')" :class="checkedOutColorId == '' ? 'acton' : ''" class="style-box colorlink">全部<b></b></a></dd>
-                        <dd v-for="outColor in outColors" v-show="CarAll">
-                            <a @click="mulChoiceExColor(outColor)"
-                               :class="checkedOutColorId.indexOf(outColor.id) > -1 ? 'acton' : ''"
-                               class="style-box colorlink"
-                               title="{{outColor.colorName}}" data-id="{{outColor.id}}">
-                                <div class="carColor" :style="{'background':outColor.colorValue.split(' ')[0]}">
+                            <a @click="choiceAll('OutColor')" :class="checkedOutColorId == '' ? 'acton' : ''" class="style-box colorlink">全部<b></b></a>
+                        </dd>
+                        <template v-if="outColors.length>0">
+                            <dd v-for="outColor in outColors">
+                                <a @click="mulChoiceExColor(outColor)"
+                                   :class="checkedOutColorId.indexOf(outColor.id) > -1 ? 'acton' : ''"
+                                   class="style-box colorlink"
+                                   title="{{outColor.colorName}}" data-id="{{outColor.id}}">
+                                    <div class="carColor" :style="{'background':outColor.colorValue.split(' ')[0]}">
                                     <span v-if="outColor.colorValue.split(' ').length>1"
                                           :style="{'background':outColor.colorValue.split(' ')[1]}"></span>
-                                </div>
-                                {{outColor.colorName}}
-                                <b></b>
-                            </a>
-                        </dd>
-
+                                    </div>
+                                    {{outColor.colorName}}
+                                    <b></b>
+                                </a>
+                            </dd>
+                        </template>
                     </div>
                 </dl>
             </div>
@@ -165,7 +176,6 @@
         route: {
             data({to}){
                 this.$nextTick(function () {
-                    debugger;
                     var that = this;
                     that.getCarM(0);
                     /*主营、副营品牌*/
@@ -210,15 +220,9 @@
                 mask_eaitModelsBrand: "",
                 findCarByCarModel: [],
                 mask_eaitModels: "",
-                /* provinces:[],
-                 provincecity:[],
-                 clone_provincecity:[],*/
                 arr_items: [],
                 outColors: [],
                 inColors: [],
-                BrandAll: false,
-                ModelAll: false,
-                CarAll: false,
                 isCarModel: false,
                 isCarModelId: "",
                 isCarModelIndex: "",
@@ -265,15 +269,12 @@
                             /*
                              * v-for 遍历完
                              * */
-
                             that.$nextTick(function () {
                                 this.brandClk({
                                     "brandId": that.brands[num].brandId,
                                     "brandName": that.brands[num].brandName
                                 }, num);
-//                            that.brandLoad({"brandId":that.brands[num].brandId,"brandName":that.brands[num].brandName},null,num);
                             })
-
                         }
                     },
                     error: function (fail) {
@@ -453,8 +454,6 @@
                         request.setRequestHeader("sessionid", config.SESSIONID());
                     },
                     success: function (response) {
-
-                        console.log("that.isCar:" + that.isCar);
                         if (response.code == 0) {
                             if (response.data.length > 0) {
                                 var list = response.data;
@@ -468,6 +467,7 @@
                                     }
                                 }
                                 that.$set("findCarByCarModel", response.data);
+
                                 that.mask_eaitModels = layer.open({
                                     type: 1,
                                     title: '编辑车款',
@@ -519,7 +519,7 @@
                                                             that.scrCarClk({"carId": cars[0].carId}, null, 0);
                                                         } else {
                                                             that.scrCarClk({"carId": null}, null, 0);
-                                                            that.CarAll = false;
+//                                                            that.CarAll = false;
                                                         }
 
                                                     } else {
@@ -544,9 +544,6 @@
                                                                 that.$nextTick(function () {
                                                                     $(".brands a").removeClass("acton");
                                                                     $(".brands a").eq(acton).addClass("acton");
-//                                                                    if(cars.length<=0){
-//                                                                        this.CarAll = false;
-//                                                                    }
                                                                 });
                                                             }
                                                         },
@@ -712,11 +709,7 @@
                 } else {
                     this.checkedInColorId = '';
                 }
-                //var inColorArr = [];
-
-                //inColorArr = (this.checkedInColorId.split(',')).shift();
-                //this.isMulExColor = false; //取消外观颜色的多选
-                this.getActivityList(1);
+                this.getActivityList(0);
             },
             selectStyleAll(){
 //            var that = this;
@@ -732,32 +725,21 @@
 //            $(".inColor .selectall").find("a").addClass("acton");
 //            $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
             },
-//			点击外观颜色的全部
+            /**
+             * 点击外饰颜色的全部
+             * */
             selectOutColAll(){
-                var that = this;
-                that.CarAll = true;
-                /* var brandId = $(".brands dd a.acton").attr("brandid");
-                 var carModelId = $(".model dd a.acton").attr("carmodelid");
-                 var carId = $(".style dd a.acton").attr("carid");*/
-                that.checkedOutColorArr=[]; //已选外饰颜色数组
-                that.getActivityList(0);
-                $(".outColor .selectall").find("a").addClass("acton");
-                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
-                $(".inColor .selectall").find("a").addClass("acton");
-                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                this.checkedOutColorId="";//选中外观颜色id
+                this.checkedOutColorArr=[]; //已选外饰颜色数组
+                this.getActivityList(0);
             },
-//			点击内饰颜色的全部
+            /**
+             * 点击内饰颜色的全部
+             * */
             selectInColAll(){
-                var that = this;
-                that.CarAll = true;
-                /* var brandId = $(".brands dd a.acton").attr("brandid");
-                 var carModelId = $(".model dd a.acton").attr("carmodelid");
-                 var carId = $(".style dd a.acton").attr("carid");
-                 var exteriorColorId = $(".outColor dd a.acton").attr("outcolorid");*/
-                that.checkedInColorArr=[]; //已选内饰颜色数组
-                that.getActivityList(0);
-                $(".inColor .selectall").find("a").addClass("acton");
-                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                this.checkedInColorArr=[]; //已选内饰颜色数组
+                this.checkedInColorId="";//选中内饰颜色id
+                this.getActivityList(0);
             },
 //          获取颜色
             getColor(carId){
@@ -844,90 +826,65 @@
                     }
                 })
             },
-//          点击品牌
+            /**
+             * 点击品牌
+             * @params obj{object} 当前对象
+             * @params index  下标
+             * */
             brandClk(obj, e, index){
-                this.BrandAll = true;
-                this.ModelAll = false;
-                this.CarAll = false;
+                this.checkedOutColorId="";//选中外观颜色id
+                this.checkedOutColorArr=[]; //已选外饰颜色数组
+                this.checkedInColorArr=[]; //已选内饰颜色数组
+                this.checkedInColorId="";//选中内饰颜色id
                 this.brandId = obj.brandId;
                 this.screen_carModels = this.carModels[this.brandId];
                 var _index = index != null ? index : 0;
                 this.$nextTick(function () {
                     if (this.screen_carModels != null) {
-//                  	点击品牌时，默认车型是全部，所以需要把品牌的id传给它
-//                    this.getActivityList(1,{"brandId":brandId});
+                        //点击品牌时，默认车型是全部，所以需要把品牌的id传给它
                         this.scrModelClk({
                             "carModelId": this.screen_carModels[_index].carModelId,
                             "carModelName": this.screen_carModels[_index].carModelName
                         }, null);
                     } else {
-                        $("#page2").empty();
-                        this.$set("screen_car", []);
-                        this.$set("arr_items", []);
-                        this.$set("outColors", []);
-                        this.$set("inColors", []);
-                        this.$set("count", 0);
+                        this.clearArrays();
                     }
-                    if (e != null || typeof e == "number") {
-                        if (typeof e == "number") {
-                            _index = e;
-                        } else {
-                            _index = $(e.target).parent().index();
-                        }
-                    }
-                    $(".brands dd").find('a').removeClass("acton");
-                    $(".brands dd").eq(_index).find('a').addClass("acton");
                 })
             },
-//          点击车型
+            /**
+             * 点击车型
+             * */
             scrModelClk(obj, e, num){
-                $(".outColor .selectall").find("a").addClass("acton");
-                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
-                $(".inColor .selectall").find("a").addClass("acton");
-                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                this.checkedOutColorId="";//选中外观颜色id
+                this.checkedOutColorArr=[]; //已选外饰颜色数组
+                this.checkedInColorArr=[]; //已选内饰颜色数组
+                this.checkedInColorId="";//选中内饰颜色id
                 this.carModelId = obj.carModelId;
-                this.screen_car = this.cars[this.carModelId];
-                this.ModelAll = true;
-                this.isCar = false;
-                var idx = num != null ? num : 0, _index = 0;
-                debugger;
+                this.screen_car = this.cars[this.carModelId]!=undefined ? this.cars[this.carModelId] : [];
+                var idx = num != null ? num : 0 ;
                 if (this.carModelId != null) {
                     this.$nextTick(function () {
-                        if (e != null) {
-                            _index = $(e.target).parent().index();
-                        }
-                        this.CarAll = false;
-                        $(".model dd").find('a').removeClass("acton");
-                        $(".model dd").eq(_index).find('a').addClass("acton");
-                        if (this.screen_car != undefined) {
+                        if (this.screen_car.length>0) {
                             this.scrCarClk({
                                 "carId": this.screen_car[idx].carId,
                                 "carName": this.screen_car[idx].carName
                             }, null);
                         } else {
-                            $("#page2").empty();
-                            this.$set("screen_car", []);
-                            this.$set("arr_items", []);
-                            this.$set("outColors", []);
-                            this.$set("inColors", []);
-                            this.$set("count", 0);
+                            this.clearArrays();
                         }
                     })
                 } else {
-                    $("#page2").empty();
-                    this.$set("screen_car", []);
-                    this.$set("arr_items", []);
-                    this.$set("outColors", []);
-                    this.$set("inColors", []);
-                    this.$set("count", 0);
+                    this.clearArrays();
                 }
             },
-//          点击车款
+            /**
+             * 点击车款
+             * */
             scrCarClk(obj, e, num){
-                $(".outColor .selectall").find("a").addClass("acton");
-                $(".outColor .selectall").siblings("dd").find("a").removeClass("acton");
-                $(".inColor .selectall").find("a").addClass("acton");
-                $(".inColor .selectall").siblings("dd").find("a").removeClass("acton");
+                this.checkedOutColorId="";//选中外观颜色id
+                this.checkedOutColorArr=[]; //已选外饰颜色数组
+                this.checkedInColorArr=[]; //已选内饰颜色数组
+                this.checkedInColorId="";//选中内饰颜色id
                 this.carId = obj.carId;
                 this.isCar = false;
                 if (this.carId != null) {
@@ -939,16 +896,10 @@
                         }
                         $(".style dd").find('a').removeClass("acton");
                         $(".style dd").eq(_index).find('a').addClass("acton");
-                        this.CarAll = true;
                         this.getColor(this.carId);
                     });
                 } else {
-                    $("#page2").empty();
-                    this.$set("screen_car", []);
-                    this.$set("arr_items", []);
-                    this.$set("outColors", []);
-                    this.$set("inColors", []);
-                    this.$set("count", 0);
+                    this.clearArrays();
                 }
             },
             selectarea(obj){
@@ -960,14 +911,22 @@
                     area: ['650px', '600px'],
                     content: $(".activearea")
                 });
-//                this.getSaleAreaByArray(obj);
             },
-            cancle1(){
+            clearArrays(){
+                $("#page2").empty();
+                this.$set("screen_car", []);
+                this.$set("arr_items", []);
+                this.$set("outColors", []);
+                this.$set("inColors", []);
+                this.$set("count", 0);
+            },
+
+           /* cancle1(){
                 layer.close(this.mask_1);
             },
             cancle2(){
                 layer.close(this.mask_3);
-            },
+            },*/
         }
     }
 </script>

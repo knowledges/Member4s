@@ -130,6 +130,9 @@
                 <dt>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;款：</dt>
                 <dd v-text="temps.carName"></dd>
             </dl>
+           <!-- <p style=" position: fixed;top: 12%;right: 5%;">
+                <a class="reset" v-on:click="reset" style="padding:10px 15px;color: #fff;background: #ff791f;border-radius: 3px;cursor: pointer;">重置</a>
+            </p>-->
             <table style="min-height: 200px">
                 <thead>
                 <tr>
@@ -148,10 +151,10 @@
                     <td>{{temp.exteriorColorName}}</td>
                     <td>{{temp.interiorColorName}}</td>
                     <td>
-                        <input type="number" class="stocks_{{$index}}" value="{{temp.stock}}">
+                        <input type="number" class="stocks_{{$index}}" v-on:keyup="stocksKeyup($event,$index)" v-on:click="stocksKeyup($event,$index)" value="{{temp.stock}}">
                     </td>
                     <td>
-                        <input type="number" class="onWays_{{$index}}" value="{{temp.onWay}}">
+                        <input type="number" class="onWays_{{$index}}" v-on:keyup="onwaysKeyup($event,$index)" v-on:click="onwaysKeyup($event,$index)"  value="{{temp.onWay}}">
                     </td>
                     <td rowspan="{{temp_arr.length}}">
                         {{temp.price}}
@@ -266,6 +269,48 @@
         }
         ,
         methods: {
+            reset(){
+                this.items.areas = [];
+                this.temps.discount = 0;
+                $(".add input").val("");
+            },
+            /**
+             * 输入库存车辆时的判断事件
+             * */
+            stocksKeyup(e,index){
+                var that = this,isEmpley = false;
+                setTimeout(function () {
+                    for(var i = 0; i< that.checkedIndex.length ; i++){
+                        if($(".stocks_"+i).val()!="" && i !=index ){
+                            isEmpley = true;
+                        }
+                    }
+                    if(!isEmpley){
+                        for(var i = 0; i< that.checkedIndex.length ; i++){
+                            $(".stocks_"+i).val($(e.target).val())
+                        }
+                    }
+
+                },500)
+            },
+            /**
+             * 输入在途车辆时的判断事件
+             * */
+            onwaysKeyup(e,index){
+                var that = this,isEmpley = false;
+                setTimeout(function () {
+                    for(var i = 0; i< that.checkedIndex.length ; i++){
+                        if($(".onWays_"+i).val()!="" && i !=index ){
+                            isEmpley = true;
+                        }
+                    }
+                    if(!isEmpley){
+                        for(var i = 0; i< that.checkedIndex.length ; i++){
+                            $(".onWays_"+i).val($(e.target).val())
+                        }
+                    }
+                },500)
+            },
             /**
              * _idx:根据组件的个数来下下面 if else 的条件的。
              * 目前默认为两个组件
@@ -379,7 +424,8 @@
                             title: '批量添加',
                             skin: 'layui-layer-rim', //加上边框
                             area: ['800px', '500px'],
-                            btn: ['保存', '取消'],
+                            time:0,
+                            btn: ['保存', '取消','重置'],
                             content: $(".batchAdd"),
                             yes: function (index, layero) {
                                 if (parseInt(that.temp_arr[0].price) < parseInt(that.temps.discount)) {
@@ -442,13 +488,18 @@
                                 }, function () {
                                 });
                             },
+                            cancel: function(){
+                                layer.closeAll();
+                                that.clearChildDb();
+                            },
                             btn2: function (index) {
                                 layer.closeAll();
                                 /*修改弹框初始化*/
                                 that.clearChildDb();
                             },
-                            cancel: function () {
-                                that.clearChildDb();
+                            btn3:function (index,layero) {
+                                that.reset();
+                                return false;
                             }
                         });
 
@@ -677,7 +728,6 @@
     [v-cloak] {
         display: none;
     }
-
     .selected {
         color: #fa8c35 !important;
         border: 1px solid #fa8c35 !important;;
